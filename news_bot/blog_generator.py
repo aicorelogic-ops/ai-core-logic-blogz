@@ -7,6 +7,8 @@ POSTS_DIR = os.path.join(BLOG_DIR, "posts")
 # Ensure posts directory exists
 os.makedirs(POSTS_DIR, exist_ok=True)
 
+import urllib.parse
+
 class BlogGenerator:
     def create_post(self, title, content_html, original_link):
         """
@@ -17,7 +19,11 @@ class BlogGenerator:
         filename = f"{datetime.now().strftime('%Y-%m-%d')}-{safe_title[:30]}.html"
         filepath = os.path.join(POSTS_DIR, filename)
         
-        # HTML Template for individual post
+        # Generate AI Image URL based on title
+        safe_prompt = urllib.parse.quote(f"futuristic abstract art representing {title}, cyberpunk, neon, logic, data, high quality, 8k")
+        image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=600&nologo=true"
+        
+        # HTML Template for individual post (Updated with Hero Image)
         post_html = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -29,24 +35,33 @@ class BlogGenerator:
 </head>
 <body>
 <header>
-    <div class="nav-container" style="display:flex; justify-content:center; padding: 1rem;">
-        <a href="../index.html">
-            <img src="../assets/logo.png" alt="AI.Core Logic" style="height: 50px; border-radius: 6px;">
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
         </a>
     </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
 </header>
 
-<main>
-    <article class="article-card">
-        <div class="article-date">{datetime.now().strftime('%B %d, %Y')}</div>
-        <h1>{title}</h1>
-        <div class="article-body">
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">{datetime.now().strftime('%B %d, %Y')}</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">{title}</h1>
+        
+        <!-- Generated Hero Image -->
+        <img src="{image_url}" alt="AI Illustration" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
             {content_html}
         </div>
-        <hr style="border-color: #233554; margin: 2rem 0;">
-        <p><em>Source: <a href="{original_link}" target="_blank" style="color: var(--brand-blue);">Read original article</a></em></p>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="{original_link}" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
         <br>
-        <a href="../index.html" class="read-more">← Back to Home</a>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
     </article>
 </main>
 
@@ -65,29 +80,29 @@ class BlogGenerator:
 
     def update_index(self, title, summary, filename):
         """
-        Injects the new post into the top of index.html
+        Injects the new post into the top of index.html using the new Forest Design.
         """
         index_path = os.path.join(BLOG_DIR, "index.html")
         
-        # Bento Grid Logic: Randomly assign a size class
-        import random
-        # 15% chance of being a huge feature, 25% chance of being wide, 60% standard
-        rand_val = random.random()
-        if rand_val < 0.15:
-            card_class = "article-card featured"
-        elif rand_val < 0.40:
-            card_class = "article-card wide"
-        else:
-            card_class = "article-card"
+        # Generate AI Image URL for the Card (Smaller)
+        safe_prompt = urllib.parse.quote(f"abstract 3d render of {title}, dark background, mint green light, minimalist, high tech")
+        card_image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=600&height=400&nologo=true"
 
-        # New entry HTML with dynamic class
+        # New Forest-Style Card HTML
         new_entry = f"""
-    <article class="{card_class}">
-        <div class="article-date">{datetime.now().strftime('%B %d')}</div>
-        <h2><a href="posts/{filename}">{title}</a></h2>
-        <p class="article-snippet">{summary}...</p>
-        <a href="posts/{filename}" class="read-more">Read Analysis →</a>
-    </article>
+        <article class="article-card">
+            <div class="card-image-placeholder" style="background-image: url('{card_image_url}');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/{filename}">{title}</a></h2>
+                <p class="article-snippet">{summary}...</p>
+                <div class="card-meta">
+                    <span class="date">{datetime.now().strftime('%b %d')}</span>
+                    <a href="posts/{filename}" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
         """
         
         try:
@@ -95,13 +110,14 @@ class BlogGenerator:
                 content = f.read()
             
             # Find the injection point (after <main id="news-feed">)
+            # We look for the comment or the opening tag
             marker = '<main id="news-feed">'
             if marker in content:
                 updated_content = content.replace(marker, marker + "\n" + new_entry)
                 
                 with open(index_path, "w", encoding="utf-8") as f:
                     f.write(updated_content)
-                print("✅ Index.html updated.")
+                print("✅ Index.html updated with new Image Card.")
             else:
                 print("❌ Could not find injection marker in index.html")
                 
