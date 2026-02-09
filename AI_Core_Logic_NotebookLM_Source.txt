@@ -1,0 +1,2102 @@
+# AI Core Logic - Complete Project Source
+# Generated for NotebookLM
+
+
+==================================================
+FILE: news_bot\blog_generator.py
+==================================================
+
+import os
+from datetime import datetime
+
+BLOG_DIR = "blog"
+POSTS_DIR = os.path.join(BLOG_DIR, "posts")
+
+# Ensure posts directory exists
+os.makedirs(POSTS_DIR, exist_ok=True)
+
+import urllib.parse
+
+class BlogGenerator:
+    def create_post(self, title, content_html, original_link, image_url=None):
+        """
+        Creates a new HTML file for the blog post.
+        Uses original image if available, else generates one based on title + content keywords.
+        """
+        # Create a safe filename
+        safe_title = "".join([c if c.isalnum() else "-" for c in title]).lower()
+        filename = f"{datetime.now().strftime('%Y-%m-%d')}-{safe_title[:30]}.html"
+        filepath = os.path.join(POSTS_DIR, filename)
+        
+        # Image Logic: Use Original OR Generate AI
+        if not image_url:
+            # Create a more descriptive prompt using the title
+            # We add "visual representation" to ensure it's not text-heavy
+            safe_prompt = urllib.parse.quote(f"editorial illustration for news article: {title}. cyberpunk style, neon, data visualization, minimalist, 3d render, high quality, 8k, dark blue and mint green palette")
+            image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=600&nologo=true"
+        
+        # HTML Template for individual post (Updated with Hero Image)
+        post_html = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} | AI Core Logic</title>
+    
+    <!-- Open Graph for Facebook -->
+    <meta property="og:title" content="{title} | AI Core Logic" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="{image_url}" />
+    <meta property="og:description" content="Read the latest analysis on AI and Logic-based business automation." />
+    <meta property="og:url" content="https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/{filename}" />
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">{datetime.now().strftime('%B %d, %Y')}</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">{title}</h1>
+        
+        <!-- Hero Image -->
+        <img src="{image_url}" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            {content_html}
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="{original_link}" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        """
+        
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(post_html)
+            
+        print(f"✅ Blog post created: {filepath}")
+        return filename
+
+    def update_index(self, title, summary, filename, image_url=None):
+        """
+        Injects the new post into the top of index.html using the new Forest Design.
+        """
+        index_path = os.path.join(BLOG_DIR, "index.html")
+        
+        if not image_url:
+            # Generate AI Image URL for the Card (Smaller)
+            safe_prompt = urllib.parse.quote(f"minimalist abstract icon for {title}, dark background, mint green, high tech, 3d render")
+            image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=600&height=400&nologo=true"
+
+        # New Forest-Style Card HTML
+        new_entry = f"""
+        <article class="article-card">
+            <div class="card-image-placeholder" style="background-image: url('{image_url}');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/{filename}">{title}</a></h2>
+                <p class="article-snippet">{summary}...</p>
+                <div class="card-meta">
+                    <span class="date">{datetime.now().strftime('%b %d')}</span>
+                    <a href="posts/{filename}" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+        """
+        
+        try:
+            with open(index_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            
+            # Find the injection point (after <main id="news-feed">)
+            # We look for the comment or the opening tag
+            marker = '<main id="news-feed">'
+            if marker in content:
+                updated_content = content.replace(marker, marker + "\n" + new_entry)
+                
+                with open(index_path, "w", encoding="utf-8") as f:
+                    f.write(updated_content)
+                print("✅ Index.html updated with new Image Card.")
+            else:
+                print("❌ Could not find injection marker in index.html")
+                
+        except Exception as e:
+            print(f"❌ Error updating index: {e}")
+
+    def deploy_to_github(self):
+        """
+        Commits and pushes the new changes to GitHub so the link becomes live.
+        """
+        import subprocess
+        
+        print("☁️ Auto-Deploying to GitHub...")
+        try:
+            # 1. Add changes
+            subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "add", "."], check=True)
+            
+            # 2. Commit
+            try:
+                subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "commit", "-m", "Auto-publish new article"], check=True)
+            except subprocess.CalledProcessError:
+                print("⚠️ Nothing to commit (files already exist). Proceeding to push...")
+            
+            # 3. Push
+            # Note: This relies on your cached credentials.
+            subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "push"], check=True)
+            
+            print("✅ Successfully deployed to https://aicorelogic-ops.github.io/ai-core-logic/")
+            return True
+        except Exception as e:
+            print(f"❌ Deploy failed: {e}")
+            return False
+
+if __name__ == "__main__":
+    # Test Run
+    gen = BlogGenerator()
+    # New Test Article for Facebook Verification
+    title = "The Rise of Autonomous Business Agents"
+    content = """
+    <p>Imagine a world where your software doesn't just wait for your input, but proactively manages your business logic. 
+    <strong>Autonomous Agents</strong> are the next evolution of AI, capable of negotiating, scheduling, and optimizing workflows 24/7.</p>
+    <p>In this post, we explore how AI Core Logic is pioneering the use of these agents to reduce operational overhead by up to 40%.</p>
+    """
+    fname = gen.create_post(title, content, "https://example.com/agents")
+    gen.update_index(title, "Why 2026 is the year of the Autonomous Agent.", fname)
+    
+    # Deploy to live site
+    gen.deploy_to_github()
+
+
+
+==================================================
+FILE: news_bot\collector.py
+==================================================
+
+import feedparser
+from datetime import datetime, timedelta
+from .settings import RSS_FEEDS, KEYWORDS
+
+class NewsCollector:
+    def __init__(self):
+        self.feeds = RSS_FEEDS
+
+    def fetch_news(self, hours_back=72):
+        """Fetch news from the last N hours."""
+        recent_news = []
+        time_threshold = datetime.now() - timedelta(hours=hours_back)
+
+        for feed_url in self.feeds:
+            print(f"Checking {feed_url}...")
+            feed = feedparser.parse(feed_url)
+            
+            for entry in feed.entries:
+                # Check date
+                published = getattr(entry, "published_parsed", None)
+                if published:
+                    pub_date = datetime(*published[:6])
+                    if pub_date < time_threshold:
+                        continue
+                
+                # Check keywords
+                title = entry.title.lower()
+                summary = getattr(entry, "summary", "").lower()
+                
+                # Image Extraction
+                image_url = None
+                if "media_content" in entry:
+                    image_url = entry.media_content[0]["url"]
+                elif "media_thumbnail" in entry:
+                    image_url = entry.media_thumbnail[0]["url"]
+                elif "links" in entry:
+                    for link in entry.links:
+                        if link.rel == "enclosure" and "image" in link.type:
+                            image_url = link.href
+                            break
+                
+                if any(kw in title or kw in summary for kw in KEYWORDS):
+                    recent_news.append({
+                        "title": entry.title,
+                        "link": entry.link,
+                        "summary": entry.summary,
+                        "published": pub_date,
+                        "image_url": image_url
+                    })
+        
+        return recent_news
+
+if __name__ == "__main__":
+    collector = NewsCollector()
+    news = collector.fetch_news()
+    print(f"Found {len(news)} relevant articles.")
+    for n in news:
+        print(f"- {n['title']}")
+
+
+
+==================================================
+FILE: news_bot\main.py
+==================================================
+
+import time
+from .collector import NewsCollector
+from .processor import NewsProcessor
+from .publisher import FacebookPublisher
+from .blog_generator import BlogGenerator
+
+def run_bot():
+    print("🤖 Starting AI Core Logic News Bot...")
+
+    # 1. Collect
+    collector = NewsCollector()
+    # Using 72 hours window for testing to ensure we find something
+    articles = collector.fetch_news(hours_back=72)
+    print(f"📥 Found {len(articles)} potential articles.")
+
+    if not articles:
+        print("😴 No new articles found. Sleeping.")
+        return
+
+    # 2. Process & Publish
+    processor = NewsProcessor()
+    publisher = FacebookPublisher()
+    blog_gen = BlogGenerator()
+
+    for article in articles:
+        print(f"📝 Processing: {article['title']}")
+        
+        # Generates DICT: {'blog_html': ..., 'facebook_msg': ...}
+        content_package = processor.summarize(article)
+        
+        if content_package:
+            # A. Create Blog Post
+            filename = blog_gen.create_post(
+                article['title'], 
+                content_package['blog_html'], 
+                article['link'],
+                image_url=article.get('image_url')
+            )
+            
+            # B. Update Index
+            blog_gen.update_index(
+                article['title'], 
+                "New AI Analysis available.", # Simple snippet
+                filename,
+                image_url=article.get('image_url')
+            )
+            
+            # C. Prepare Facebook Link
+            # Production URL structure for GitHub Pages
+            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/{filename}" 
+            
+            fb_message = content_package['facebook_msg'].replace("[LINK]", blog_url)
+            
+            # D. Deploy to GitHub
+            is_deployed = blog_gen.deploy_to_github()
+            
+            if not is_deployed:
+                print("⚠️ GitHub deploy reported failure (might just be 'no changes'), proceeding anyway...")
+
+            # E. Post to Facebook (ALWAYS try to post, the link is likely fine)
+            print(f"🚀 Publishing to Facebook...")
+            publisher.post_content(fb_message, link=blog_url)
+            
+            # Sleep to avoid spamming
+            time.sleep(10)
+        else:
+            print("❌ Failed to process article.")
+
+if __name__ == "__main__":
+    run_bot()
+
+
+
+==================================================
+FILE: news_bot\processor.py
+==================================================
+
+import os
+import google.generativeai as genai
+import traceback
+from .settings import GOOGLE_API_KEY
+
+if not GOOGLE_API_KEY:
+    print("Warning: GOOGLE_API_KEY is not set.")
+
+# Configure Gemini
+try:
+    genai.configure(api_key=GOOGLE_API_KEY)
+    model = genai.GenerativeModel('gemini-flash-latest')
+except Exception as e:
+    print(f"Error configuring Gemini: {e}")
+    model = None
+
+class NewsProcessor:
+    def summarize(self, article):
+        """
+        Takes an article dict and returns a DICT with:
+        - 'blog_html': Full HTML analysis for the website.
+        - 'facebook_msg': Short teaser for social media.
+        """
+        if not model:
+            print("Skipping summarization: Gemini model not initialized.")
+            return None
+
+        prompt = f"""
+        You are an expert AI Analyst for 'AI Core Logic'.
+        
+        Input:
+        Title: {article['title']}
+        Summary: {article['summary']}
+        
+        Task: Create TWO outputs in a strictly formatted way.
+        
+        Output 1: A BLOG POST (HTML Format)
+        - Use <h3> for subheaders.
+        - Use <p> for paragraphs.
+        - Use <ul><li> for lists.
+        - Tone: Detailed, analytical, educational.
+        - content: 
+            - "What is it?"
+            - "Why it matters for Business/Logistics"
+            - "Our Take/Prediction"
+        
+        Output 2: A FACEBOOK POST (Plain Text)
+        - Hook: "🚀 New AI Tool..."
+        - Teaser: "We analyzed how [Tool] affects your business..."
+        - CTA: "Read the full analysis here: [LINK]" (Place holder [LINK])
+        
+        RETURN FORMAT:
+        Separate the two with a delimiter "|||||".
+        First part = HTML. Second part = Facebook Text.
+        """
+
+        try:
+            response = model.generate_content(prompt)
+            text = response.text.strip()
+            
+            # Split the response
+            if "|||||" in text:
+                parts = text.split("|||||")
+                return {
+                    "blog_html": parts[0].strip(),
+                    "facebook_msg": parts[1].strip()
+                }
+            else:
+                # Fallback if AI forgets delimiter
+                return {
+                    "blog_html": f"<p>{text}</p>",
+                    "facebook_msg": "New AI Update! Check our blog. [LINK]"
+                }
+
+        except Exception as e:
+            print(f"Error generating summary with Gemini: {e}")
+            with open("error_log.txt", "w", encoding="utf-8") as panic_log:
+                traceback.print_exc(file=panic_log)
+            return None
+
+if __name__ == "__main__":
+    # Test run
+    processor = NewsProcessor()
+    sample_article = {
+        "title": "New AI Tool Automates Invoice Processing",
+        "summary": "A new startup has released a tool that reads PDF invoices with 99% accuracy.",
+        "link": "http://example.com"
+    }
+    result = processor.summarize(sample_article)
+    print("BLOG:", result['blog_html'][:50] if result else "None")
+    print("FB:", result['facebook_msg'] if result else "None")
+
+
+
+==================================================
+FILE: news_bot\publisher.py
+==================================================
+
+import requests
+from .settings import FB_PAGE_ACCESS_TOKEN, FB_PAGE_ID
+
+class FacebookPublisher:
+    def __init__(self):
+        self.base_url = "https://graph.facebook.com/v19.0"
+        self.token = FB_PAGE_ACCESS_TOKEN
+        self.page_id = FB_PAGE_ID
+
+    def post_content(self, message, link=None):
+        """
+        Publishes a post to the Facebook Page.
+        """
+        if not self.token or not self.page_id:
+            print("Error: Missing Facebook Page Token or Page ID.")
+            return None
+
+        url = f"{self.base_url}/{self.page_id}/feed"
+        payload = {
+            "message": message,
+            "access_token": self.token
+        }
+        
+        if link:
+            payload["link"] = link
+
+        try:
+            response = requests.post(url, data=payload)
+            response.raise_for_status()
+            data = response.json()
+            print(f"✅ Successfully posted to Facebook! Post ID: {data.get('id')}")
+            return data.get('id')
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Error posting to Facebook: {e}")
+            if response is not None: # check if response exists first
+                 with open("fb_error.txt", "w", encoding="utf-8") as f:
+                     f.write(response.text)
+                 print(f"Response saved to fb_error.txt")
+            return None
+
+if __name__ == "__main__":
+    # Test run
+    publisher = FacebookPublisher()
+    publisher.post_content("Hello World! This is a test post from AI Core Logic Bot. #AI #Automation")
+
+
+
+==================================================
+FILE: news_bot\requirements.txt
+==================================================
+
+requests
+beautifulsoup4
+feedparser
+python-dotenv
+google-generativeai
+fastapi
+uvicorn
+pydantic
+
+
+
+==================================================
+FILE: news_bot\settings.py
+==================================================
+
+import os
+from dotenv import load_dotenv
+
+from pathlib import Path
+env_path = Path(__file__).parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
+# Facebook Config
+FB_PAGE_ACCESS_TOKEN = os.getenv("FB_PAGE_ACCESS_TOKEN")
+FB_PAGE_ID = os.getenv("FB_PAGE_ID")
+
+# AI Config
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+# News Sources (RSS)
+# News Sources (RSS)
+RSS_FEEDS = [
+    "https://rss.app/feeds/tbdDfZBy9mkg0nUM.xml",
+    "https://rss.app/feeds/top5xHlZ2Hs26yLJ.xml",
+]
+
+# Filtering keywords
+KEYWORDS = ["automation", "productivity", "efficiency", "small business", "AI tool", "software", "generative ai", "startup"]
+
+
+
+==================================================
+FILE: blog\index.html
+==================================================
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Core Logic | Business Intelligence</title>
+    <link rel="stylesheet" href="css/style.css?v=6">
+</head>
+
+<body>
+
+    <header>
+        <div class="nav-left">
+            <a href="index.html" class="logo-link">
+                <img src="assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+            </a>
+        </div>
+
+        <nav class="nav-center">
+            <a href="#">About Us</a>
+            <a href="#">Services</a>
+            <a href="#">Our Technology</a>
+            <a href="#">Resources</a>
+        </nav>
+
+        <div class="nav-right">
+            <a href="#" class="cta-button secondary small">Contact</a>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-content">
+            <h1>AI Core Logic <span class="hero-highlight">Blog</span></h1>
+            <div class="hero-sub">
+                <p>Honest Conversations About <br> Automation and Logic.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Bar (Visual only for now) -->
+    <div class="filter-bar">
+        <a href="#" class="active">All</a>
+        <a href="#">Automation</a>
+        <a href="#">Logistics</a>
+        <a href="#">Intelligence</a>
+        <a href="#">Tech Stack</a>
+
+        <div class="search-wrapper">
+            <input type="text" placeholder="Search blog...">
+        </div>
+    </div>
+
+    <main id="news-feed">
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://image.pollinations.ai/prompt/minimalist%20abstract%20icon%20for%20The%20Rise%20of%20Autonomous%20Business%20Agents%2C%20dark%20background%2C%20mint%20green%2C%20high%20tech%2C%203d%20render?width=600&height=400&nologo=true');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-the-rise-of-autonomous-busines.html">The Rise of Autonomous Business
+                        Agents</a></h2>
+                <p class="article-snippet">Why 2026 is the year of the Autonomous Agent....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-the-rise-of-autonomous-busines.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://www.visualcapitalist.com/wp-content/uploads/2026/01/Jobs_Exposed_to_AI_Part2_Share.webp');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-ranked--the-jobs-most-exposed-.html">Ranked: The Jobs Most Exposed to
+                        Generative AI, According to Microsoft</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-ranked--the-jobs-most-exposed-.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://techcrunch.com/wp-content/uploads/2024/12/Grand-Hyatt-San-Francisco-Hotel-Exterior.16x9.webp?resize=1200,675');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-an-ai-startup-founder-says-he-.html">An AI startup founder says he's
+                        planning a 'March for Billionaires' in protest of California's wealth tax</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-an-ai-startup-founder-says-he-.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://images.wsj.net/im-92868278/social');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-here-s-where-ai-is-tearing-thr.html">Here’s Where AI Is Tearing Through
+                        Corporate America</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-here-s-where-ai-is-tearing-thr.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://images.axios.com/xtPbubAPPXtMhrzl_VlpV0cWxNY=/0x0:1600x900/1366x768/2026/02/06/1770414772330.png');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-ai-wiped-out--400-billion-this.html">AI wiped out $400 billion this week —
+                        and it's only getting started</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-ai-wiped-out--400-billion-this.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://futurism.com/wp-content/uploads/2026/02/anthropic-agents-automation.jpg?quality=85&w=1200');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-anthropic-insiders-afraid-they.html">Anthropic Insiders Afraid They’ve
+                        Crossed a Line</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-anthropic-insiders-afraid-they.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://i.guim.co.uk/img/media/d58fab9300a082b89b73f1f824621b42d2710a29/516_36_4781_3827/master/4781.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom,left&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=7a2e7f366c487ddc1e584b7c856b7c38');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-why-has-elon-musk-merged-his-r.html">Why has Elon Musk merged his rocket
+                        company with his AI startup?</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-why-has-elon-musk-merged-his-r.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://i.dailymail.co.uk/1s/2026/02/06/21/106176397-0-image-m-119_1770412087515.jpg');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-high-paying-jobs-that-require-.html">High-paying jobs that require NO
+                        degree... and are safe from AI</a></h2>
+                <p class="article-snippet">New AI Analysis available....</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-high-paying-jobs-that-require-.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="article-card">
+            <div class="card-image-placeholder"
+                style="background-image: url('https://image.pollinations.ai/prompt/abstract%203d%20render%20of%20The%20Dawn%20of%20Autonomous%20Logistics%2C%20dark%20background%2C%20mint%20green%20light%2C%20minimalist%2C%20high%20tech?width=600&height=400&nologo=true');">
+                <span class="category-pill">AI Update</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-the-dawn-of-autonomous-logisti.html">The Dawn of Autonomous Logistics</a>
+                </h2>
+                <p class="article-snippet">How AI is reshaping modern supply chains with logic-driven systems...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-the-dawn-of-autonomous-logisti.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Manually updating existing cards to match new structure temporarily -->
+
+        <article class="article-card">
+            <div class="card-image-placeholder gradient-1">
+                <span class="category-pill">Finance</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents
+                        buy their own tech tools</a></h2>
+                <p class="article-snippet">Analysis on autonomous agent economies...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+        <article class="article-card">
+            <div class="card-image-placeholder gradient-2">
+                <span class="category-pill">Healthcare</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor
+                        issue in treating rare diseases</a></h2>
+                <p class="article-snippet">AI impact on specialized medical labor...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Repeating cards for visual fill -->
+        <article class="article-card">
+            <div class="card-image-placeholder gradient-3">
+                <span class="category-pill">Technology</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="#">The Future of Logic in Business Operations</a></h2>
+                <p class="article-snippet">Why logic-based AI systems are winning...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="#" class="read-more-btn"></a>
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <footer>
+        <div class="footer-big-text">AI.Core Logic</div>
+        <p>&copy; 2026 AI Core Logic. Integrating Intelligence. <span style="opacity:0.5; font-size: 0.8em;">(v2.0
+                Polished)</span></p>
+    </footer>
+
+</body>
+
+</html>
+
+
+==================================================
+FILE: blog\css\style.css
+==================================================
+
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Outfit:wght@200;500;800&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+:root {
+    /* Brand Colors - Midnight & Mint (Inspiration Match) */
+    --bg-deep: #0E1016;
+    --bg-card: #161922;
+    --bg-header: rgba(14, 16, 22, 0.85);
+
+    /* Accents */
+    --accent-mint: #98E2C6;
+    --accent-glow: rgba(152, 226, 198, 0.25);
+    --accent-cyan: #00F0FF;
+
+    /* Text */
+    --text-primary: #F3F4F6;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+
+    /* Typography - "Tech Native" Selection */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Subtle Noise Texture Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Header Re-styling */
+header {
+    background: var(--bg-header);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Very subtle separator */
+    padding: 1.5rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.logo-link:hover {
+    opacity: 0.8;
+}
+
+.logo-img {
+    height: 48px;
+    /* Slightly smaller for cleaner look */
+    width: auto;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+/* Card Styling - Matching the 'Forest' Look */
+.article-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    /* Subtle border */
+    border-radius: 24px;
+    padding: 1.5rem;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    overflow: hidden;
+
+    /* Animation Entry */
+    opacity: 0;
+    animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Staggered Delay for first 10 items */
+.article-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.article-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.article-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.article-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.article-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.article-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--accent-glow);
+    border-color: rgba(152, 226, 198, 0.2);
+}
+
+.article-card:hover .card-image-placeholder {
+    transform: scale(1.05);
+}
+
+/* The "Image" Placeholder */
+.card-image-placeholder {
+    height: 240px;
+    width: 100%;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.read-more::after {
+    content: '↗';
+    font-size: 1.2rem;
+}
+
+.read-more:hover {
+    background: var(--accent-mint);
+    color: var(--bg-deep);
+    transform: rotate(45deg);
+}
+
+/* Featured Article Style (First child) - Optional
+.article-card:first-child {
+    grid-column: 1 / -1;
+    background: linear-gradient(to right, rgba(30, 41, 59, 0.9), rgba(11, 17, 32, 0.9));
+} 
+*/
+
+.article-date {
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.article-card h2 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin: 0.5rem 0 1rem 0;
+}
+
+.article-card h2 a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.article-card h2 a:hover {
+    color: var(--accent-cyan);
+}
+
+.article-snippet {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    width: fit-content;
+}
+
+.read-more:hover {
+    background: rgba(0, 240, 255, 0.1);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+footer {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 4rem;
+}
+
+/* Hero Section - Typographical Focus */
+#hero {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding-top: 2rem;
+}
+
+#hero::before {
+    display: none;
+    /* Remove previous glow blob */
+}
+
+.hero-content h1 {
+    font-family: var(--font-heading);
+    font-size: 5rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    background: none;
+    -webkit-text-fill-color: initial;
+    text-shadow: none;
+}
+
+/* Specific coloring for "AI" in the title to be Mint */
+.hero-highlight {
+    color: var(--accent-mint);
+}
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    letter-spacing: normal;
+}
+
+/* Pill Buttons */
+.cta-button {
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    /* Full pill shape */
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+    background: var(--text-primary);
+    color: var(--bg-deep);
+    box-shadow: none;
+}
+
+.cta-button.primary:hover {
+    background: var(--accent-mint);
+    transform: translateY(-2px);
+}
+
+.cta-button.secondary {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    background: transparent;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* --- Inspiration Match: Header Layout --- */
+.nav-center {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-center a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-center a:hover {
+    color: var(--text-primary);
+}
+
+.cta-button.small {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    background: #FFFFFF;
+    color: #000;
+    border-radius: 50px;
+}
+
+.cta-button.small:hover {
+    background: var(--accent-mint);
+}
+
+/* --- Inspiration Match: Filter Bar --- */
+.filter-bar {
+    max-width: 1400px;
+    margin: 0 auto 3rem auto;
+    padding: 0 1rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.filter-bar a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: var(--font-body);
+}
+
+.filter-bar a.active,
+.filter-bar a:hover {
+    color: var(--text-primary);
+}
+
+.search-wrapper {
+    margin-left: auto;
+}
+
+.search-wrapper input {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: white;
+}
+
+/* --- Inspiration Match: Card Grid --- */
+main#news-feed {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem 4rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* Image styles moved to article-card block for easier animation management */
+
+.gradient-1 {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+
+.gradient-2 {
+    background: linear-gradient(135deg, #334155, #1e293b);
+}
+
+.gradient-3 {
+    background: linear-gradient(135deg, #475569, #334155);
+}
+
+.category-pill {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: white;
+    text-transform: uppercase;
+}
+
+.card-content {
+    padding: 0 0.5rem;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+}
+
+.date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.read-more-btn {
+    width: 32px;
+    height: 32px;
+    background: #1C1F2E;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.read-more-btn::after {
+    content: '↗';
+    color: white;
+    font-size: 1rem;
+}
+
+.read-more-btn:hover {
+    background: var(--accent-mint);
+}
+
+.read-more-btn:hover::after {
+    color: black;
+}
+
+/* --- Footer Big Text --- */
+.footer-big-text {
+    font-family: var(--font-heading);
+    font-size: 12vw;
+    /* Massive text */
+    font-weight: 700;
+    color: #FFFFFF;
+    opacity: 0.9;
+    line-height: 1;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: -5px;
+}
+
+@media (max-width: 768px) {
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .cta-container {
+        flex-direction: column;
+    }
+}
+
+
+==================================================
+FILE: blog\posts\2026-02-08-ai-wiped-out--400-billion-this.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI wiped out $400 billion this week — and it's only getting started | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">AI wiped out $400 billion this week — and it's only getting started</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://images.axios.com/xtPbubAPPXtMhrzl_VlpV0cWxNY=/0x0:1600x900/1366x768/2026/02/06/1770414772330.png" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            **
+```html
+<h1>The Software Valuation Shockwave: Why AI Just Wiped Out $400 Billion</h1>
+
+<p>The headline speaks volumes: $400 billion in valuation vaporized, marking one of the swiftest market corrections in recent tech history. This dramatic shift is not a typical cyclical downturn; it is a fundamental re-rating driven by the pervasive, deflationary power of artificial intelligence. AI is no longer just optimizing—it is outright replacing entire tiers of legacy software and operational processes, forcing a rapid reckoning for companies built on decades-old monetization structures.</p>
+
+<h3>What is it?</h3>
+<p>The "wipeout" represents a widespread loss of market capitalization, primarily affecting established Software-as-a-Service (SaaS) providers whose core products face direct threat or devaluation from readily available AI tools and Large Language Models (LLMs). The market is recognizing that the functional ‘moat’ that protected many high-margin software companies—cost of development, proprietary data, and complex APIs—is rapidly shrinking.</p>
+<ul>
+    <li><strong>Efficiency Overhaul:</strong> Tasks that once required specialized software licenses (e.g., specific marketing copy generation, detailed CRM reporting, basic code review) are now automated or integrated into cheaper, general-purpose AI platforms.</li>
+    <li><strong>Deflationary Pricing Pressure:</strong> As AI reduces the marginal cost of producing software functionalities, the perceived value—and therefore the price—of proprietary solutions falls drastically.</li>
+    <li><strong>Investor Anxiety:</strong> Valuations based on high employee headcount and long implementation cycles are deemed unsustainable, as AI integration promises significant reduction in both.</li>
+</ul>
+
+<h3>Why it matters for Business/Logistics</h3>
+<p>For executive teams and operational heads, this correction signals a mandated shift from gradual adoption to radical integration. Companies that treat AI as a marginal efficiency tool rather than a core operational replacement will face crippling cost disadvantages.</p>
+<p><strong>Business Impact:</strong></p>
+<ul>
+    <li><strong>Staffing Models:</strong> The demand for mid-level, specialized analysts or coders whose primary function is repetitive data manipulation is declining. Budget allocation must pivot towards AI engineers and prompt specialists.</li>
+    <li><strong>Procurement Strategy:</strong> Companies must rigorously audit their existing software stack. If a $50,000 annual license can be functionally replaced by a $500 API subscription and a custom prompt, the legacy contract becomes indefensible.</li>
+    <li><strong>Market Consolidation:</strong> We expect rapid mergers and acquisitions, where AI-native startups acquire legacy users, or major tech giants integrate AI into every facet of their enterprise offering, squeezing out smaller, undifferentiated players.</li>
+</ul>
+<p><strong>Logistics Impact:</strong></p>
+<p>Logistics and supply chain management are particularly vulnerable to AI-driven devaluation. Proprietary planning and optimization software, which often carries hefty licensing fees, is being undercut by LLMs capable of real-time predictive analytics and autonomous adjustment based on globally sourced data streams.</p>
+
+<h3>Our Take/Prediction</h3>
+<p>This $400 billion correction is merely the initial pruning of an overvalued sector. We predict the market will increasingly bifurcate into two distinct categories:</p>
+<ol>
+    <li><strong>AI Infrastructure & Foundation Models:</strong> Companies providing the foundational hardware, core models, and data infrastructure necessary to run AI at scale (these valuations will remain robust or increase).</li>
+    <li><strong>AI-Native Utility Providers:</strong> Companies that are deeply integrated with AI, offering specialized services based on output and utility, rather than proprietary access or complicated licensing.</li>
+</ol>
+<p>For 'AI Core Logic,' the message is clear: Invest in core competence and operational excellence driven by AI, not simply in high-cost, defensive software licenses. The future of software monetization is usage-based and outcome-driven; anything less is marked for devaluation.</p>
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://www.axios.com/2026/02/07/ai-software-anthropic-losses-stock-market" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-an-ai-startup-founder-says-he-.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An AI startup founder says he's planning a 'March for Billionaires' in protest of California's wealth tax | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">An AI startup founder says he's planning a 'March for Billionaires' in protest of California's wealth tax</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://techcrunch.com/wp-content/uploads/2024/12/Grand-Hyatt-San-Francisco-Hotel-Exterior.16x9.webp?resize=1200,675" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            <div style="font-family: Arial, sans-serif;">
+
+    <h2>Wealth Tax Warpath: An AI Founder's Political Calculus and the Business Implications</h2>
+    <p>The convergence of technology leadership, personal finance, and political activism has never been more pronounced. A recent announcement by an AI startup founder planning a highly publicized protest against California’s wealth tax provides a critical case study for how executive political positioning impacts the broader tech ecosystem.</p>
+
+    <h3>What is it?</h3>
+    <p>The "March for Billionaires" is a planned, high-profile protest event organized by a prominent AI startup founder. Its target is the proposed California wealth tax legislation, which aims to tax the global net worth of high-earning state residents, regardless of where those assets are held.</p>
+    <p>Key characteristics of the event and its context:</p>
+    <ul>
+        <li><strong>Political Theater:</strong> The march utilizes a provocative and potentially satirical name to draw maximum media attention to the tax issue.</li>
+        <li><strong>Targeted Policy:</strong> The California wealth tax often includes low entry thresholds, capturing many successful founders and highly compensated executives, not just established billionaires.</li>
+        <li><strong>Source of Conflict:</strong> It represents a direct confrontation between the state’s desire to fund public services via progressive taxation and the founders’ arguments that such taxes stifle innovation and encourage capital flight.</li>
+    </ul>
+
+    <h3>Why it matters for Business/Logistics</h3>
+    <p>For an AI company, financial stability and access to talent are paramount. A wealth tax, or the political fight against it, creates immediate and long-term logistical friction, especially in the capital-intensive AI sector:</p>
+    <p><strong>1. Executive Talent Acquisition and Retention:</strong></p>
+    <ul>
+        <li>High-value executives and engineers often factor in tax implications when deciding where to live and work. Tax policies perceived as punitive can severely handicap California-based AI firms competing for global talent.</li>
+        <li>The controversy adds a new layer of complexity to compensation packages, potentially requiring higher base salaries or more creative equity structures to offset perceived tax risks.</li>
+    </ul>
+    <p><strong>2. Capital Liquidity and Investment:</strong></p>
+    <ul>
+        <li>Wealth taxes, if implemented, directly impact the liquid capital available to founders—capital often recycled into new ventures, angel investing, or bridging early-stage funding gaps for their own companies.</li>
+        <li>Political instability surrounding tax policy adds a risk premium to VC valuations. Venture capital funds may become warier of funding companies whose founders or primary operations are based in high-tax jurisdictions perceived as hostile to wealth generation.</li>
+    </ul>
+    <p><strong>3. Corporate Relocation Pressure:</strong></p>
+    <p>The protest itself serves as an advertisement for corporate exodus. The march signals to policymakers that founders are politically mobilized and serious about relocating headquarters and key personnel to states like Texas, Florida, or jurisdictions outside the U.S. that offer more favorable tax environments.</p>
+
+    <h3>Our Take/Prediction</h3>
+    <p>While the "March for Billionaires" may elicit public backlash for appearing tone-deaf to broader economic inequality issues, its primary function is not persuasion but leverage. We predict this event will successfully force the wealth tax debate out of backroom lobbying and onto the front pages, raising the political cost for legislators supporting the measure.</p>
+    <p><strong>Prediction:</strong> This is a bellwether moment signaling the permanent politicization of the tech elite. AI Core Logic advises startups to develop clear, proactive strategies regarding state-level tax policy risks, including formal relocation contingency plans. The financial and reputational stability of a modern AI firm now depends heavily on navigating these public policy battles, regardless of whether the founder agrees with the protestor’s methods.</p>
+
+</div>
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://techcrunch.com/2026/02/06/an-ai-startup-founder-says-hes-planning-a-march-for-billionaires-in-protest-of-californias-wealth-tax/" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-anthropic-insiders-afraid-they.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthropic Insiders Afraid They’ve Crossed a Line | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">Anthropic Insiders Afraid They’ve Crossed a Line</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://futurism.com/wp-content/uploads/2026/02/anthropic-agents-automation.jpg?quality=85&w=1200" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            <h2>The Existential Backlash: Anthropic’s Internal Crisis and the Future of Automation</h2>
+
+<h3>What is it?</h3>
+<p>Anthropic, a leading AI research lab renowned for its focus on safety and the development of Constitutional AI, is reportedly experiencing significant internal moral distress. This anxiety stems not from development failures, but from the successful progression of their models—specifically, the realization that the high capabilities of their frontier systems are rapidly approaching levels of autonomy that could render broad swaths of human labor redundant or, in the extreme view, make humans obsolete.</p>
+<p>This situation represents a profound paradox: the company built on the mandate of safety and alignment is now facing an internal crisis of confidence regarding the ultimate utility and safety of the advanced intelligence they are creating. The fear is rooted in the accelerating timeline toward General AI (AGI) capabilities, forcing employees to grapple with an acute sense of responsibility for potential societal upheaval.</p>
+
+<h3>Why it matters for Business/Logistics</h3>
+<p>While often categorized as an academic or philosophical debate, internal existential anxiety at a major frontier AI lab translates directly into tangible commercial and logistical risk for the broader economy:</p>
+<ul>
+    <li>**Talent Volatility and Development Friction:** Highly skilled AI researchers and engineers may experience increased burnout or choose to leave the field due to ethical fatigue. This attrition directly slows the development and refinement of critical business models, impacting the speed at which powerful new tools become commercially available.</li>
+    <li>**Regulatory Reinforcement:** Internal fears expressed by the creators themselves serve as powerful political ammunition for regulators seeking tighter controls. This almost guarantees increased scrutiny, potential moratoriums, and complex compliance hurdles for businesses that plan to integrate frontier AI models deeply into their operational logistics.</li>
+    <li>**Defensive Product Strategy:** To mitigate internal and external ethical pressure, Anthropic and its competitors may adopt deliberately cautious release roadmaps. Capabilities that are deemed too disruptive (even if technically ready) may be heavily gated or restricted, forcing enterprises relying on maximum automation speed to adjust their long-term strategic forecasts.</li>
+    <li>**Supply Chain Risk Modeling:** Companies need to begin modeling the risk associated with ‘ethical pauses’ in AI development. If a critical AI provider decides to halt development for six months for alignment checks, it could derail massive enterprise automation projects relying on predictable capability scaling.</li>
+</ul>
+
+<h3>Our Take/Prediction</h3>
+<p>We predict that this ethical reckoning will solidify into a core strategic differentiator within the AI market. The internal struggle at Anthropic will force a critical bifurcation: those who prioritize speed and deployment (moving fast and breaking things, or rather, breaking the labor market), and those who prioritize safety and stability, even at the cost of commercial velocity.</p>
+<p>For AI Core Logic clients, the key takeaway is that the 'existential risk' is now a quantifiable business risk. Companies must budget for regulatory friction and expect slower, more deliberate rollouts of truly transformative AGI models. Furthermore, safety and alignment will transition from merely ethical talking points into premium, marketable features. Enterprises must choose model partners based not just on performance benchmarks, but on the robustness of their internal alignment protocols, understanding that safety equals stability in the long term, even if it delays peak capability.</p>
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://futurism.com/artificial-intelligence/anthropic-agents-automation" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-here-s-where-ai-is-tearing-thr.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Here’s Where AI Is Tearing Through Corporate America | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">Here’s Where AI Is Tearing Through Corporate America</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://images.wsj.net/im-92868278/social" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            <h2>The Great Corporate Software Rethink: AI’s Enterprise Invasion</h2>
+<p>The speed and capability of Generative AI models have shifted the focus from simple optimization to fundamental replacement within corporate IT infrastructure. The underlying software handling everything from routine customer service to complex logistical planning is now deemed 'AI-vulnerable,' prompting massive shifts in investment and market valuation.</p>
+
+<h3>What is it?</h3>
+<p>This disruption is not merely about integrating chatbots into existing Customer Relationship Management (CRM) systems. It represents a deeper systemic challenge to decades of established enterprise resource planning (ERP) and specialized operational software. AI models are demonstrating the capacity to:</p>
+<ul>
+    <li>Perform complex data synthesis and generate actionable insights without human-defined queries.</li>
+    <li>Automate core logic workflows (e.g., inventory reallocation, pricing adjustments, predictive maintenance scheduling) that previously required proprietary, rigid codebases.</li>
+    <li>Interface seamlessly with disparate systems, overcoming the integration hell that plagues monolithic legacy software architectures.</li>
+</ul>
+<p>In essence, AI is beginning to function as a dynamic middleware layer that intelligently deprecates the need for expensive, inflexible licensed software licenses and associated human maintenance teams.</p>
+
+<h3>Why it matters for Business/Logistics</h3>
+<p>For large organizations, especially those dealing with complex supply chains and high data velocity, this AI shift offers unprecedented opportunities for cost reduction and competitive advantage, but also poses significant risks if ignored.</p>
+<ul>
+    <li><strong>Decoupling Efficiency from Staffing:</strong> AI agents can manage entire micro-processes—like reviewing supplier contracts or optimizing warehouse picking routes—at a fraction of the time and cost compared to traditional business process automation (BPA) tools.</li>
+    <li><strong>Real-Time Dynamic Logistics:</strong> In logistics, AI replaces static planning models. Instead of optimizing based on last month's averages, AI can dynamically adjust shipping routes, buffer stock, and staffing levels based on real-time weather, geopolitical risks, and instantaneous demand signals.</li>
+    <li><strong>Capital Allocation Shift:</strong> Companies are moving capital away from maintaining legacy systems (often 70-80% of the IT budget) and redirecting it toward modular, cloud-native AI services, fundamentally changing the vendor landscape.</li>
+    <li><strong>Vulnerability of "Middle Software":</strong> Specialized industry tools—from insurance claims processors to legal document review platforms—are facing the most immediate threat of commoditization as foundational models learn to handle their core functions.</li>
+</ul>
+
+<h3>Our Take/Prediction</h3>
+<p>We predict a bifurcated market response over the next 36 months. Large, entrenched software providers will attempt to rebrand their existing tools with AI components, effectively trying to bolt new intelligence onto old architecture. The winners, however, will be those organizations—and new vendors—that embrace "AI-Native Architecture."</p>
+<p>This architecture is characterized by:</p>
+<ol>
+    <li>Microservices centered around specific AI agents rather than monolithic code structures.</li>
+    <li>A focus on data quality and accessibility, treating data governance as the primary competitive asset.</li>
+    <li>A rapid shift in employee skills, prioritizing prompt engineering and AI model oversight over traditional software development and data entry.</li>
+</ol>
+<p>Companies that delay auditing their current software stack for AI vulnerability risk significant technical debt and loss of market position as competitors rapidly deploy intelligent, self-optimizing business processes.</p>
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://www.wsj.com/tech/ai/ai-software-business-stock-market-4b17b432" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-high-paying-jobs-that-require-.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-paying jobs that require NO degree... and are safe from AI | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">High-paying jobs that require NO degree... and are safe from AI</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://i.dailymail.co.uk/1s/2026/02/06/21/106176397-0-image-m-119_1770412087515.jpg" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            <h3>What is it?</h3>
+<p>The contemporary narrative surrounding Artificial Intelligence often focuses on large language models (LLMs) and advanced robotic process automation (RPA). This technology is rapidly evolving beyond the realm of science fiction—where AI was depicted primarily as physical threats—into a subtle, yet profound, force targeting white-collar efficiency. The core function of modern applied AI is to standardize, automate, and process high volumes of cognitive, repetitive tasks. This includes data reconciliation, initial customer service triage via chatbots, basic legal discovery, and standard financial reporting.</p>
+<p>The key finding in recent labor analysis is that vulnerability is inversely correlated with environmental predictability. Jobs involving standardized digital inputs are highly exposed, regardless of the required education level. Conversely, roles requiring complex physical dexterity, unpredictable environmental handling, and deep interpersonal negotiation are proving highly resilient.</p>
+
+<h3>Why it matters for Business/Logistics</h3>
+<p>For strategic business planning, understanding AI resilience is crucial for talent acquisition and risk mitigation. Businesses must evaluate their staffing models based on task necessity, not just educational credentials. Roles that offer the highest resistance to current automation technologies generally fall into specialized areas:</p>
+<ul>
+    <li><strong>Tactile Trade Skills:</strong> Plumbing, high-voltage electrical work, specialized HVAC repair, and heavy equipment maintenance. These tasks require non-standardized problem-solving in unique physical spaces, a challenge current robotics struggle to overcome efficiently or affordably.</li>
+    <li><strong>Unscripted Interpersonal Roles:</strong> Specialized sales, high-stakes negotiation, complex therapy, and customized human resource management. These require high levels of emotional intelligence and adaptability that LLMs can mimic but cannot authentically replicate for critical decision-making.</li>
+    <li><strong>Logistics and Supply Chain Execution:</strong> While backend planning is heavily automated, the last-mile delivery, warehouse optimization that requires dynamic stacking/retrieval in non-ideal conditions, and critical infrastructure maintenance (like rail or pipeline inspection) still demands highly specialized, hands-on human intervention.</li>
+</ul>
+<p>Focusing talent investment in these resilient areas provides a structural competitive advantage, ensuring essential operations continue even as administrative overhead is streamlined by AI.</p>
+
+<h3>Our Take/Prediction</h3>
+<p>AI Core Logic predicts a continued hollowing out of the middle-tier cognitive workforce—the routine administrative assistant, basic paralegal, and entry-level financial analyst. The future labor market will demand excellence at two extremes: AI Architects, Engineers, and Strategists (the operators of the machine), and highly specialized, hands-on skilled tradespeople (the maintainers of the physical world).</p>
+<p>Education credentials are rapidly decoupling from job safety. We advise businesses to prioritize skill mastery over formal degree requirements for roles demanding complex physical or interpersonal interaction. The highest-value, high-paying jobs of the next decade may increasingly be those that AI cannot yet touch—tasks that require mud on the boots and unpredictable human complexity.</p>
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://www.dailymail.co.uk/yourmoney/article-15524959/ai-resistant-jobs-healthcare-energy-trades.html" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-how-ai-is-helping-solve-the-la.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How AI is helping solve the labor issue in treating rare diseases | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="logo"><a href="../index.html" style="text-decoration:none; color:inherit;">AI Core Logic</a></div>
+    <div class="subtitle">Intelligence for Business</div>
+</header>
+
+<main>
+    <article class="article-card">
+        <div class="article-date">February 08, 2026</div>
+        <h1>How AI is helping solve the labor issue in treating rare diseases</h1>
+        <div class="article-body">
+            ```html
+<h2>AI, Automation, and the Biotech Labor Gap</h2>
+
+<h3>What is it?</h3>
+<p>The convergence of advanced artificial intelligence and specialized biotechnology is being leveraged to address critical labor shortages across the drug discovery and clinical development pipeline, particularly concerning rare diseases. Traditional pharmaceutical R&D relies heavily on specialized personnel—biostatisticians, biochemists, and clinical trial coordinators—a pool that is chronically insufficient when dealing with low-incidence conditions.</p>
+<p>As highlighted by startups at Web Summit Qatar, AI intervention focuses on three key areas:</p>
+<ul>
+    <li><b>Automation of Discovery:</b> Using machine learning (ML) models to analyze massive genomic and proteomic datasets, rapidly identifying potential drug candidates and pathways that would take human researchers years to screen.</li>
+    <li><b>Data Synthesis and Logistics:</b> AI tools manage and harmonize complex, decentralized patient data typical of rare diseases, streamlining the logistical bottlenecks associated with trial recruitment and monitoring.</li>
+    <li><b>Gene Editing Optimization:</b> Utilizing specialized algorithms to refine CRISPR and other gene editing techniques, ensuring higher precision and reducing the need for intensive, manual laboratory validation.</li>
+</ul>
+
+<h3>Why it matters for Business/Logistics</h3>
+<p>For organizations operating in the biotech space—from large Pharma to Contract Research Organizations (CROs)—AI is transitioning from a competitive edge to a core operational necessity. The primary value propositions are related to time, cost, and risk mitigation.</p>
+<ul>
+    <li><b>Accelerated Timelines:</b> AI drastically reduces the research phase bottleneck. A process that requires hundreds of thousands of hours of manual synthesis and analysis can be completed by optimized algorithms in days or weeks, translating directly into reduced R&D expenditure.</li>
+    <li><b>Scalability in Niche Markets:</b> Rare disease treatment often demands personalized medicine approaches, which are notoriously difficult to scale due to the limited patient pool and the complexity of individual cases. AI provides the computational infrastructure necessary to manage individualized therapeutic logistics efficiently.</li>
+    <li><b>Labor Pool De-risking:</b> By automating highly repetitive or data-intensive roles, companies can reallocate scarce high-skilled human capital (such as PhD-level scientists) to focus exclusively on hypothesis generation and strategic oversight, rather than data scrubbing or manual lab work. This insulates businesses from the volatility and expense of the specialized scientific labor market.</li>
+</ul>
+
+<h3>Our Take/Prediction</h3>
+<p>We predict a significant acceleration in strategic acquisitions within the next 18-24 months, with major pharmaceutical firms and established CROs actively purchasing AI-driven biotech platforms specifically designed for rare disease logistics and drug discovery. The competitive advantage will shift away from who has the biggest internal lab, to who has the most sophisticated computational power and data infrastructure.</p>
+<p>However, the industry must also prepare for new regulatory challenges. The deployment of autonomous AI in gene editing and clinical diagnosis raises complex questions regarding accountability, validation, and data ethics. Companies prioritizing explainable AI (XAI) and rigorous audit trails for their algorithms will gain a decisive regulatory edge as global health authorities adapt to these rapidly evolving methods.</p>
+        </div>
+        <hr style="border-color: #233554; margin: 2rem 0;">
+        <p><em>Source: <a href="https://techcrunch.com/2026/02/06/how-ai-is-helping-with-the-labor-issue-in-treating-rare-diseases/" target="_blank" style="color: var(--brand-blue);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="read-more">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-ranked--the-jobs-most-exposed-.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranked: The Jobs Most Exposed to Generative AI, According to Microsoft | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">Ranked: The Jobs Most Exposed to Generative AI, According to Microsoft</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://www.visualcapitalist.com/wp-content/uploads/2026/01/Jobs_Exposed_to_AI_Part2_Share.webp" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            ```html
+<h3>Ranked: Understanding Generative AI Exposure in the Workforce</h3>
+
+<h3>What is it?</h3>
+<p>The recent analysis by Microsoft provides a critical framework for understanding the immediate impact of Generative AI (GenAI) on various professions. Unlike previous studies that focused solely on theoretical automation potential, this ranking centers on two practical metrics: the frequency with which AI is currently used for specific job tasks, and the measured success rate of the AI in completing those tasks effectively.</p>
+<p>This approach reveals immediate exposure, focusing heavily on roles that rely on structured communication, content synthesis, data summarization, and initial drafting. The jobs highest on this exposure list are typically found in the white-collar sector, encompassing administrative support, copywriting, legal research assistance, and certain data analyst functions.</p>
+
+<h3>Why it matters for Business/Logistics</h3>
+<p>High GenAI exposure is not synonymous with complete job replacement, but it signals the immediate necessity for operational integration and process redesign. For businesses and logistics operations, leveraging GenAI in these exposed areas offers substantial, near-term efficiencies:</p>
+<ul>
+    <li><strong>Efficiency Gains in Administrative Overhead:</strong> Tasks like generating standard operating procedure (SOP) drafts, summarizing lengthy reports, or drafting external communications can be offloaded to GenAI, freeing up specialized staff for higher-value strategic work.</li>
+    <li><strong>Data Synthesis and Reporting:</strong> In logistics, where vast amounts of tracking, inventory, and supply chain data are generated, GenAI can rapidly synthesize complex data points into actionable reports, dramatically accelerating decision-making cycles.</li>
+    <li><strong>Reskilling Imperative:</strong> Businesses must shift from viewing these roles as task executors to 'AI supervisors' or 'editors.' The most exposed jobs require individuals to master prompt engineering and output validation to ensure accuracy and contextual relevance, transforming the definition of productivity.</li>
+    <li><strong>Competitive Advantage:</strong> Early adopters who successfully integrate GenAI into their most exposed functions (e.g., marketing content generation or compliance documentation) will see a faster ROI and a notable competitive advantage through reduced time-to-market and lower labor costs for repetitive functions.</li>
+</ul>
+
+<h3>Our Take/Prediction</h3>
+<p>We predict a rapid and necessary evolution in the job market concerning highly exposed roles. The shift will primarily be augmentation-focused over the next 18–24 months, fundamentally changing job descriptions rather than eliminating entire departments. Productivity in white-collar sectors will be measured not by the quantity of output generated by the human, but by the quality and speed of output managed and refined by the human utilizing AI.</p>
+<p>Furthermore, businesses should proactively establish internal training programs focusing specifically on GenAI proficiency. Failure to adopt AI tools in the areas Microsoft identifies as highly exposed will result in significant organizational drag, leading to inefficiency compared to competitors who embrace this technological transformation.</p>
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://www.visualcapitalist.com/ranked-the-jobs-most-exposed-to-generative-ai-according-to-microsoft/" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-sapiom-raises--15m-to-help-ai-.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapiom raises $15M to help AI agents buy their own tech tools | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="logo"><a href="../index.html" style="text-decoration:none; color:inherit;">AI Core Logic</a></div>
+    <div class="subtitle">Intelligence for Business</div>
+</header>
+
+<main>
+    <article class="article-card">
+        <div class="article-date">February 08, 2026</div>
+        <h1>Sapiom raises $15M to help AI agents buy their own tech tools</h1>
+        <div class="article-body">
+            <article>
+    <h2>Sapiom: The Financial Plumbing for Autonomous AI Agents</h2>
+    <h3>What is it?</h3>
+    <p>Sapiom, recently securing $15 million in funding with backing from Accel, is developing the crucial financial middleware necessary for the next generation of autonomous AI systems. This solution is specifically designed to solve a significant operational bottleneck: allowing AI agents to purchase resources, software, and services instantly and autonomously.</p>
+    <p>Essentially, Sapiom is building the 'Agent Commerce' layer, providing the necessary infrastructure for algorithmic entities to engage in economic transactions. This infrastructure provides:</p>
+    <ul>
+        <li>Secure authentication mechanisms for establishing agent identities and permissions.</li>
+        <li>A robust layer for processing high-volume, low-value micro-payments required for API access or specialized data sets.</li>
+        <li>Financial traceability and accountability for transactions conducted exclusively by automated entities.</li>
+    </ul>
+
+    <h3>Why it matters for Business/Logistics</h3>
+    <p>Current enterprise AI solutions are often bottlenecked by financial inertia, requiring human oversight or pre-approved expenditure protocols for accessing external tools. Sapiom’s financial layer fundamentally shifts this paradigm, enabling true agent autonomy.</p>
+    <p>For logistics and core business operations, the implications for efficiency and scalability are profound:</p>
+    <ul>
+        <li><strong>Dynamic Resource Allocation:</strong> Agents can instantly procure necessary resources (e.g., higher-resolution satellite data feeds or specific cloud compute bursts) without waiting for human approval, drastically improving system response times and operational resilience.</li>
+        <li><strong>Optimized Cost Control:</strong> Businesses can assign dedicated, hard-coded budgets to specific agent fleets. The system natively supports a highly granular 'pay-as-you-go' model for agents, ensuring transparency and minimizing wasteful expenditure on underutilized software licenses.</li>
+        <li><strong>Scalability:</strong> It removes the administrative burden of manually provisioning and managing credit accounts for potentially thousands of specialized agents operating across diverse tasks and external vendors.</li>
+    </ul>
+
+    <h3>Our Take/Prediction</h3>
+    <p>The successful funding of Sapiom is a strong validation signal for the burgeoning Agent Economy. We predict that financial infrastructure is the foundational layer required for widespread, high-value deployment of AI agents in enterprise settings. Without seamless, secure payment mechanisms, agent autonomy remains a theoretical concept rather than an operational reality.</p>
+    <p>The market will rapidly pivot from focusing solely on agent capability (what agents can do) to focusing on agent infrastructure (how agents operate securely and financially). Look for subsequent development in specialized areas such as AI-native compliance tools, enhanced budgeting dashboards, and granular agent identity verification systems, all built upon this new financial core.</p>
+</article>
+        </div>
+        <hr style="border-color: #233554; margin: 2rem 0;">
+        <p><em>Source: <a href="https://techcrunch.com/2026/02/05/sapiom-raises-15m-to-help-ai-agents-buy-their-own-tech-tools/" target="_blank" style="color: var(--brand-blue);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="read-more">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-the-dawn-of-autonomous-logisti.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dawn of Autonomous Logistics | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">The Dawn of Autonomous Logistics</h1>
+        
+        <!-- Generated Hero Image -->
+        <img src="https://image.pollinations.ai/prompt/futuristic%20abstract%20art%20representing%20The%20Dawn%20of%20Autonomous%20Logistics%2C%20cyberpunk%2C%20neon%2C%20logic%2C%20data%2C%20high%20quality%2C%208k?width=1200&height=600&nologo=true" alt="AI Illustration" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            
+    <p>Artificial Intelligence is no longer just a buzzword; it is the backbone of modern supply chains. 
+    From predictive analytics to autonomous delivery drones, logic-driven systems are reshaping how we move goods.</p>
+    <p>In this test of our new <strong>Visual Engine</strong>, we are demonstrating how AI can automatically 
+    visualize the context of an article and generate a relevant header image without human intervention.</p>
+    
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://example.com" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-the-rise-of-autonomous-busines.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rise of Autonomous Business Agents | AI Core Logic</title>
+    
+    <!-- Open Graph for Facebook -->
+    <meta property="og:title" content="The Rise of Autonomous Business Agents | AI Core Logic" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://image.pollinations.ai/prompt/editorial%20illustration%20for%20news%20article%3A%20The%20Rise%20of%20Autonomous%20Business%20Agents.%20cyberpunk%20style%2C%20neon%2C%20data%20visualization%2C%20minimalist%2C%203d%20render%2C%20high%20quality%2C%208k%2C%20dark%20blue%20and%20mint%20green%20palette?width=1200&height=600&nologo=true" />
+    <meta property="og:description" content="Read the latest analysis on AI and Logic-based business automation." />
+    <meta property="og:url" content="https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/2026-02-08-the-rise-of-autonomous-busines.html" />
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">The Rise of Autonomous Business Agents</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://image.pollinations.ai/prompt/editorial%20illustration%20for%20news%20article%3A%20The%20Rise%20of%20Autonomous%20Business%20Agents.%20cyberpunk%20style%2C%20neon%2C%20data%20visualization%2C%20minimalist%2C%203d%20render%2C%20high%20quality%2C%208k%2C%20dark%20blue%20and%20mint%20green%20palette?width=1200&height=600&nologo=true" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            
+    <p>Imagine a world where your software doesn't just wait for your input, but proactively manages your business logic. 
+    <strong>Autonomous Agents</strong> are the next evolution of AI, capable of negotiating, scheduling, and optimizing workflows 24/7.</p>
+    <p>In this post, we explore how AI Core Logic is pioneering the use of these agents to reduce operational overhead by up to 40%.</p>
+    
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://example.com/agents" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
+
+==================================================
+FILE: blog\posts\2026-02-08-why-has-elon-musk-merged-his-r.html
+==================================================
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why has Elon Musk merged his rocket company with his AI startup? | AI Core Logic</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <div class="nav-left">
+        <a href="../index.html" class="logo-link">
+            <img src="../assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
+        </a>
+    </div>
+    <!-- Simple Nav for Article Page -->
+    <nav class="nav-center">
+        <a href="../index.html">Home</a>
+    </nav>
+</header>
+
+<main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <article class="article-details">
+        <div class="article-date" style="color: var(--accent-mint);">February 08, 2026</div>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">Why has Elon Musk merged his rocket company with his AI startup?</h1>
+        
+        <!-- Hero Image -->
+        <img src="https://i.guim.co.uk/img/media/d58fab9300a082b89b73f1f824621b42d2710a29/516_36_4781_3827/master/4781.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom,left&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=7a2e7f366c487ddc1e584b7c856b7c38" alt="Article Image" style="width: 100%; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+
+        <div class="article-body" style="font-size: 1.1rem; color: #e2e8f0;">
+            **Output 1: A BLOG POST (HTML Format)**
+
+```html
+<article>
+    <h1>The $1.25 Trillion Question: Analyzing the SpaceX and xAI Merger</h1>
+    <p>The recent consolidation of Elon Musk’s aerospace behemoth, SpaceX, and his nascent artificial intelligence startup, xAI, marks a pivotal moment in the infrastructure and generative AI landscape. With an estimated combined valuation potentially reaching $1.25 trillion, this move is less about simple M&A and more about fundamental vertical integration.</p>
+
+    <h3>What is it?</h3>
+    <p>SpaceX, the world leader in orbital launch services and the operator of the vast Starlink satellite constellation, has effectively absorbed xAI, the developer of the Grok large language model. This merger is designed to create a single, unified entity that controls the entire pipeline of data acquisition, high-performance compute infrastructure, and foundational model development.</p>
+    <ul>
+        <li><strong>SpaceX Contribution:</strong> Provides massive compute resources, proprietary, real-time global sensor data from Starlink, and critical low-earth orbit (LEO) logistical capabilities.</li>
+        <li><strong>xAI Contribution:</strong> Provides the intellectual property, talent, and models (Grok) necessary to process, analyze, and monetize this unique data stream.</li>
+        <li><strong>The Goal:</strong> To bypass traditional reliance on external cloud providers (like AWS or Azure) for GPU clusters and to establish a highly defensible 'infrastructure-first' moat in the AI race.</li>
+    </ul>
+
+    <h3>Why it matters for Business/Logistics</h3>
+    <p>This strategic maneuver has profound implications, particularly concerning data scarcity and computational bottlenecks, two of the primary challenges facing advanced AI development today.</p>
+    <ul>
+        <li><strong>Proprietary Data Moat:</strong> Starlink’s immense global footprint generates unique geospatial, weather, and logistical data that cannot be replicated by traditional internet-based scrapers. Combining this with Grok allows for the creation of foundational models specifically optimized for real-world physical and logistical tasks—crucial for future autonomous systems and predictive maintenance.</li>
+        <li><strong>Decoupling from the Cloud Oligopoly:</strong> By pooling the combined entity’s resources, xAI gains priority access to crucial GPU infrastructure secured by SpaceX. This capability shields the AI development schedule from market volatility and competition for high-demand AI chips, ensuring dedicated compute power essential for next-generation model training.</li>
+        <li><strong>Defense and Government Applications:</strong> The integration is highly attractive for governmental and defense contracts, offering a secure, end-to-end solution—from satellite connectivity to localized AI processing—that reduces supply chain risk and complexity.</li>
+    </ul>
+
+    <h3>Our Take/Prediction</h3>
+    <p>While the business synergy is clear on paper, successfully merging a rigorous, safety-critical aerospace culture with the fast-iterating, move-fast-and-break-things ethos of an AI startup presents significant managerial and cultural challenges. The true test of the $1.25 trillion valuation lies in the speed of operational synergy.</p>
+    <p>We predict initial friction, particularly around resource allocation and security protocols. However, the sheer strategic value of owning both the physical transport layer (SpaceX) and the intelligence layer (xAI) will likely overcome these hurdles. Expect accelerated deployment of specialized Grok models leveraging Starlink data feeds for advanced terrestrial applications, setting a new precedent for vertically integrated technology giants in the coming decade.</p>
+</article>
+```
+        </div>
+        
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+        <p><em>Source: <a href="https://www.theguardian.com/technology/2026/feb/07/why-has-elon-musk-merged-his-rocket-company-with-his-ai-startup" target="_blank" style="color: var(--accent-mint);">Read original article</a></em></p>
+        <br>
+        <a href="../index.html" class="cta-button primary">← Back to Home</a>
+    </article>
+</main>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic.</p>
+</footer>
+</body>
+</html>
+        
+
