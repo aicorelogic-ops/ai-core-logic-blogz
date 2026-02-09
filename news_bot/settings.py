@@ -13,9 +13,8 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # News Sources (RSS)
 # News Sources (RSS)
 RSS_FEEDS = [
-    "https://techcrunch.com/category/artificial-intelligence/feed/",
-    "https://venturebeat.com/category/ai/feed/", # Enterprise & Business AI
-    "https://www.wired.com/feed/category/ai/latest/rss",
+    "https://rss.app/feeds/tbdDfZBy9mkg0nUM.xml",
+    "https://rss.app/feeds/top5xHlZ2Hs26yLJ.xml",
 ]
 
 # Filtering keywords
