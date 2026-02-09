@@ -94,8 +94,33 @@ class BlogGenerator:
         except Exception as e:
             print(f"❌ Error updating index: {e}")
 
+    def deploy_to_github(self):
+        """
+        Commits and pushes the new changes to GitHub so the link becomes live.
+        """
+        import subprocess
+        
+        print("☁️ Auto-Deploying to GitHub...")
+        try:
+            # 1. Add changes
+            subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "add", "."], check=True)
+            
+            # 2. Commit
+            subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "commit", "-m", "Auto-publish new article"], check=True)
+            
+            # 3. Push
+            # Note: This relies on your cached credentials.
+            subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "push"], check=True)
+            
+            print("✅ Successfully deployed to https://aicorelogic-ops.github.io/ai-core-logic/")
+            return True
+        except Exception as e:
+            print(f"❌ Deploy failed: {e}")
+            return False
+
 if __name__ == "__main__":
     # Test
     gen = BlogGenerator()
     fname = gen.create_post("Test Article", "<p>This is a test.</p>", "http://google.com")
     gen.update_index("Test Article", "This is a short summary.", fname)
+    # gen.deploy_to_github() # Uncomment to test deploy

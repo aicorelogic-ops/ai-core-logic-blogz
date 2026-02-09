@@ -44,16 +44,20 @@ def run_bot():
             )
             
             # C. Prepare Facebook Link
-            # IMPORTAT: Since this is local, we don't have a real URL yet.
-            # We will post a dummy link or the file path for now.
-            # In production, this would be: https://your-site.com/blog/posts/{filename}
-            blog_url = f"https://aicorelogic.com/news/{filename}" 
+            # Production URL structure for GitHub Pages
+            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/{filename}" 
             
             fb_message = content_package['facebook_msg'].replace("[LINK]", blog_url)
             
-            # D. Post to Facebook
-            print(f"🚀 Publishing to Facebook...")
-            publisher.post_content(fb_message, link=blog_url)
+            # D. Deploy to GitHub (Critical step for the link to work)
+            is_deployed = blog_gen.deploy_to_github()
+            
+            if is_deployed:
+                # E. Post to Facebook
+                print(f"🚀 Publishing to Facebook...")
+                publisher.post_content(fb_message, link=blog_url)
+            else:
+                print("⚠️ Skipping Facebook post because GitHub deploy failed (Link would represent 404).")
             
             # Sleep to avoid spamming
             time.sleep(10)
