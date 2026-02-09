@@ -29,8 +29,11 @@ class BlogGenerator:
 </head>
 <body>
 <header>
-    <div class="logo"><a href="../index.html" style="text-decoration:none; color:inherit;">AI Core Logic</a></div>
-    <div class="subtitle">Intelligence for Business</div>
+    <div class="nav-container" style="display:flex; justify-content:center; padding: 1rem;">
+        <a href="../index.html">
+            <img src="../assets/logo.png" alt="AI.Core Logic" style="height: 50px; border-radius: 6px;">
+        </a>
+    </div>
 </header>
 
 <main>
@@ -66,9 +69,20 @@ class BlogGenerator:
         """
         index_path = os.path.join(BLOG_DIR, "index.html")
         
-        # New entry HTML
+        # Bento Grid Logic: Randomly assign a size class
+        import random
+        # 15% chance of being a huge feature, 25% chance of being wide, 60% standard
+        rand_val = random.random()
+        if rand_val < 0.15:
+            card_class = "article-card featured"
+        elif rand_val < 0.40:
+            card_class = "article-card wide"
+        else:
+            card_class = "article-card"
+
+        # New entry HTML with dynamic class
         new_entry = f"""
-    <article class="article-card">
+    <article class="{card_class}">
         <div class="article-date">{datetime.now().strftime('%B %d')}</div>
         <h2><a href="posts/{filename}">{title}</a></h2>
         <p class="article-snippet">{summary}...</p>
