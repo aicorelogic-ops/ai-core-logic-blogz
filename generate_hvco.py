@@ -168,6 +168,19 @@ def generate_hvco():
             try:
                 response = model.generate_content(f"{SYSTEM_PROMPT}\n\nTASK:\n{article['social_prompt']}")
                 social_copy = response.text.replace("```text", "").replace("```", "").strip()
+                
+                # Clean up any instruction labels that the AI might include
+                social_copy = social_copy.replace('**OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)**', '')
+                social_copy = social_copy.replace('OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)', '')
+                social_copy = social_copy.replace('**Facebook Ad:**', '')
+                social_copy = social_copy.replace('Facebook Ad:', '')
+                
+                # Remove leading markdown bold markers if present
+                import re
+                if social_copy.startswith('**'):
+                    social_copy = re.sub(r'^\*\*[^*]+\*\*\s*', '', social_copy)
+                
+                social_copy = social_copy.strip()
                 break
             except exceptions.ResourceExhausted:
                 time.sleep(20 * (2 ** attempt))

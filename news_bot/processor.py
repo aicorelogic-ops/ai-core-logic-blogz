@@ -62,9 +62,13 @@ class NewsProcessor:
         - Long copy converts better - answer objections, build intrigue
         - End with: "Full breakdown here: [LINK]"
         
-        RETURN FORMAT:
-        Separate the two with a delimiter "|||||".
-        First part = HTML. Second part = Facebook Text.
+        CRITICAL RETURN FORMAT:
+        - DO NOT include labels like "Output 1:" or "Output 2:" in your response
+        - DO NOT include any markdown formatting indicators like **text** in the Facebook post
+        - Separate the two outputs ONLY with the delimiter "|||||"
+        - First part = HTML blog content (can use HTML tags)
+        - Second part = Plain text Facebook post (NO labels, NO markdown, NO formatting indicators)
+        - The Facebook post should start IMMEDIATELY with the content, not with any header
         """
 
         try:
@@ -74,9 +78,29 @@ class NewsProcessor:
             # Split the response
             if "|||||" in text:
                 parts = text.split("|||||")
+                blog_html = parts[0].strip()
+                facebook_msg = parts[1].strip()
+                
+                # Clean up Facebook message - remove any instruction labels or formatting indicators
+                # Remove common AI output labels
+                facebook_msg = facebook_msg.replace('**OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)**', '')
+                facebook_msg = facebook_msg.replace('OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)', '')
+                facebook_msg = facebook_msg.replace('**OUTPUT 2:**', '')
+                facebook_msg = facebook_msg.replace('OUTPUT 2:', '')
+                facebook_msg = facebook_msg.replace('**Facebook Post:**', '')
+                facebook_msg = facebook_msg.replace('Facebook Post:', '')
+                
+                # Clean up any remaining markdown bold markers in plain text
+                import re
+                # Only remove ** markers if they're wrapping instruction-like text at the start
+                if facebook_msg.startswith('**'):
+                    facebook_msg = re.sub(r'^\*\*[^*]+\*\*\s*', '', facebook_msg)
+                
+                facebook_msg = facebook_msg.strip()
+                
                 return {
-                    "blog_html": parts[0].strip(),
-                    "facebook_msg": parts[1].strip()
+                    "blog_html": blog_html,
+                    "facebook_msg": facebook_msg
                 }
             else:
                 # Fallback if AI forgets delimiter
