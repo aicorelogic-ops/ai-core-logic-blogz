@@ -152,8 +152,18 @@ class BlogGenerator:
             return False
 
 if __name__ == "__main__":
-    # Test
+    # Test Run
     gen = BlogGenerator()
-    fname = gen.create_post("Test Article", "<p>This is a test.</p>", "http://google.com")
-    gen.update_index("Test Article", "This is a short summary.", fname)
-    # gen.deploy_to_github() # Uncomment to test deploy
+    # Create a realistic test article to see the AI image generation in action
+    title = "The Dawn of Autonomous Logistics"
+    content = """
+    <p>Artificial Intelligence is no longer just a buzzword; it is the backbone of modern supply chains. 
+    From predictive analytics to autonomous delivery drones, logic-driven systems are reshaping how we move goods.</p>
+    <p>In this test of our new <strong>Visual Engine</strong>, we are demonstrating how AI can automatically 
+    visualize the context of an article and generate a relevant header image without human intervention.</p>
+    """
+    fname = gen.create_post(title, content, "https://example.com")
+    gen.update_index(title, "How AI is reshaping modern supply chains with logic-driven systems", fname)
+    
+    # Deploy to live site
+    gen.deploy_to_github()
