@@ -35,6 +35,14 @@ class BlogGenerator:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} | AI Core Logic</title>
+    
+    <!-- Open Graph for Facebook -->
+    <meta property="og:title" content="{title} | AI Core Logic" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="{image_url}" />
+    <meta property="og:description" content="Read the latest analysis on AI and Logic-based business automation." />
+    <meta property="og:url" content="https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/{filename}" />
+
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -159,16 +167,15 @@ class BlogGenerator:
 if __name__ == "__main__":
     # Test Run
     gen = BlogGenerator()
-    # Create a realistic test article to see the AI image generation in action
-    title = "The Dawn of Autonomous Logistics"
+    # New Test Article for Facebook Verification
+    title = "The Rise of Autonomous Business Agents"
     content = """
-    <p>Artificial Intelligence is no longer just a buzzword; it is the backbone of modern supply chains. 
-    From predictive analytics to autonomous delivery drones, logic-driven systems are reshaping how we move goods.</p>
-    <p>In this test of our new <strong>Visual Engine</strong>, we are demonstrating how AI can automatically 
-    visualize the context of an article and generate a relevant header image without human intervention.</p>
+    <p>Imagine a world where your software doesn't just wait for your input, but proactively manages your business logic. 
+    <strong>Autonomous Agents</strong> are the next evolution of AI, capable of negotiating, scheduling, and optimizing workflows 24/7.</p>
+    <p>In this post, we explore how AI Core Logic is pioneering the use of these agents to reduce operational overhead by up to 40%.</p>
     """
-    fname = gen.create_post(title, content, "https://example.com")
-    gen.update_index(title, "How AI is reshaping modern supply chains with logic-driven systems", fname)
+    fname = gen.create_post(title, content, "https://example.com/agents")
+    gen.update_index(title, "Why 2026 is the year of the Autonomous Agent.", fname)
     
     # Deploy to live site
     gen.deploy_to_github()
