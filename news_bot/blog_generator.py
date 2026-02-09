@@ -106,7 +106,10 @@ class BlogGenerator:
             subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "add", "."], check=True)
             
             # 2. Commit
-            subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "commit", "-m", "Auto-publish new article"], check=True)
+            try:
+                subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "commit", "-m", "Auto-publish new article"], check=True)
+            except subprocess.CalledProcessError:
+                print("⚠️ Nothing to commit (files already exist). Proceeding to push...")
             
             # 3. Push
             # Note: This relies on your cached credentials.
