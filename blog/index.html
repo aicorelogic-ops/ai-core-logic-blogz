@@ -11,116 +11,101 @@
 <body>
 
     <header>
-        <div class="nav-container">
+        <div class="nav-left">
             <a href="index.html" class="logo-link">
                 <img src="assets/brand-logo.png" alt="AI.Core Logic" class="logo-img">
             </a>
-            <!-- Future: Add Nav Links here -->
+        </div>
+
+        <nav class="nav-center">
+            <a href="#">About Us</a>
+            <a href="#">Services</a>
+            <a href="#">Our Technology</a>
+            <a href="#">Resources</a>
+        </nav>
+
+        <div class="nav-right">
+            <a href="#" class="cta-button secondary small">Contact</a>
         </div>
     </header>
 
+    <section id="hero">
+        <div class="hero-content">
+            <h1>AI Core Logic <span class="hero-highlight">Blog</span></h1>
+            <div class="hero-sub">
+                <p>Honest Conversations About <br> Automation and Logic.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Bar (Visual only for now) -->
+    <div class="filter-bar">
+        <a href="#" class="active">All</a>
+        <a href="#">Automation</a>
+        <a href="#">Logistics</a>
+        <a href="#">Intelligence</a>
+        <a href="#">Tech Stack</a>
+
+        <div class="search-wrapper">
+            <input type="text" placeholder="Search blog...">
+        </div>
+    </div>
+
     <main id="news-feed">
+        <!-- Manually updating existing cards to match new structure temporarily -->
 
         <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents buy
-                    their own tech tools</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more">Read Analysis →</a>
+            <div class="card-image-placeholder gradient-1">
+                <span class="category-pill">Finance</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents
+                        buy their own tech tools</a></h2>
+                <p class="article-snippet">Analysis on autonomous agent economies...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more-btn"></a>
+                </div>
+            </div>
         </article>
-
 
         <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor issue
-                    in treating rare diseases</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more">Read Analysis →</a>
+            <div class="card-image-placeholder gradient-2">
+                <span class="category-pill">Healthcare</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor
+                        issue in treating rare diseases</a></h2>
+                <p class="article-snippet">AI impact on specialized medical labor...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more-btn"></a>
+                </div>
+            </div>
         </article>
 
-
+        <!-- Repeating cards for visual fill -->
         <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents buy
-                    their own tech tools</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more">Read Analysis →</a>
+            <div class="card-image-placeholder gradient-3">
+                <span class="category-pill">Technology</span>
+            </div>
+            <div class="card-content">
+                <h2><a href="#">The Future of Logic in Business Operations</a></h2>
+                <p class="article-snippet">Why logic-based AI systems are winning...</p>
+                <div class="card-meta">
+                    <span class="date">Feb 08</span>
+                    <a href="#" class="read-more-btn"></a>
+                </div>
+            </div>
         </article>
 
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor issue
-                    in treating rare diseases</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more">Read Analysis →</a>
-        </article>
-
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents buy
-                    their own tech tools</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more">Read Analysis →</a>
-        </article>
-
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor issue
-                    in treating rare diseases</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more">Read Analysis →</a>
-        </article>
-
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents buy
-                    their own tech tools</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more">Read Analysis →</a>
-        </article>
-
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor issue
-                    in treating rare diseases</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more">Read Analysis →</a>
-        </article>
-
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html">Sapiom raises $15M to help AI agents buy
-                    their own tech tools</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-sapiom-raises--15m-to-help-ai-.html" class="read-more">Read Analysis →</a>
-        </article>
-
-
-        <article class="article-card">
-            <div class="article-date">February 08</div>
-            <h2><a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html">How AI is helping solve the labor issue
-                    in treating rare diseases</a></h2>
-            <p class="article-snippet">New AI Analysis available....</p>
-            <a href="posts/2026-02-08-how-ai-is-helping-solve-the-la.html" class="read-more">Read Analysis →</a>
-        </article>
-
-        <!-- Articles will be injected here by the Python Bot -->
-        <article class="article-card">
-            <div class="article-date">SYSTEM MSG</div>
-            <h2><a href="#">Welcome to AI Core Logic</a></h2>
-            <p class="article-snippet">This is the central hub for our latest insights on Automation, AI Tools, and
-                Logistics efficiency. Stay tuned for daily updates.</p>
-        </article>
     </main>
 
     <footer>
-        <p>&copy; 2026 AI Core Logic. Built with Intelligence. (v3.0)</p>
+        <div class="footer-big-text">AI CORE LOGIC</div>
+        <div class="footer-links">
+            <p>&copy; 2026 AI Core Logic. Built with Intelligence. (v4.0)</p>
+        </div>
     </footer>
 
 </body>
