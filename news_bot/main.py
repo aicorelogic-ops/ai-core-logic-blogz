@@ -22,7 +22,9 @@ def run_bot():
     publisher = FacebookPublisher()
     blog_gen = BlogGenerator()
 
-    for article in articles:
+    # Process only the FIRST article (limit to 1 post per run)
+    for article in articles[:1]:  # [:1] takes only the first article
+
         print(f"📝 Processing: {article['title']}")
         
         # Generates DICT: {'blog_html': ..., 'facebook_msg': ...}
@@ -61,16 +63,42 @@ def run_bot():
             # Hyper-dopamine strategy: Photo posts stop the scroll, link is in caption
             print(f"🚀 Publishing to Facebook as photo post...")
             
-            # ALWAYS generate custom scroll-stopping image (don't use article photos)
-            # Extract hook from title
+            # VIRAL IMAGE GENERATION - Pattern Interrupt Strategy for Facebook
             import urllib.parse
+            import random
+            
+            # Extract the "Bleeding Neck" problem from title
             image_hook = article['title'][:60] if len(article['title']) <= 60 else article['title'].split(':')[0][:60]
             
-            safe_prompt = urllib.parse.quote(
-                f"Bold text overlay on dark background: '{image_hook.upper()}', "
-                f"fire emoji 🔥, warning symbol ⚠️, high contrast neon red and black, "
-                f"viral social media aesthetic, attention-grabbing typography, scroll-stopping visual"
+            # Apply Direct Response Marketer Framework
+            
+            # Option A: "Raw Native" / Leaked Evidence
+            raw_native = (
+                f"iPhone photo amateur candid shot, first-person POV, "
+                f"computer screen showing shocking data about '{image_hook}', "
+                f"messy desk, RED CIRCLE hand-drawn around key detail, "
+                f"harsh office lighting, grainy quality, user-generated content, "
+                f"flash photography, NOT professional, leaked evidence style"
             )
+            
+            # Option B: "Breaking News" 
+            breaking_news = (
+                f"Breaking news screenshot style, person looking SHOCKED, "
+                f"holding document about '{image_hook}', "
+                f"'BREAKING NEWS' or 'EXPOSED' banner, TMZ viral news style, "
+                f"candid amateur photo, harsh flash lighting, grainy iPhone quality"
+            )
+            
+            # Option C: "Weird" Visual
+            weird_visual = (
+                f"Close-up macro photo of weird detail about '{image_hook}', "
+                f"magnified mistake, confusing composition, "
+                f"makes viewer ask 'what the hell is that?', "
+                f"amateur grainy texture, harsh lighting, pattern interrupt"
+            )
+            
+            chosen_style = random.choice([raw_native, breaking_news, weird_visual])
+            safe_prompt = urllib.parse.quote(chosen_style)
             photo_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
             
             publisher.post_photo(photo_url=photo_url, message=fb_message)

@@ -21,30 +21,46 @@ class BlogGenerator:
         filepath = os.path.join(POSTS_DIR, filename)
         
         
-        # ALWAYS generate custom scroll-stopping image with TEXT OVERLAY
-        # Extract a hook from the title for the image (first 60 chars or shocking part)
+        # VIRAL IMAGE GENERATION - Pattern Interrupt Strategy
+        # Extract the "Bleeding Neck" problem or shocking detail from title
         image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
         
-        # Add aggressive visual tactics like the copywriting
+        # Apply Direct Response Marketer Framework for Scroll-Stopping Visuals
         import random
-        image_styles = [
-            # Style 1: Bold Text Shock
-            f"Bold text overlay on dark background: '{image_hook.upper()}', "
-            f"fire emoji 🔥, warning symbol ⚠️, high contrast neon colors, "
-            f"viral social media post aesthetic, attention-grabbing typography",
-            
-            # Style 2: Alert/Breaking News
-            f"Smartphone notification screenshot style: 🚨 ALERT banner, "
-            f"text: '{image_hook}', red and black color scheme, "
-            f"breaking news aesthetic, high urgency visual",
-            
-            # Style 3: Stat Shock
-            f"Bold statistics typography on gradient background about {title}, "
-            f"large numbers, percentage symbols, dollar signs, "
-            f"neon accent colors, viral content style, pattern interrupt visual"
-        ]
         
-        chosen_style = random.choice(image_styles)
+        # Option A: "Raw Native" / Leaked Evidence (UGC Style)
+        raw_native = (
+            f"iPhone photo amateur candid shot, first-person POV perspective, "
+            f"computer screen showing shocking data about '{image_hook}', "
+            f"messy desk with papers and coffee cup, "
+            f"RED CIRCLE hand-drawn around key detail, RED ARROW pointing to problem, "
+            f"harsh office lighting, grainy quality, user-generated content aesthetic, "
+            f"flash photography, NOT professional, NOT stock photo, leaked evidence style"
+        )
+        
+        # Option B: "Breaking News" (Viral News Chyron)
+        breaking_news = (
+            f"Breaking news TV screenshot style, person looking genuinely SHOCKED or TERRIFIED, "
+            f"holding document with '{image_hook}' visible, "
+            f"news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
+            f"TMZ style viral news aesthetic, candid amateur photo, "
+            f"harsh flash lighting, NOT cinematic, NOT studio quality, "
+            f"dimly lit background, real reaction not posed, grainy iPhone quality"
+        )
+        
+        # Option C: The "Weird" / "Gross" Visual (Confusion Trigger)
+        weird_visual = (
+            f"Close-up macro photo of weird unexpected detail about '{image_hook}', "
+            f"magnified mistake or strange contradiction, confusing composition, "
+            f"makes viewer ask 'what the hell is that?', "
+            f"amateur photography, grainy texture, harsh lighting, "
+            f"NOT aesthetically pleasing, pattern interrupt visual, "
+            f"user-generated content style, candid first-person POV"
+        )
+        
+        # Randomly select one framework for variety
+        chosen_style = random.choice([raw_native, breaking_news, weird_visual])
+        
         safe_prompt = urllib.parse.quote(chosen_style)
         image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
         

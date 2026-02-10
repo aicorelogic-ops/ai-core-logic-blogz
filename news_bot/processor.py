@@ -41,11 +41,30 @@ class NewsProcessor:
         Task: Create TWO outputs in a strictly formatted way.
         
         Output 1: A BLOG POST (HTML Format)
-        **CRITICAL: Do NOT just summarize the original. Add AI.Core Logic's unique, opinionated spin:**
-        - Make it logistics/business-focused (not generic AI news)
-        - Strong predictions and opinions (not neutral reporting)
-        - "Why this matters to YOUR business" framing
+        **CRITICAL: REWRITE the news, DON'T just copy it. Apply SABRI SUBY COPYWRITING:**
         
+        **FORUM FORAGING**: Use the prospect's exact language (not corporate jargon)
+        - Talk like a frustrated logistics owner, not a journalist
+        - Use words like "bleeding cash", "burning hours", "stuck", "frustrated"
+        
+        **80/20 RULE**: 80% about THEIR pain/problem, only 20% about the solution
+        - Spend most of the blog agitating the problem they didn't know they had
+        - Make them FEEL the cost of inaction
+        
+        **SELL THE CLICK**: Create burning intrigue, not summary
+        - Don't reveal everything - make them curious
+        - Use specific numbers that shock (e.g., "$40k lost per year on this mistake")
+        
+        **6TH GRADE READABILITY**: Short punchy sentences
+        - No fluff. No fancy words. Get to the point.
+        - One idea per sentence. Easy to scan.
+        
+        **OPINIONATED, NOT NEUTRAL**: 
+        - Take a strong stance (e.g., "This is stupid" or "This changes everything")
+        - Make predictions (e.g., "Companies ignoring this will be obsolete in 18 months")
+        - Add YOUR voice, not the original article's voice
+        
+        **Structure**:
         - Start with a PATTERN INTERRUPT hook (not generic intro)
         - Use <h3> for subheaders to break up text
         - Use <p> for paragraphs, <b> for emphasis, <ul><li> for lists
@@ -54,7 +73,7 @@ class NewsProcessor:
             2. Agitate the Pain: What's really costing them (use specific numbers/scenarios)
             3. The Discovery: What we found that changes everything  
             4. Why It Matters: Specific benefit for logistics/business owners
-            5. The Prediction: Where this is headed
+            5. The Prediction: Where this is headed (urgency + authority)
         - Long-form content (buyers need details to convert)
         - Use subheads like "The Silent Profit Killer", "What We Discovered", "The 40% Rule"
         
