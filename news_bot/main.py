@@ -17,13 +17,58 @@ def run_bot():
         print("😴 No new articles found. Sleeping.")
         return
 
-    # 2. Process & Publish
+    # 2. Score Articles for Viral Potential (Select BEST, not newest)
+    print("🎯 Scoring articles for viral potential...")
+    
+    def score_viral_potential(article):
+        """Score article 0-100 based on engagement potential"""
+        try:
+            import google.generativeai as genai
+            from .settings import GOOGLE_API_KEY
+            
+            genai.configure(api_key=GOOGLE_API_KEY)
+            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            
+            prompt = f"""Score this article for VIRAL POTENTIAL in the logistics/business automation niche (0-100).
+
+Title: {article['title']}
+Summary: {article.get('summary', '')[:300]}
+
+Scoring Factors:
+1. SPECIFICITY: Does it have specific numbers/data? ($40k, 30% increase, etc.)
+2. CONTROVERSY: Is it provocative or against conventional wisdom?
+3. URGENCY: Does it create time pressure or FOMO?
+4. EMOTIONAL HOOK: Does it trigger fear, curiosity, or anger?
+5. RELEVANCE: Will logistics/small business owners care?
+6. CLICKBAIT FACTOR: Does the title create a curiosity gap?
+
+Return ONLY a number 0-100. No explanation."""
+
+            response = model.generate_content(prompt)
+            score = int(response.text.strip())
+            return max(0, min(100, score))  # Clamp between 0-100
+        except Exception as e:
+            print(f"⚠️ Scoring error: {e}")
+            return 50  # Default middle score if error
+    
+    # Score all articles
+    articles_with_scores = []
+    for article in articles:
+        score = score_viral_potential(article)
+        articles_with_scores.append((article, score))
+        print(f"  📊 '{article['title'][:60]}...' → Score: {score}")
+    
+    # Select the HIGHEST scoring article
+    best_article, best_score = max(articles_with_scores, key=lambda x: x[1])
+    print(f"\n🏆 Selected BEST article (Score: {best_score}): {best_article['title']}\n")
+    
+    # 3. Process & Publish the BEST article
     processor = NewsProcessor()
     publisher = FacebookPublisher()
     blog_gen = BlogGenerator()
 
-    # Process only the FIRST article (limit to 1 post per run)
-    for article in articles[:1]:  # [:1] takes only the first article
+    # Process only the BEST article (highest viral score)
+    for article in [best_article]:  # Process only the winner
 
         print(f"📝 Processing: {article['title']}")
         
