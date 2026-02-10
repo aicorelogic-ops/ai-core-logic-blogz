@@ -60,6 +60,42 @@ class FacebookPublisher:
         except requests.exceptions.RequestException as e:
             self._handle_error(e, response if 'response' in locals() else None)
             return None
+    
+    def post_reel(self, video_path, caption):
+        """
+        Post a video as a Reel to Facebook Page.
+        Video should be vertical format (9:16), 15-90 seconds.
+        """
+        if not self.token or not self.page_id:
+            print("Error: Missing Facebook Page Token or Page ID.")
+            return None
+        
+        url = f"{self.base_url}/{self.page_id}/video_reels"
+        
+        try:
+            print(f"🎬 Uploading reel to Facebook...")
+            
+            # Read video file
+            with open(video_path, 'rb') as video_file:
+                files = {'source': video_file}
+                data = {
+                    'description': caption,
+                    'access_token': self.token
+                }
+                
+                response = requests.post(url, files=files, data=data)
+                response.raise_for_status()
+                
+                reel_data = response.json()
+                print(f"✅ Successfully posted Reel!")
+                print(f"Reel ID: {reel_data.get('id')}")
+                return reel_data.get('id')
+                    
+        except Exception as e:
+            print(f"❌ Reel upload error: {e}")
+            if 'response' in locals():
+                self._handle_error(e, response)
+            return None
 
     def _handle_error(self, exception, response):
         print(f"❌ Error posting to Facebook: {exception}")
