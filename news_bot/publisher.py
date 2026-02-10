@@ -61,40 +61,130 @@ class FacebookPublisher:
             self._handle_error(e, response if 'response' in locals() else None)
             return None
     
+    def post_video(self, video_path, caption):
+        """
+        Post a video to Facebook Page (simpler than Reels API).
+        Works for any video format including vertical 9:16 reels.
+        """
+        if not self.token or not self.page_id:
+            print("Error: Missing Facebook Page Token or Page ID.")
+            return None
+        
+        url = f"{self.base_url}/{self.page_id}/videos"
+        
+        try:
+            import os
+            video_size = os.path.getsize(video_path)
+            print(f"🎬 Uploading video to Facebook...")
+            print(f"   Video size: {video_size:,} bytes")
+            
+            with open(video_path, 'rb') as video_file:
+                files = {'file': video_file}
+                data = {
+                    'description': caption,
+                    'access_token': self.token
+                }
+                
+                response = requests.post(url, files=files, data=data, timeout=120)
+                response.raise_for_status()
+                
+                video_data = response.json()
+                print(f"✅ Successfully posted video!")
+                print(f"Video ID: {video_data.get('id')}")
+                return video_data.get('id')
+                    
+        except Exception as e:
+            print(f"❌ Video upload error: {e}")
+            if 'response' in locals():
+                self._handle_error(e, response)
+            return None
+    
     def post_reel(self, video_path, caption):
         """
-        Post a video as a Reel to Facebook Page.
+        Post a video as a Reel to Facebook Page using 3-phase upload.
         Video should be vertical format (9:16), 15-90 seconds.
         """
         if not self.token or not self.page_id:
             print("Error: Missing Facebook Page Token or Page ID.")
             return None
         
-        url = f"{self.base_url}/{self.page_id}/video_reels"
-        
         try:
-            print(f"🎬 Uploading reel to Facebook...")
+            import os
+            video_size = os.path.getsize(video_path)
             
-            # Read video file
+            print(f"🎬 Uploading reel to Facebook (3-phase upload)...")
+            print(f"   Video size: {video_size:,} bytes")
+            
+            # PHASE 1: Initialize upload session
+            print("   Phase 1: Initializing upload session...")
+            init_url = f"{self.base_url}/{self.page_id}/video_reels"
+            init_data = {
+                'upload_phase': 'start',
+                'file_size': video_size,
+                'access_token': self.token
+            }
+            
+            init_response = requests.post(init_url, data=init_data)
+            init_response.raise_for_status()
+            init_result = init_response.json()
+            
+            video_id = init_result.get('video_id')
+            upload_session_id = init_result.get('upload_session_id')
+            
+            if not video_id or not upload_session_id:
+                print(f"❌ Failed to initialize upload: {init_result}")
+                return None
+            
+            print(f"   ✅ Session ID: {upload_session_id}")
+            
+            # PHASE 2: Upload video file
+            print("   Phase 2: Uploading video file...")
+            upload_url = f"{self.base_url}/{self.page_id}/video_reels"
+            
             with open(video_path, 'rb') as video_file:
-                files = {'source': video_file}
-                data = {
-                    'description': caption,
+                upload_data = {
+                    'upload_phase': 'transfer',
+                    'upload_session_id': upload_session_id,
                     'access_token': self.token
                 }
+                upload_files = {'video_file_chunk': video_file}
                 
-                response = requests.post(url, files=files, data=data)
-                response.raise_for_status()
-                
-                reel_data = response.json()
+                upload_response = requests.post(upload_url, data=upload_data, files=upload_files)
+                upload_response.raise_for_status()
+                upload_result = upload_response.json()
+            
+            print(f"   ✅ Video uploaded")
+            
+            # PHASE 3: Finalize and publish
+            print("   Phase 3: Publishing reel...")
+            finish_url = f"{self.base_url}/{self.page_id}/video_reels"
+            finish_data = {
+                'upload_phase': 'finish',
+                'upload_session_id': upload_session_id,
+                'description': caption,
+                'access_token': self.token
+            }
+            
+            finish_response = requests.post(finish_url, data=finish_data)
+            finish_response.raise_for_status()
+            finish_result = finish_response.json()
+            
+            if finish_result.get('success'):
                 print(f"✅ Successfully posted Reel!")
-                print(f"Reel ID: {reel_data.get('id')}")
-                return reel_data.get('id')
+                print(f"Reel ID: {video_id}")
+                return video_id
+            else:
+                print(f"❌ Failed to finalize: {finish_result}")
+                return None
                     
         except Exception as e:
             print(f"❌ Reel upload error: {e}")
-            if 'response' in locals():
-                self._handle_error(e, response)
+            if 'init_response' in locals():
+                self._handle_error(e, init_response)
+            elif 'upload_response' in locals():
+                self._handle_error(e, upload_response)
+            elif 'finish_response' in locals():
+                self._handle_error(e, finish_response)
             return None
 
     def _handle_error(self, exception, response):

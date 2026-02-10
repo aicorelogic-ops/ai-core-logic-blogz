@@ -159,6 +159,11 @@ class BlogGenerator:
             with open(index_path, "r", encoding="utf-8") as f:
                 content = f.read()
             
+            # 🛑 Prevention: Check if this file is already linked in the index
+            if f'href="posts/{filename}"' in content:
+                print(f"⏭️ Skipping index update: {filename} already exists in index.html")
+                return
+            
             # Find the injection point (after <main id="news-feed">)
             # We look for the comment or the opening tag
             marker = '<main id="news-feed">'
@@ -167,7 +172,7 @@ class BlogGenerator:
                 
                 with open(index_path, "w", encoding="utf-8") as f:
                     f.write(updated_content)
-                print("✅ Index.html updated with new Image Card.")
+                print(f"✅ Index.html updated with new Image Card: {filename}")
             else:
                 print("❌ Could not find injection marker in index.html")
                 
