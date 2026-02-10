@@ -11,6 +11,7 @@ import os
 import textwrap
 import numpy as np
 from .reel_script_generator import ReelScriptGenerator
+from .audio_utils import generate_tts, mix_audio
 
 class ViralReelGenerator:
     def __init__(self):
@@ -38,38 +39,75 @@ class ViralReelGenerator:
             
             # Create slides based on viral script
             slides = []
+            audio_clips = []
             
-            # Hook slide (3 seconds) - STOP SCROLLING style
-            slides.append(self._create_urgent_slide(
-                text=script['hook']['script'],
-                overlay_text=script['hook']['text_overlay'],
-                image_path=viral_image_path,
-                duration=3,
-                style='hook'  # Red, urgent
+            # Helper to process slides with audio
+            def process_slide(text, overlay_text, duration, style):
+                # 1. Generate Audio
+                audio_filename = f"temp_audio_{style}_{len(audio_clips)}.mp3"
+                audio_path = generate_tts(text, audio_filename)
+                
+                # 2. Get Audio Clip
+                audio_clip = AudioFileClip(audio_path)
+                # Ensure slide is at least as long as audio (plus buffer)
+                slide_duration = max(duration, audio_clip.duration + 0.5)
+                
+                # 3. Create Video Slide
+                slide = self._create_urgent_slide(
+                    text=text,
+                    overlay_text=overlay_text,
+                    image_path=viral_image_path,
+                    duration=slide_duration,
+                    style=style
+                )
+                
+                # 4. Attach Audio
+                slide = slide.set_audio(audio_clip)
+                audio_clips.append(audio_path)
+                return slide
+
+            # Hook slide (3 seconds)
+            slides.append(process_slide(
+                script['hook']['script'],
+                script['hook']['text_overlay'],
+                3, 'hook'
             ))
             
-            # Body slides (3-4 slides, ~10s each)
+            # Body slides (~10s each or audio duration)
             for i, point in enumerate(script['body']):
-                slides.append(self._create_urgent_slide(
-                    text=point['script'],
-                    overlay_text=point['text_overlay'],
-                    image_path=viral_image_path,
-                    duration=10,
-                    style='body'  # Orange/yellow
+                slides.append(process_slide(
+                    point['script'],
+                    point['text_overlay'],
+                    10, 'body'
                 ))
             
-            # CTA slide (3 seconds) - Link in bio
-            slides.append(self._create_urgent_slide(
-                text=script['cta']['script'],
-                overlay_text=script['cta']['text_overlay'],
-                image_path=viral_image_path,
-                duration=3,
-                style='cta'  # Green/white
+            # CTA slide (3 seconds)
+            slides.append(process_slide(
+                script['cta']['script'],
+                script['cta']['text_overlay'],
+                3, 'cta'
             ))
             
             # Concatenate
             final_video = concatenate_videoclips(slides, method="compose")
             
+            # Background Music Mixing (Optional)
+            bg_music = "assets/audio/urgent_bkg.mp3"
+            if os.path.exists(bg_music):
+                print("🎸 Adding background music...")
+                # We'll rely on the audio in the clips for the voiceover
+                # But we want to mix it with BG music
+                voiceover_audio = final_video.audio
+                bg_clip = AudioFileClip(bg_music).volumex(0.15)
+                
+                if bg_clip.duration < voiceover_audio.duration:
+                    bg_clip = bg_clip.loop(duration=voiceover_audio.duration)
+                else:
+                    bg_clip = bg_clip.subclip(0, voiceover_audio.duration)
+                
+                final_audio = CompositeAudioClip([bg_clip, voiceover_audio])
+                final_video = final_video.set_audio(final_audio)
+
             # Export
             output_path = os.path.join("blog", "reels", f"{article['title'][:30].replace(' ', '_').replace('/', '_')}_VIRAL.mp4")
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -78,9 +116,16 @@ class ViralReelGenerator:
                 output_path,
                 fps=self.fps,
                 codec='libx264',
-                audio=False,
+                audio=True, # 🔊 AUDIO IS NOW ON
                 preset='medium'
             )
+            
+            print(f"✅ Viral reel created with Audio: {output_path}")
+            
+            # Cleanup temporary audio files
+            for a_path in audio_clips:
+                if os.path.exists(a_path):
+                    os.remove(a_path)
             
             print(f"✅ Viral reel created: {output_path}")
             
