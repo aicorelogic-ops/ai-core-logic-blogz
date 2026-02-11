@@ -122,20 +122,30 @@ Return ONLY a number 0-100. No explanation."""
             # E. Post Viral Photo to Facebook
             print(f"🚀 Publishing to Facebook as viral photo post...")
             
+            fb_caption = content_package['facebook_msg'].replace("[LINK]", blog_url)
+            image_idea = ""
+            
+            # Extract Image Idea if provided by AI
+            if "|| Image Idea:" in fb_caption:
+                parts = fb_caption.split("|| Image Idea:")
+                fb_caption = parts[0].strip()
+                image_idea = parts[1].strip()
+            
             import urllib.parse
             import random
             
-            image_hook = article['title'][:60] if len(article['title']) <= 60 else article['title'].split(':')[0][:60]
+            # Use AI suggestion if available, else fallback to high-impact face prompt
+            if image_idea:
+                # Add "human face showing emotion" emphasis to AI prompt
+                final_image_prompt = f"iPhone photo amateur candid shot, human face showing extreme emotion, {image_idea}, high-impact, RED CIRCLE around detail, harsh flash"
+            else:
+                image_hook = article['title'][:60] if len(article['title']) <= 60 else article['title'].split(':')[0][:60]
+                final_image_prompt = f"iPhone photo amateur candid shot, shocked human face, {image_hook}, RED CIRCLE, harsh flash"
             
-            # Image generation styles
-            raw_native = f"iPhone photo amateur candid shot, shock '{image_hook}', RED CIRCLE, harsh flash"
-            breaking_news = f"TMZ style breaking news, shocking '{image_hook}', candid, glitchy text banner"
-            
-            chosen_style = random.choice([raw_native, breaking_news])
-            safe_prompt = urllib.parse.quote(chosen_style)
+            safe_prompt = urllib.parse.quote(final_image_prompt)
             photo_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
             
-            photo_post_id = publisher.post_photo(photo_url=photo_url, message=fb_message)
+            photo_post_id = publisher.post_photo(photo_url=photo_url, message=fb_caption)
             
             # F. CREATE AND POST VIRAL REEL
             print(f"🎬 Creating Hyper-Dopamine viral reel...")
@@ -144,7 +154,8 @@ Return ONLY a number 0-100. No explanation."""
             video_post_id = None
             if reel_path:
                 print(f"📤 Posting viral reel to Facebook...")
-                video_post_id = publisher.post_video(reel_path, fb_message)
+                # Also clean the caption for the video
+                video_post_id = publisher.post_video(reel_path, fb_caption)
             
             # G. TRACK ARTICLE AS PROCESSED
             tracker.mark_as_processed(article['link'], {

@@ -69,34 +69,35 @@ class NewsProcessor:
         - Keep paragraphs 1-3 sentences for mobile readability.
         - Take a strong stance. Be opinionated.
         
-        Output 2: A FACEBOOK POST (Plain Text, SHORT & PUNCHY)
-        **KEEP IT SHORT - Long posts are boring, nobody reads them**
-        - Lead with the hook emoji + shocking statement
-        - 2-3 punchy sentences of pain (short!)
-        - 1 sentence with intrigue/benefit
-        - Link + strong CTA
-        - Include emojis for pattern interrupt (🚨, 🔥, ⚡, 💡)
-        - End with: "Full story: [LINK]"
-        - CRITICAL: Include 5-7 relevant hashtags at the very end
+        Output 2: A FACEBOOK POST (Psychologically Optimized for Scale)
+        **VIRAL SPECS:**
+        1. **THE HOOK (Inverted Pyramid)**: The VERY FIRST sentence must be the most shocking, controversial, or high-value insight. DO NOT build up to it. Interrupt the scroll immediately.
         
-        Example structure:
-        🚨 [Shocking hook in 10 words max]
+        2. **HIGH-AROUSAL EMOTION**: Pivot the tone to evoke Awe (Scientific breakthroughs), Anxiety (Looming threats), or Anger (Injustices). Avoid sadness or fluff.
         
-        [Pain sentence 1]. [Pain sentence 2]. 
+        3. **SCANNABILITY (F-Pattern)**: 
+           - Use 1-2 sentence paragraphs only.
+           - Include a bulleted list for the "Meat" of the value.
+           - Start lines with power words.
+           
+        4. **TAC CONCLUSION**:
+           - **Transition**: Signal clearly that you are wrapping up.
+           - **Ask**: Ask a SPECIFIC, simple question (e.g., "Which feature scares you most?" NOT "What do you think?").
+           - **Call to Action**: Explicitly tell them to "Share this to warn others" or "Tag a CEO who needs to see this."
+           
+        5. **VISUAL CUE**: Suggest a specific image idea at the bottom including a HUMAN FACE showing high emotion (Shock, Excitement, or Intensity), as research shows faces drive engagement.
         
-        [Intrigue: "Here's what we found..." or "The solution: ..."]
-        
-        Full story: [LINK]
-        
-        #Hashtag1 #Hashtag2 #Hashtag3 #Hashtag4 #Hashtag5
+        **FORMATTING**:
+        - Use emojis for pattern interrupt (🚨, 🔥, ⚡).
+        - No markdown bolding (**).
+        - Include 5-7 relevant hashtags.
+        - End with: "Full story: [LINK] || Image Idea: [Prompt Description]"
         
         CRITICAL RETURN FORMAT:
-        - DO NOT include labels like "Output 1:" or "Output 2:" in your response
-        - DO NOT include any markdown formatting indicators like **text** in the Facebook post
-        - Separate the two outputs ONLY with the delimiter "|||||"
-        - First part = HTML blog content (can use HTML tags)
-        - Second part = Plain text Facebook post (NO labels, NO markdown, NO formatting indicators)
-        - The Facebook post should start IMMEDIATELY with the content, not with any header
+        - DO NOT include labels like "Output 1:" or "Output 2:".
+        - Separate the two outputs ONLY with the delimiter "|||||".
+        - First part = HTML blog content.
+        - Second part = Plain text Facebook post.
         """
 
         try:
