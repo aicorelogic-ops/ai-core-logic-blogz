@@ -193,11 +193,14 @@ Return ONLY a number 0-100. No explanation."""
             
             # Regex is safer for all whitespace including newlines
             import re
-            clean_prompt = re.sub(r'\s+', ' ', final_image_prompt).strip()
+            # Remove all non-alphanumeric characters except spaces
+            clean_prompt = re.sub(r'[^a-zA-Z0-9 ]', '', final_image_prompt)
+            # Collapse multiple spaces
+            clean_prompt = re.sub(r'\s+', ' ', clean_prompt).strip()
             
-            # Limit to 400 chars to be safe (URL limits)
-            if len(clean_prompt) > 400:
-                clean_prompt = clean_prompt[:400]
+            # Limit to 200 chars to be safe (URL limits)
+            if len(clean_prompt) > 200:
+                clean_prompt = clean_prompt[:200]
 
             print(f"DEBUG: Clean Prompt: {clean_prompt[:100]}...")
             
