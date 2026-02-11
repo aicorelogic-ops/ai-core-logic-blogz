@@ -10,65 +10,97 @@ os.makedirs(POSTS_DIR, exist_ok=True)
 import urllib.parse
 
 class BlogGenerator:
-    def create_post(self, title, content_html, original_link, image_url=None):
+    def __init__(self):
+        self.posts_dir = POSTS_DIR
+
+    def create_slug(self, title):
+        """Creates a URL-friendly slug from the title."""
+        safe_title = "".join([c if c.isalnum() or c.isspace() else "-" for c in title]).lower()
+        return "-".join(safe_title.split())[:50] # Limit slug length
+
+    def calculate_read_time(self, content):
+        """Calculates estimated reading time based on content word count."""
+        # Assuming content is HTML, we need to strip tags for accurate word count
+        import re
+        clean_content = re.sub(r'<[^>]+>', '', content)
+        word_count = len(clean_content.split())
+        return max(1, round(word_count / 200)) # 200 words per minute
+
+    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None):
         """
-        Creates a new HTML file for the blog post.
-        Uses original image if available, else generates one based on title + content keywords.
+        Generates a static HTML page for the blog post.
         """
-        # Create a safe filename
-        safe_title = "".join([c if c.isalnum() else "-" for c in title]).lower()
-        filename = f"{datetime.now().strftime('%Y-%m-%d')}-{safe_title[:30]}.html"
-        filepath = os.path.join(POSTS_DIR, filename)
+        # Create slug
+        slug = self.create_slug(title)
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        filename = f"{date_str}-{slug}.html"
+        filepath = os.path.join(self.posts_dir, filename)
         
+        # If no image provided, generate one using Viral Pattern Interrupt Strategy
+        if not image_url:
+            # Extract the "Bleeding Neck" problem or shocking detail from title
+            image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+            
+            # Apply Direct Response Marketer Framework for Scroll-Stopping Visuals
+            import random
+            
+            # Option A: "Raw Native" / Leaked Evidence (UGC Style)
+            raw_native = (
+                f"iPhone photo amateur candid shot, first-person POV perspective, "
+                f"computer screen showing shocking data about '{image_hook}', "
+                f"messy desk with papers and coffee cup, "
+                f"RED CIRCLE hand-drawn around key detail, RED ARROW pointing to problem, "
+                f"harsh office lighting, grainy quality, user-generated content aesthetic, "
+                f"flash photography, NOT professional, NOT stock photo, leaked evidence style"
+            )
+            
+            # Option B: "Breaking News" (Viral News Chyron)
+            breaking_news = (
+                f"Breaking news TV screenshot style, person looking genuinely SHOCKED or TERRIFIED, "
+                f"holding document with '{image_hook}' visible, "
+                f"news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
+                f"TMZ style viral news aesthetic, candid amateur photo, "
+                f"harsh flash lighting, NOT cinematic, NOT studio quality, "
+                f"dimly lit background, real reaction not posed, grainy iPhone quality"
+            )
+            
+            # Option C: The "Weird" / "Gross" Visual (Confusion Trigger)
+            weird_visual = (
+                f"Close-up macro photo of weird unexpected detail about '{image_hook}', "
+                f"magnified mistake or strange contradiction, confusing composition, "
+                f"makes viewer ask 'what the hell is that?', "
+                f"amateur photography, grainy texture, harsh lighting, "
+                f"NOT aesthetically pleasing, pattern interrupt visual, "
+                f"user-generated content style, candid first-person POV"
+            )
+            
+            # Randomly select one framework for variety
+            chosen_style = random.choice([raw_native, breaking_news, weird_visual])
+            
+            safe_prompt = urllib.parse.quote(chosen_style)
+            image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
         
-        # VIRAL IMAGE GENERATION - Pattern Interrupt Strategy
-        # Extract the "Bleeding Neck" problem or shocking detail from title
-        image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+        # Calculate read time
+        read_time = self.calculate_read_time(content)
         
-        # Apply Direct Response Marketer Framework for Scroll-Stopping Visuals
-        import random
-        
-        # Option A: "Raw Native" / Leaked Evidence (UGC Style)
-        raw_native = (
-            f"iPhone photo amateur candid shot, first-person POV perspective, "
-            f"computer screen showing shocking data about '{image_hook}', "
-            f"messy desk with papers and coffee cup, "
-            f"RED CIRCLE hand-drawn around key detail, RED ARROW pointing to problem, "
-            f"harsh office lighting, grainy quality, user-generated content aesthetic, "
-            f"flash photography, NOT professional, NOT stock photo, leaked evidence style"
-        )
-        
-        # Option B: "Breaking News" (Viral News Chyron)
-        breaking_news = (
-            f"Breaking news TV screenshot style, person looking genuinely SHOCKED or TERRIFIED, "
-            f"holding document with '{image_hook}' visible, "
-            f"news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
-            f"TMZ style viral news aesthetic, candid amateur photo, "
-            f"harsh flash lighting, NOT cinematic, NOT studio quality, "
-            f"dimly lit background, real reaction not posed, grainy iPhone quality"
-        )
-        
-        # Option C: The "Weird" / "Gross" Visual (Confusion Trigger)
-        weird_visual = (
-            f"Close-up macro photo of weird unexpected detail about '{image_hook}', "
-            f"magnified mistake or strange contradiction, confusing composition, "
-            f"makes viewer ask 'what the hell is that?', "
-            f"amateur photography, grainy texture, harsh lighting, "
-            f"NOT aesthetically pleasing, pattern interrupt visual, "
-            f"user-generated content style, candid first-person POV"
-        )
-        
-        # Randomly select one framework for variety
-        chosen_style = random.choice([raw_native, breaking_news, weird_visual])
-        
-        safe_prompt = urllib.parse.quote(chosen_style)
-        image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
-        
-        # Calculate reading time (~200 words per minute)
-        word_count = len(urllib.parse.unquote(content_html).split())
-        reading_time = max(1, round(word_count / 200))
-        
-        # HTML Template for individual post (High Readability Spec)
+        # Prepare Editorial Prospect
+        if not editorial_prospect:
+            editorial_prospect = "We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."
+            
+        editorial_bio_html = f'''
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"{editorial_prospect}"</p>
+                </div>
+            </div>
+        </div>
+        '''
+
+        # Generate HTML content
         post_html = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -76,75 +108,226 @@ class BlogGenerator:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} | AI Core Logic</title>
-    
-    <!-- Open Graph for Facebook -->
-    <meta property="og:title" content="{title} | AI Core Logic" />
-    <meta property="og:type" content="article" />
-    <meta property="og:image" content="{image_url}" />
-    <meta property="og:description" content="Read the latest analysis on AI and Logic-based business automation." />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {{
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }}
+        
+        body {{
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }}
+        
+        /* Navbar */
+        nav {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+        
+        .logo {{
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }}
+        
+        .logo-img {{
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }}
+        
+        .logo-text {{
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }}
+        
+        .logo-text span {{ color: var(--primary); }}
+        
+        .nav-links a {{
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }}
+        
+        .nav-links a:hover {{ color: var(--primary); }}
+        
+        /* Hero Section */
+        .article-hero {{
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('{image_url}') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }}
+        
+        .article-hero::after {{
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }}
+        
+        .hero-content {{
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }}
+        
+        .category-pill {{
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }}
+        
+        h1 {{
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }}
+        
+        .meta-info {{
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }}
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {{
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }}
+        .quick-summary strong {{ color: var(--primary); display: block; margin-bottom: 0.5rem; }}
+        
+        /* Article Body */
+        .article-container {{
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }}
+        
+        .article-body {{
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }}
+        
+        .article-body h2 {{
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }}
+        
+        .article-body p {{ margin-bottom: 1.5rem; }}
+        
+        /* Footer */
+        footer {{
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }}
+
+        .back-btn {{
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }}
+        
+        .back-btn:hover {{ transform: scale(1.05); }}
+    </style>
 </head>
 <body>
-<div id="scroll-progress"></div>
 
-<header>
-    <div class="nav-left">
-        <a href="../index.html" class="logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-            <img src="../assets/brand-logo.png" alt="AI Core Logic" style="height: 40px; border-radius: 4px;">
-            <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; color: #F8FAFC;">AI.CORE <span style="color: #00F0FF;">LOGIC</span></span>
-        </a>
-    </div>
-    <nav class="nav-center">
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
         <a href="../index.html">Home</a>
-    </nav>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>{title}</h1>
+        <div class="meta-info">
+            <span>{date_str}</span>
+            <span>•</span>
+            <span>{read_time} min read</span>
+        </div>
+    </div>
 </header>
 
-<main style="max-width: 900px; margin: 0 auto; padding: 4rem 2rem;">
-    <article class="article-details">
-        <div class="article-meta" style="font-family: 'Space Mono', monospace; font-size: 0.85rem; color: #94A3B8; margin-bottom: 1rem;">
-            {datetime.now().strftime('%B %d, %Y')} &bull; ⏱️ {reading_time} min read
-        </div>
-        
-        <h1 style="font-family: 'Outfit', sans-serif; font-size: 4rem; line-height: 1.1; margin-bottom: 2rem; font-weight: 700; color: #F8FAFC;">{title}</h1>
-        
-        <!-- Hero Image -->
-        <img src="{image_url}" alt="Hero Image" style="width: 100%; border-radius: 12px; margin-bottom: 3rem; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        {{TLDR_SUMMARY}}
+    </div>
 
-        <!-- Quick Summary Box (High Readability Spec) -->
-        <div class="quick-summary">
-            <strong>TL;DR:</strong> 
-            <p>Our deep analysis of this development reveals critical shifts in the AI landscape. We've distilled the noise into the absolute essentials you need to know to stay ahead.</p>
-        </div>
-
-        <div class="article-body" style="font-family: 'Verdana', sans-serif; font-size: 20px; line-height: 1.8; color: #CBD5E1;">
-            {content_html}
-        </div>
+    <!-- Main Content -->
+    <div class="article-body">
+        {content}
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
         
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 4rem 0;">
-        
-        <!-- Author Bio Section -->
-        <div class="author-bio" style="display: flex; gap: 1.5rem; align-items: center; background: #141B24; padding: 2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
-            <div style="width: 80px; height: 80px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00F0FF; box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);">
-                <img src="../assets/brand-logo.png" alt="AI Core Logic Logo" style="width: 100%; height: 100%; object-fit: contain;">
-            </div>
-            <div>
-                <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #F8FAFC;">AI Core Logic Editorial</h4>
-                <p style="margin: 0; font-size: 0.9rem; color: #94A3B8;">Mastering the intersection of logistics, automation, and generative AI. We cut through the hype to find real-world business value.</p>
-            </div>
-        </div>
-
-        <div style="margin-top: 4rem;">
-            <a href="../index.html" class="cta-button primary">← Back to News Feed</a>
-        </div>
-    </article>
+        {editorial_bio_html}
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
 </main>
 
-<script>
-    // Reading Progress Bar
     window.onscroll = function() {{
         let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -160,6 +343,12 @@ class BlogGenerator:
 </html>
         """
         
+        # Replace TL;DR placeholder with actual content
+        if not tldr_summary:
+            tldr_summary = "Key insights and actionable takeaways to stay ahead in the AI landscape."
+        
+        post_html = post_html.replace("{{TLDR_SUMMARY}}", tldr_summary)
+        
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(post_html)
             
@@ -168,55 +357,23 @@ class BlogGenerator:
 
     def update_index(self, title, summary, filename, image_url=None):
         """
-        Injects the new post into the top of index.html using the new Forest Design.
+        Rebuilds the entire site (index.html, category pages, etc.) by calling generate_categories.py.
+        This ensures the new post is correctly categorized and added to all relevant pages.
         """
-        index_path = os.path.join(BLOG_DIR, "index.html")
+        import subprocess
+        print("🔄 Rebuilding site structure (Index + Categories)...")
         
-        if not image_url:
-            # Generate 'Native Card' Image - raw, attention-grabbing thumbnail
-            safe_prompt = urllib.parse.quote(f"Raw smartphone photo about {title}, authentic native social media style, high contrast, pattern interrupt visual, attention-grabbing composition, mint green accent")
-            image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=600&height=400&nologo=true"
-
-        # New Forest-Style Card HTML
-        new_entry = f"""
-        <article class="article-card">
-            <div class="card-image-placeholder" style="background-image: url('{image_url}');">
-                <span class="category-pill">AI Update</span>
-            </div>
-            <div class="card-content">
-                <h2><a href="posts/{filename}">{title}</a></h2>
-                <p class="article-snippet">{summary}...</p>
-                <div class="card-meta">
-                    <span class="date">{datetime.now().strftime('%b %d')}</span>
-                    <a href="posts/{filename}" class="read-more-btn"></a>
-                </div>
-            </div>
-        </article>
-        """
+        # Path to generate_categories.py (assumed to be in project root)
+        # We need to find the root directory relative to this file
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(current_dir) # up one level from 'news_bot'
+        script_path = os.path.join(project_root, "generate_categories.py")
         
         try:
-            with open(index_path, "r", encoding="utf-8") as f:
-                content = f.read()
-            
-            # 🛑 Prevention: Check if this file is already linked in the index
-            if f'href="posts/{filename}"' in content:
-                print(f"⏭️ Skipping index update: {filename} already exists in index.html")
-                return
-            
-            # Find the injection point (after <main id="news-feed">)
-            # We look for the comment or the opening tag
-            marker = '<main id="news-feed">'
-            if marker in content:
-                updated_content = content.replace(marker, marker + "\n" + new_entry)
-                
-                with open(index_path, "w", encoding="utf-8") as f:
-                    f.write(updated_content)
-                print(f"✅ Index.html updated with new Image Card: {filename}")
-            else:
-                print("❌ Could not find injection marker in index.html")
-                
+            subprocess.run(["python", script_path], check=True, cwd=project_root)
+            print("✅ Site rebuild complete.")
         except Exception as e:
-            print(f"❌ Error updating index: {e}")
+            print(f"❌ Error rebuilding site: {e}")
 
     def deploy_to_github(self):
         """
