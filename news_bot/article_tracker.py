@@ -26,7 +26,7 @@ class ArticleTracker:
             with open(self.tracking_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
-            print(f"⚠️ Error loading tracker: {e}")
+            print(f"[WARN] Error loading tracker: {e}")
             return {}
     
     def _save_data(self, data):
@@ -35,7 +35,7 @@ class ArticleTracker:
             with open(self.tracking_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
         except Exception as e:
-            print(f"❌ Error saving tracker: {e}")
+            print(f"[ERROR] Error saving tracker: {e}")
     
     def is_processed(self, article_url):
         """
@@ -72,7 +72,7 @@ class ArticleTracker:
         data[article_url] = metadata
         self._save_data(data)
         
-        print(f"✅ Tracked: {metadata.get('title', article_url)}")
+        print(f"[OK] Tracked: {metadata.get('title', article_url)}")
     
     def get_processed_count(self):
         """Get total number of processed articles"""
@@ -131,7 +131,7 @@ class ArticleTracker:
         if article_url in data:
             del data[article_url]
             self._save_data(data)
-            print(f"🗑️ Removed from tracking: {article_url}")
+            print(f"[REMOVED] Removed from tracking: {article_url}")
             return True
         return False
     
@@ -156,7 +156,7 @@ class ArticleTracker:
         """Print summary of tracked articles"""
         articles = self.list_all_articles()
         
-        print(f"\n📊 Article Tracker Summary")
+        print(f"\n[Article Tracker Summary]")
         print(f"{'='*60}")
         print(f"Total Processed: {len(articles)}")
         print(f"\nRecent Articles (last 7 days): {len(self.get_recent_articles(7))}")
@@ -164,7 +164,7 @@ class ArticleTracker:
         if articles:
             print(f"\n5 Most Recent:")
             for article in articles[:5]:
-                print(f"  • {article['title'][:50]}")
+                print(f"  - {article['title'][:50]}")
                 print(f"    Date: {article['processed_date'][:10]}")
                 print(f"    FB ID: {article['facebook_post_id']}")
                 print()

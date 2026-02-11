@@ -5,5 +5,20 @@
     "facebook_photo_id": null,
     "facebook_video_id": null,
     "processed_date": "2026-02-11T16:38:31.916952"
+  },
+  "https://www.cnbc.com/2026/02/10/the-ai-threat-wrecked-software-stocks-now-broker-stocks-look-next-with-lpl-down-11percent.html": {
+    "title": "The AI threat wrecked software stocks. Now broker stocks look next with LPL down 11%",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-11T17:10:39.438266"
+  },
+  "https://www.forbes.com/sites/rogerdooley/2026/02/11/by-years-end-4-in-5-small-businesses-will-use-ai-marketing-tools/": {
+    "title": "By Year's End, 4 In 5 Small Businesses Will Use AI Marketing Tools",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-11T17:11:54.823087"
+  },
+  "https://www.marketwatch.com/story/the-sell-off-in-ai-losers-has-been-so-steep-that-this-famed-activist-investor-has-reportedly-sprung-into-action-c100732b": {
+    "title": "The sell-off in AI losers has been so steep that this famed activist investor has reportedly sprung into action",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-11T17:11:54.878718"
   }
 }

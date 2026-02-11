@@ -84,8 +84,30 @@ Return ONLY a number 0-100. No explanation."""
     # viral_gen = ViralReelGenerator()  # Removed per user request
 
     # Process only the BEST article (highest viral score)
-    for article in [best_article]:  # Process only the winner
+    # UPDATED: Loop through top 3 articles in case the best one is a duplicate
+    articles_with_scores.sort(key=lambda x: x[1], reverse=True)
+    
+    selected_article = None
+    
+    for article, score in articles_with_scores[:3]:
+        print(f"Checking candidate: {article['title'].encode('ascii', 'ignore').decode('ascii')} (Score: {score})")
+        
+        # Check against existing filesystem (Title Similarity)
+        is_dup, existing_file = blog_gen.is_duplicate_title(article['title'])
+        if is_dup:
+             print(f"  SKIP: Similar article already exists: {existing_file}")
+             # Mark as processed so we don't check it again next time
+             tracker.mark_as_processed(article['link'], {'title': article['title'], 'status': 'duplicate_skipped'})
+             continue
+             
+        selected_article = article
+        break
+    
+    if not selected_article:
+        print("All top candidates were duplicates or processed. Sleeping.")
+        return
 
+    for article in [selected_article]:  # Process only the winner
         print(f"Processing: {article['title'].encode('ascii', 'ignore').decode('ascii')}")
         
         # Generates DICT: {'blog_html': ..., 'facebook_msg': ...}

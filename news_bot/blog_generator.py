@@ -8,6 +8,8 @@ POSTS_DIR = os.path.join(BLOG_DIR, "posts")
 os.makedirs(POSTS_DIR, exist_ok=True)
 
 import urllib.parse
+import re
+from difflib import SequenceMatcher
 
 class BlogGenerator:
     def __init__(self):
@@ -25,6 +27,42 @@ class BlogGenerator:
         clean_content = re.sub(r'<[^>]+>', '', content)
         word_count = len(clean_content.split())
         return max(1, round(word_count / 200)) # 200 words per minute
+
+    def is_duplicate_title(self, candidate_title, threshold=0.85):
+        """
+        Checks if a similar title already exists in the blog posts.
+        Returns (bool, existing_filename)
+        """
+        # Get all HTML files
+        if not os.path.exists(self.posts_dir):
+            return False, None
+            
+        posts = [f for f in os.listdir(self.posts_dir) if f.endswith(".html")]
+        
+        candidate_clean = candidate_title.lower().strip()
+        
+        for post in posts:
+            try:
+                with open(os.path.join(self.posts_dir, post), "r", encoding="utf-8", errors="ignore") as f:
+                    content = f.read()
+                    
+                # Extract title
+                title_match = re.search(r'<title>(.*?) \|', content)
+                if not title_match:
+                    continue
+                    
+                existing_title = title_match.group(1).lower().strip()
+                
+                # Check similarity
+                similarity = SequenceMatcher(None, candidate_clean, existing_title).ratio()
+                
+                if similarity > threshold:
+                    return True, post
+            except Exception as e:
+                print(f"Error reading {post}: {e}")
+                continue
+                
+        return False, None
 
     def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None):
         """

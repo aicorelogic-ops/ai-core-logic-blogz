@@ -1,5 +1,6 @@
 
 import requests
+import os
 from .settings import FB_PAGE_ACCESS_TOKEN, FB_PAGE_ID
 
 class FacebookPublisher:
@@ -68,19 +69,60 @@ class FacebookPublisher:
                 print(f"Image check failed: {e}, waiting {retry_delay}s...")
                 time.sleep(retry_delay)
         
-        # Now post to Facebook
-        payload = {
-            "url": photo_url,
-            "caption": message,
-            "access_token": self.token
-        }
-
+        # Now post to Facebook using BINARY UPLOAD (More reliable than URL)
         try:
-            response = requests.post(url, data=payload, timeout=30)
+            # 1. Get image content (Local File or URL)
+            print("Retrieving image for binary upload...")
+            
+            image_content = None
+            if photo_url.startswith("file://"):
+                local_path = photo_url.replace("file://", "")
+                if os.name == 'nt': # Windows fix for file:///C:/...
+                    local_path = local_path.lstrip('/')
+                
+                print(f"Reading local file: {local_path}")
+                with open(local_path, "rb") as f:
+                    image_content = f.read()
+            else:
+                image_content = self._download_image_content(photo_url)
+            
+            if not image_content:
+                print("Failed to retrieve image content.")
+                return None
+            
+            content_size = len(image_content)
+            print(f"Image Size: {content_size} bytes.")
+            
+            if content_size < 1000:
+                print(f"WARNING: Image too small! Content preview: {str(image_content[:200])}")
+            
+            # 2. Prepare multipart upload
+            files = {
+                'source': ('image.jpg', image_content, 'image/jpeg')
+            }
+            
+            # Send token in query params to avoid multipart confusion
+            params = {
+                "access_token": self.token
+            }
+            
+            data = {
+                "caption": message,
+                "published": "true"
+            }
+
+            print("Uploading binary image data to Facebook (Token in Params)...")
+            response = requests.post(url, files=files, data=data, params=params, timeout=60)
+            
+            # Check for specific subcode errors
+            if response.status_code >= 400:
+                print(f"Facebook API Error Response: {response.text}")
+                
             response.raise_for_status()
             data = response.json()
             print(f"Successfully posted photo to Facebook! ID: {data.get('id')}")
             return data.get('id')
+            
         except requests.exceptions.RequestException as e:
             self._handle_error(e, response if 'response' in locals() else None)
             return None
@@ -217,6 +259,37 @@ class FacebookPublisher:
             with open("fb_error.txt", "w", encoding="utf-8") as f:
                 f.write(response.text)
             print(f"Response saved to fb_error.txt")
+            
+    def _download_image_content(self, url):
+        """
+        Robustly downloads image content, handling redirects and headers.
+        """
+        print(f"Downloading image from: {url}")
+        try:
+            session = requests.Session()
+            session.headers.update({
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            })
+            
+            response = session.get(url, stream=True, timeout=30, allow_redirects=True)
+            response.raise_for_status()
+            
+            content = b""
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    content += chunk
+                    
+            if len(content) == 0:
+                print("WARNING: Downloaded content is empty.")
+                return None
+                
+            return content
+        except Exception as e:
+            print(f"Download invalid: {e}")
+            return None
 
 if __name__ == "__main__":
     # Test run
