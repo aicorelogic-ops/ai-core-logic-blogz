@@ -60,7 +60,15 @@
             <h2 style="color: #fff; margin-top: 0; margin-bottom: 0.5rem;">Partner With Us</h2>
             <p style="color: #94A3B8; margin-bottom: 2rem;">Ready to optimize your logic? Tell us what you're building.</p>
             
-            <form action="mailto:consulting@aicorelogic.com" method="post" enctype="text/plain">
+            <!-- Formspree Integration -->
+            <form action="https://formspree.io/f/xbdadegq" method="POST">
+                
+                <!-- Anti-spam honeypot (hidden) -->
+                <input type="text" name="_gotcha" style="display:none">
+                
+                <!-- Success redirect (optional, or rely on Formspree default) -->
+                <!-- <input type="hidden" name="_next" value="https://aicorelogic-ops.github.io/ai-core-logic/thanks.html"> -->
+
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Jane Doe" required>
@@ -73,10 +81,10 @@
                 
                 <div class="form-group">
                     <label>Computed Needs (How can we help?)</label>
-                    <textarea name="needs" class="form-control" placeholder="I need to automate my dispatch workflow..." required></textarea>
+                    <textarea name="message" class="form-control" placeholder="I need to automate my dispatch workflow..." required></textarea>
                 </div>
                 
-                <button type="submit" class="submit-btn">Schedule Consulting Appointment</button>
+                <button type="submit" class="submit-btn" style="background: #00F0FF; color: #000; font-weight: 700; border: none; padding: 1rem; border-radius: 6px; cursor: pointer; width: 100%;">Schedule Consulting Appointment</button>
             </form>
         </div>
     </main>
