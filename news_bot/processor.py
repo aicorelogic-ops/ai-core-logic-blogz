@@ -33,51 +33,43 @@ class NewsProcessor:
         Summary: {article['summary']}
         
         CORE PRINCIPLES:
-        - 80% about the PROSPECT'S pain/desires, only 20% about the solution
-        - Use short, punchy sentences (6th grade reading level)
-        - NO fluff or generic intros like "In today's world..."
-        - Sell the CLICK, not the product
+        - HIGH-READABILITY: Structure for scanners first. Most important info at the TOP.
+        - HIGH-AROUSAL EMOTION: Evoke awe, anxiety, or anger to drive virality.
+        - NO FLUFF: One idea per sentence. 6th grade reading level.
+        - MOBILE-FIRST: Paragraphs must be 1-3 sentences max.
         
         Task: Create TWO outputs in a strictly formatted way.
         
         Output 1: A BLOG POST (HTML Format)
-        **CRITICAL: REWRITE the news, DON'T just copy it. Apply SABRI SUBY COPYWRITING:**
+        **STRUCTURE SPECS:**
         
-        **FORUM FORAGING**: Use the prospect's exact language (not corporate jargon)
-        - Talk like a frustrated logistics owner, not a journalist
-        - Use words like "bleeding cash", "burning hours", "stuck", "frustrated"
+        1. **PATTERN INTERRUPT HOOK**: Start with a shocking statement or number.
         
-        **80/20 RULE**: 80% about THEIR pain/problem, only 20% about the solution
-        - Spend most of the blog agitating the problem they didn't know they had
-        - Make them FEEL the cost of inaction
+        2. **PPT INTRO (Preview, Proof, Transition)**:
+           - PREVIEW: What is this post about?
+           - PROOF: Why should they listen? (Expertise/Data)
+           - TRANSITION: Move them into the body content.
+           
+        3. **INVERTED PYRAMID**: Put the "Who, What, When, Where, Why" in the first 2 paragraphs.
         
-        **SELL THE CLICK**: Create burning intrigue, not summary
-        - Don't reveal everything - make them curious
-        - Use specific numbers that shock (e.g., "$40k lost per year on this mistake")
+        4. **LAYER-CAKE SCANNING**:
+           - Use BOLD and DESCRIPTIVE H2/H3 headers.
+           - Use BULLET POINTS (<ul><li>) for key data.
+           - NO generic headers like "Introduction" or "Conclusion".
+           
+        5. **SABRI SUBY STYLE**: 80% agitation of pain/desire, 20% solution.
         
-        **6TH GRADE READABILITY**: Short punchy sentences
-        - No fluff. No fancy words. Get to the point.
-        - One idea per sentence. Easy to scan.
+        6. **TAC CONCLUSION (Transition, Ask, Call to Action)**:
+           - TRANSITION: Signal the end of the content.
+           - ASK: Ask a specific question to encourage comments/shares.
+           - CALL TO ACTION: Tell them exactly what to do next.
         
-        **OPINIONATED, NOT NEUTRAL**: 
-        - Take a strong stance (e.g., "This is stupid" or "This changes everything")
-        - Make predictions (e.g., "Companies ignoring this will be obsolete in 18 months")
-        - Add YOUR voice, not the original article's voice
+        **CONTENT RULES**:
+        - Use H2 for major segments and H3 for sub-points.
+        - Keep paragraphs 1-3 sentences for mobile readability.
+        - Take a strong stance. Be opinionated.
         
-        **Structure**:
-        - Start with a PATTERN INTERRUPT hook (not generic intro)
-        - Use <h3> for subheaders to break up text
-        - Use <p> for paragraphs, <b> for emphasis, <ul><li> for lists
-        - Structure:
-            1. Hook: Pattern interrupt (e.g., "Your dispatcher is burning $10k/month. Here's proof.")
-            2. Agitate the Pain: What's really costing them (use specific numbers/scenarios)
-            3. The Discovery: What we found that changes everything  
-            4. Why It Matters: Specific benefit for logistics/business owners
-            5. The Prediction: Where this is headed (urgency + authority)
-        - Long-form content (buyers need details to convert)
-        - Use subheads like "The Silent Profit Killer", "What We Discovered", "The 40% Rule"
-        
-        Output 2: A FACEBOOK POST (Plain Text, SHORT & PUNCHY 100-150 words MAX)
+        Output 2: A FACEBOOK POST (Plain Text, SHORT & PUNCHY)
         **KEEP IT SHORT - Long posts are boring, nobody reads them**
         - Lead with the hook emoji + shocking statement
         - 2-3 punchy sentences of pain (short!)
