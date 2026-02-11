@@ -69,22 +69,45 @@ class NewsProcessor:
         - Keep paragraphs 1-3 sentences for mobile readability.
         - Take a strong stance. Be opinionated.
         
-        Output 2: A FACEBOOK POST (Psychologically Optimized for Scale)
-        **ULTRA-BREVITY SPECS (CRITICAL):**
-        - **MAX 60-80 WORDS TOTAL.** 
-        - **AGGRESSIVELY PUNCHY**: Use short, staccato sentences. 
+        Output 2: A FACEBOOK POST (Research-Backed Engagement Formula)
         
-        **VIRAL SPECS:**
-        1. **HOOK**: Single shocking sentence.
-        2. **EMOTION**: Evoke Awe, Anxiety, or Anger.
-        3. **STRUCTURE**: Hook -> 2 punchy lines of value -> Ask -> CTA.
-        4. **VISUAL**: Suggest specific visual elements for the news graphic (scene, mood, key elements).
+        **CONTENT STRATEGY FRAMEWORK:**
+        Apply the PPT Formula for maximum impact:
+        1. **PREVIEW (Line 1)**: Front-load the most shocking/valuable insight in the FIRST 2-3 WORDS
+           - Users scan in F-pattern (top left is critical)
+           - First line must stand alone and arrest scrolling
         
-        **FORMATTING**:
-        - Use 2-3 emojis max.
-        - No markdown bolding.
-        - 3 relevant hashtags.
-        - End with: "Full story: [LINK] || Image Idea: [Brief scene description for news graphic]"
+        2. **PROOF (Line 2)**: Establish credibility or amp emotion
+           - Cite data, trends, or amplify the "why this matters NOW"
+           - Must evoke HIGH-AROUSAL emotion (choose ONE):
+             * ✅ AWE/EXCITEMENT (wonder, breakthrough)
+             * ✅ ANXIETY (urgency, fear of missing out) 
+             * ✅ ANGER (injustice, outrage)
+             * ❌ AVOID: Sadness, contentment (low arousal = no shares)
+        
+        3. **TRANSITION (Lines 3-4)**: Deliver practical value in 1-2 punchy lines
+           - Short paragraphs (1-2 sentences each) get 2x more eye fixations
+           - Each line should be scannable on its own
+        
+        **FORMATTING FOR SCANNABILITY:**
+        - **MAX 60-80 WORDS TOTAL** (ultra-brevity)
+        - Line breaks after every 1-2 sentences (white space = focus)
+        - 2-3 emojis max (visual breaks, not clutter)
+        - NO markdown bolding
+        - Use [BRACKETS] around 1 key term for 38% higher CTR
+        
+        **TAC CLOSE (Call to Action):**
+        - **T**ransition: Signal the end
+        - **A**sk: Specific 2-second question (not "thoughts?")
+        - **C**TA: Direct command ("Click," "Read," "Share")
+        
+        **HEADLINE HOOK:**
+        - 3 relevant hashtags (social proof + discoverability)
+        - End with: "Full story: [LINK] || Image Idea: [Brief scene for news graphic]"
+        
+        **VISUAL GUIDANCE:**
+        - Suggest scene with FACES (multiple faces = maximum attention)
+        - Align mood with arousal emotion (urgent/exciting/shocking)
         
         CRITICAL RETURN FORMAT:
         - Separate outputs ONLY with "|||||".
