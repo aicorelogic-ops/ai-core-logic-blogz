@@ -5,6 +5,7 @@ from .publisher import FacebookPublisher
 from .blog_generator import BlogGenerator
 from .article_tracker import ArticleTracker
 from .viral_reel_generator import ViralReelGenerator
+from .image_design_helper import analyze_article_visual_context, create_news_overlay_prompt
 
 def run_bot():
     print("🤖 Starting AI Core Logic News Bot...")
@@ -125,22 +126,26 @@ Return ONLY a number 0-100. No explanation."""
             fb_caption = content_package['facebook_msg'].replace("[LINK]", blog_url)
             image_idea = ""
             
-            # Extract Image Idea if provided by AI
-            if "|| Image Idea:" in fb_caption:
+            # Extract Image Design specs if provided by AI (NEW format: || Image Design:)
+            if "|| Image Design:" in fb_caption:
+                parts = fb_caption.split("|| Image Design:")
+                fb_caption = parts[0].strip()
+                image_idea = parts[1].strip()
+            # Fallback to old format for compatibility
+            elif "|| Image Idea:" in fb_caption:
                 parts = fb_caption.split("|| Image Idea:")
                 fb_caption = parts[0].strip()
                 image_idea = parts[1].strip()
             
             import urllib.parse
-            import random
             
-            # Use AI suggestion if available, else fallback to high-impact face prompt
-            if image_idea:
-                # Add "human face showing emotion" emphasis to AI prompt
-                final_image_prompt = f"iPhone photo amateur candid shot, human face showing extreme emotion, {image_idea}, high-impact, RED CIRCLE around detail, harsh flash"
-            else:
-                image_hook = article['title'][:60] if len(article['title']) <= 60 else article['title'].split(':')[0][:60]
-                final_image_prompt = f"iPhone photo amateur candid shot, shocked human face, {image_hook}, RED CIRCLE, harsh flash"
+            # NEW APPROACH: Use news overlay style inspired by ABC News / Variety graphics
+            print(f"🎨 Analyzing article for visual design specs...")
+            design_specs = analyze_article_visual_context(article)
+            print(f"   Design specs: {design_specs['category_badge']} | {design_specs['emotion_trigger']} mood")
+            
+            # Generate professional news-style prompt
+            final_image_prompt = create_news_overlay_prompt(article, design_specs, image_idea)
             
             safe_prompt = urllib.parse.quote(final_image_prompt)
             photo_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"

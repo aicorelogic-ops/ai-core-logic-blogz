@@ -70,33 +70,25 @@ class NewsProcessor:
         - Take a strong stance. Be opinionated.
         
         Output 2: A FACEBOOK POST (Psychologically Optimized for Scale)
+        **ULTRA-BREVITY SPECS (CRITICAL):**
+        - **MAX 60-80 WORDS TOTAL.** 
+        - **AGGRESSIVELY PUNCHY**: Use short, staccato sentences. 
+        
         **VIRAL SPECS:**
-        1. **THE HOOK (Inverted Pyramid)**: The VERY FIRST sentence must be the most shocking, controversial, or high-value insight. DO NOT build up to it. Interrupt the scroll immediately.
-        
-        2. **HIGH-AROUSAL EMOTION**: Pivot the tone to evoke Awe (Scientific breakthroughs), Anxiety (Looming threats), or Anger (Injustices). Avoid sadness or fluff.
-        
-        3. **SCANNABILITY (F-Pattern)**: 
-           - Use 1-2 sentence paragraphs only.
-           - Include a bulleted list for the "Meat" of the value.
-           - Start lines with power words.
-           
-        4. **TAC CONCLUSION**:
-           - **Transition**: Signal clearly that you are wrapping up.
-           - **Ask**: Ask a SPECIFIC, simple question (e.g., "Which feature scares you most?" NOT "What do you think?").
-           - **Call to Action**: Explicitly tell them to "Share this to warn others" or "Tag a CEO who needs to see this."
-           
-        5. **VISUAL CUE**: Suggest a specific image idea at the bottom including a HUMAN FACE showing high emotion (Shock, Excitement, or Intensity), as research shows faces drive engagement.
+        1. **HOOK**: Single shocking sentence.
+        2. **EMOTION**: Evoke Awe, Anxiety, or Anger.
+        3. **STRUCTURE**: Hook -> 2 punchy lines of value -> Ask -> CTA.
+        4. **VISUAL**: Suggest specific visual elements for the news graphic (scene, mood, key elements).
         
         **FORMATTING**:
-        - Use emojis for pattern interrupt (🚨, 🔥, ⚡).
-        - No markdown bolding (**).
-        - Include 5-7 relevant hashtags.
-        - End with: "Full story: [LINK] || Image Idea: [Prompt Description]"
+        - Use 2-3 emojis max.
+        - No markdown bolding.
+        - 3 relevant hashtags.
+        - End with: "Full story: [LINK] || Image Idea: [Brief scene description for news graphic]"
         
         CRITICAL RETURN FORMAT:
-        - DO NOT include labels like "Output 1:" or "Output 2:".
-        - Separate the two outputs ONLY with the delimiter "|||||".
-        - First part = HTML blog content.
+        - Separate outputs ONLY with "|||||".
+        - First part = HTML blog.
         - Second part = Plain text Facebook post.
         """
 
