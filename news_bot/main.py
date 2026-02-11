@@ -185,27 +185,20 @@ Return ONLY a number 0-100. No explanation."""
             design_specs = analyze_article_visual_context(article)
             print(f"   Design specs: {design_specs['category_badge']} | {design_specs['emotion_trigger']} mood")
             
-            # Generate professional news-style prompt
-            final_image_prompt = create_news_overlay_prompt(article, design_specs, image_idea)
             
-            # Sanitize prompt for URL (Pollinations doesn't like newlines or excessive length)
-            # clean_prompt = final_image_prompt.replace('\n', ' ').replace('\r', '').replace('  ', ' ').strip()
+            # FALLBACK: Ultra-simple prompt to guarantee generation
+            # Pollinations seems to be rejecting complex prompts today
+            clean_prompt = f"News graphic about {article['title']}"
             
-            # Regex is safer for all whitespace including newlines
+            # Sanitize just in case
             import re
-            # Remove all non-alphanumeric characters except spaces
-            clean_prompt = re.sub(r'[^a-zA-Z0-9 ]', '', final_image_prompt)
-            # Collapse multiple spaces
-            clean_prompt = re.sub(r'\s+', ' ', clean_prompt).strip()
+            clean_prompt = re.sub(r'[^a-zA-Z0-9 ]', '', clean_prompt)
+            clean_prompt = urllib.parse.quote(clean_prompt.strip())
             
-            # Limit to 200 chars to be safe (URL limits)
-            if len(clean_prompt) > 200:
-                clean_prompt = clean_prompt[:200]
-
-            print(f"DEBUG: Clean Prompt: {clean_prompt[:100]}...")
+            print(f"DEBUG: Using Simple Prompt: {clean_prompt}")
             
-            safe_prompt = urllib.parse.quote(clean_prompt)
-            photo_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
+            # safe_prompt = urllib.parse.quote(clean_prompt) # Already quoted above
+            photo_url = f"https://image.pollinations.ai/prompt/{clean_prompt}?width=1200&height=630&nologo=true"
             
             photo_post_id = publisher.post_photo(photo_url=photo_url, message=fb_caption)
             
