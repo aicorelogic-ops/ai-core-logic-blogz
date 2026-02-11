@@ -195,9 +195,9 @@ Return ONLY a number 0-100. No explanation."""
             import re
             clean_prompt = re.sub(r'\s+', ' ', final_image_prompt).strip()
             
-            # Limit to 800 chars to be safe (URL limits)
-            if len(clean_prompt) > 800:
-                clean_prompt = clean_prompt[:800]
+            # Limit to 400 chars to be safe (URL limits)
+            if len(clean_prompt) > 400:
+                clean_prompt = clean_prompt[:400]
 
             print(f"DEBUG: Clean Prompt: {clean_prompt[:100]}...")
             
