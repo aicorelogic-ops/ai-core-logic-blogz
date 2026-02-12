@@ -2,6 +2,12 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 from news_bot.blog_generator import BlogGenerator
+from news_bot.collector import NewsCollector
+from news_bot.article_tracker import ArticleTracker
+import time
+from google.api_core import exceptions
+import urllib.parse
+import re
 
 # Load Environment Variables
 load_dotenv(os.path.join("news_bot", ".env"))
@@ -39,254 +45,172 @@ Format options:
 - Output MUST be raw HTML (no <html> tags, just the body content).
 """
 
-ARTICLES = [
-    {
-        "type": "Provocative",
-        "title": "The Death of the Middle Manager",
-        "summary": "Why AI Agents are flattening logistics orgs and saving 40% overhead.",
-        "prompt": """
-        Write a blog post titled "The Death of the Middle Manager: How AI Agents are Flattening Logistics Orgs".
+def score_viral_potential(article):
+    """
+    Scores an article 0-100 based on viral potential using Gemini.
+    """
+    try:
+        model = genai.GenerativeModel('models/gemini-2.0-flash')
         
-        STRUCTURE (80% PAIN, 20% SOLUTION):
-        1. Hook: Pattern interrupt - "Middle Management is the 'silent profit killer'. Here's the proof."
-        2. Agitate Pain: The telephone game, lost hours, 3am emergency calls, burning overhead
-        3. The Discovery: AI Agents negotiate in 300ms (use specific numbers)
-        4. Why It Matters: Specific benefit for logistics owners (e.g., "40% overhead reduction")
-        5. Prediction: Where this is headed (90% fewer managers by 2027)
-        
-        Use prospect language: "You're paying a middle manager $80k to forward emails."
-        """,
-        "social_prompt": """
-        Write a Facebook Ad for this article (LONG-FORM 200+ words).
-        
-        HYPER-DOPAMINE STRUCTURE:
-        1. Call out the audience: "Logistics owners with 10+ person teams..."
-        2. Agitate specific pain: "You're burning $15k/month on middle managers who just... forward emails. 
-           At 3am, they call YOU anyway. The 'telephone game' is costing you deals."
-        3. Curiosity Gap: "We discovered something that cuts management overhead by 40%. No layoffs. No drama."
-        4. Specific Benefit + Intrigue: "AI Agents that negotiate carrier rates in 300 milliseconds."
-        5. The Big Reveal: "The Death of the Middle Manager" (title drop)
-        6. CTA: "The full blueprint is here: [LINK]"
-        7. HASHTAGS: Include 5-7 relevant hashtags at the end (e.g., #AI #Logistics #BusinessAutomation #MiddleManagement #AIAgents #SupplyChain #TechInnovation)
-        
-        Style: Long copy, emojis (🚨⚡), pattern interrupt, specific numbers, NOT vague clickbait.
-        """
-    },
-    {
-        "type": "Case Study",
-        "title": "Case Study: Automating a 50-Person Dispatch Team",
-        "summary": "The exact blueprint we used to recover 20 hours/week per dispatcher.",
-        "prompt": """
-        Write a Case Study titled "We Automated a 50-Person Dispatch Team. Here's the Exact Blueprint."
-        
-        STRUCTURE:
-        1. Hook: "4,000 emails a day. 50 people drowning. One solution."
-        2. The Problem: 80% PAIN - Humans reading slow, errors, burnout, 3am calls
-        3. The Bottleneck: Show the exact pain point (use real scenarios)
-        4. The Fix: Inbox Agent - but focus on RESULTS, not tech specs
-        5. Result: 20 hours saved/week per dispatcher (specific number)
-        
-        Use prospect language: "Your dispatchers are buried in admin hell."
-        """,
-        "social_prompt": """
-        Write a Facebook Ad for this Case Study (LONG-FORM 200+ words).
-        
-        HYPER-DOPAMINE STRUCTURE:
-        1. Call out: "If you're drowning in 4,000 emails a day..."
-        2. Paint the nightmare: "Your team spends 6 hours/day just sorting carrier emails. The invoices pile up."
-        3. The discovery: "We eliminated 90% of email admin. Here's the before/after."
-        4. Specific proof: "20 hours saved per dispatcher. 50-person team. Real numbers."
-        5. The reveal: Case study title drop
-        6. CTA: "See the full breakdown: [LINK]"
-        7. HASHTAGS: Include 5-7 relevant hashtags (e.g., #CaseStudy #EmailAutomation #ProductivityHacks #Logistics #AI #DispatchTeam #BusinessEfficiency)
-        
-        Style: Long copy, emojis (📊💡), case study proof, specific metrics, NOT theoretical.
-        """
-    },
-    {
-        "type": "Tutorial",
-        "title": "Tutorial: Build Your Own 'Email Sorter' Bot",
-        "summary": "A 10-minute guide to building your first AI logic filter.",
-        "prompt": """
-        Write a technical Tutorial titled "How to Build Your Own 'Email Sorter' Bot in 10 Minutes".
-        
-        STRUCTURE:
-        1. Hook: "You don't need a $50k dev team. Here's proof."
-        2. Pain (80%): "Your inbox is a graveyard. 800 unread. Missed deals. Anxiety."
-        3. Promise: No-code logic, anyone can do this
-        4. The Stack: Python + Gemini (but keep it simple)
-        5. The Concept: Auto-sorting magic
-        6. The Benefit: Inbox peace (emotional outcome)
-        
-        Make it accessible to non-technical readers.
-        """,
-        "social_prompt": """
-        Write a Facebook Ad for this Tutorial (LONG-FORM 200+ words).
-        
-        HYPER-DOPAMINE STRUCTURE:
-        1. Call out: "If you have 800+ unread emails right now..."
-        2. Agitate: "Your inbox: 800 unread. You miss deals. You feel behind. Every. Single. Day."
-        3. The Reveal: "I built an 'Email Sorter' bot in 10 minutes. Zero code. Zero devs."
-        4. Specific Benefit: "Inbox goes from 800 → 0. Autopilot."
-        5. The Offer: "I'm giving you the exact 10-minute blueprint."
-        6. CTA: "Reclaim your peace here: [LINK]"
-        7. HASHTAGS: Include 5-7 relevant hashtags (e.g., #Tutorial #EmailProductivity #AITools #NoCode #Automation #WorkSmarter #TechTutorial)
-        
-        Style: Rebellious, specific, long-form, emojis (🔥💡).
-        """
-    }
-]
+        prompt = f"""Score this article for VIRAL POTENTIAL in the logistics/business automation niche (0-100).
 
+Title: {article['title']}
+Summary: {article.get('summary', '')[:500]}
+
+Scoring Factors:
+1. SPECIFICITY: Does it have specific numbers/data? ($40k, 30% increase, etc.)
+2. CONTROVERSY: Is it provocative or posted by a major player (Elon, Bezos, etc)?
+3. URGENCY: Does it create time pressure or FOMO?
+4. RELEVANCE: Will logistics/small business owners care?
+5. CLICKBAIT FACTOR: Does the title create a curiosity gap?
+
+Return ONLY a number 0-100. No explanation."""
+
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+        match = re.search(r'\d+', text)
+        if match:
+            score = int(match.group())
+            return max(0, min(100, score))
+        return 50
+    except Exception as e:
+        print(f"⚠️ Scoring error: {e}")
+        return 50
 
 def generate_hvco():
-    print("🚀 Starting HVCO Generator (Sabri Mode)...")
+    print("🚀 Starting HVCO Generator (Live RSS Mode)...")
     
     from news_bot.publisher import FacebookPublisher
     blog_gen = BlogGenerator()
     fb_pub = FacebookPublisher()
+    tracker = ArticleTracker()
     model = genai.GenerativeModel('models/gemini-2.0-flash')
 
-    import time
-    from google.api_core import exceptions
-    import urllib.parse
-
-    # Intelligent Article Selection
-    print("🧠 Analyzing viral potential of available angles...")
-
-    # INJECT LIVE TEST ARTICLE
-    ARTICLES.append({
-        'title': 'The Agentic Shift: Why Chatbots Are Dead and Agents Are The Future',
-        'summary': 'A strategic look at how autonomous AI agents are replacing simple chatbots in logistics, driving real ROI instead of just answering FAQs.',
-        'link': 'https://example.com/agentic-shift',
-        'type': 'Strategic Insight',
-        'viral_score': 98,
-        'prompt': """
-        Write a blog post titled "The Agentic Shift: Why Chatbots are Dead".
-        
-        STRUCTURE:
-        1. Hook: "Stop building chatbots. They are digital answering machines."
-        2. The Shift: Agents DO work. Chatbots TALK about work.
-        3. Real World: An agent that negotiates freight vs a chatbot that quotes a tracking number.
-        4. The ROI: 10x productivity for teams that switch.
-        """,
-        'social_prompt': """
-        Write a Facebook Ad for this article.
-        
-        STRUCTURE:
-        1. Pattern Interrupt: "Chatbots are dead. 💀"
-        2. Agitate: "Your customers hate them. Your team ignores them."
-        3. Solution: "Meet the AI Agent. It doesn't chat. It WORKS."
-        4. CTA: "Read the future of automation: [LINK]"
-        
-        REQUIREMENTS:
-        - Use emojis (🤖, 📉, 🚀)
-        - Ends with hashtags #AIAgents #LogisticsTech #Automation
-        """
-    })
-
-    # FILTER DUPLICATES FIRST
-    available_articles = []
-    print("🔍 Checking for duplicates...")
-    for art in ARTICLES:
-        is_dup, existing_file = blog_gen.is_duplicate_title(art['title'])
-        if is_dup:
-            print(f"   [SKIP] Duplicate found: '{art['title']}' (in {existing_file})")
-        else:
-            available_articles.append(art)
+    # 1. FETCH LIVE NEWS
+    print("📡 Fetching live news from RSS feeds...")
+    collector = NewsCollector()
+    raw_articles = collector.fetch_news(hours_back=48)
     
-    if not available_articles:
-        print("❌ All articles have already been posted. No new content to generate.")
+    if not raw_articles:
+        print("❌ No news found in the last 48 hours.")
         return
 
-    print(f"✅ Found {len(available_articles)} fresh articles for analysis.")
-    
-    # DYNAMICALLY BUILD PROMPT BASED ON AVAILABLE ARTICLES
-    options_text = ""
-    for i, art in enumerate(available_articles):
-        options_text += f"{i+1}. {art['title']} (\"{art['type']}\")\n   Summary: {art['summary']}\n\n"
+    print(f"🔍 Found {len(raw_articles)} articles. Filtering and scoring...")
 
-    selection_prompt = f"""
-    You are a Viral Content Strategist. 
-    Review these {len(available_articles)} article angles and select the ONE with the highest potential for social media engagement and click-through rate.
+    # 2. FILTER & SCORE
+    scored_articles = []
     
-    Analyze for:
-    1. emotional arousal (awe, anger, anxiety)
-    2. mass appeal (broad vs niche)
-    3. clickability of the hook
+    for art in raw_articles:
+        # A. Check Tracker (URL history)
+        if tracker.is_processed(art['link']):
+            print(f"   [SKIP] Already processed URL: {art['title'][:30]}...")
+            continue
+
+        # B. Check Blog Title (to prevent duplicates from different URLs)
+        is_dup, existing_file = blog_gen.is_duplicate_title(art['title'])
+        if is_dup:
+            print(f"   [SKIP] Title collision with blog: {art['title'][:30]}...")
+            continue
+
+        # C. Score Viral Potential
+        score = score_viral_potential(art)
+        print(f"   [SCORE: {score}] {art['title'][:60]}...")
+        
+        if score > 60: # Only consider decent articles
+            art['viral_score'] = score
+            scored_articles.append(art)
+
+    if not scored_articles:
+        print("❌ No articles met the viral threshold (>60). Exiting.")
+        return
+
+    # 3. SELECT WINNER
+    # Sort by score desc
+    scored_articles.sort(key=lambda x: x['viral_score'], reverse=True)
+    selected_article = scored_articles[0]
     
-    OPTIONS:
-    {options_text}
-       
-    Return ONLY the number (1 to {len(available_articles)}) of the best article. 
+    print(f"\n🏆 WINNER: {selected_article['title']} (Score: {selected_article['viral_score']})")
+
+    # 4. GENERATE DYNAMIC PROMPTS
+    # We construct the Sabri Suby prompts dynamically based on the winner's content
+    
+    print("🧠 Constructing High-Value Prompts...")
+    
+    article_title = selected_article['title']
+    article_summary = selected_article['summary']
+    
+    selected_article['prompt'] = f"""
+    Write a blog post titled "{article_title}".
+    
+    CONTEXT from Source:
+    "{article_summary}"
+    
+    STRUCTURE (80% PAIN, 20% SOLUTION):
+    1. Hook: Pattern interrupt related to "{article_title}".
+    2. Agitate Pain: Why is this relevant/painful for logistics & business owners?
+    3. The Discovery/Insight: The core news update from the context.
+    4. Why It Matters: Specific benefit or impact (save money, save time, avoid risk).
+    5. Prediction/Takeaway: Where this is headed.
+    
+    Use prospect language. No fluff.
     """
     
-    try:
-        response = model.generate_content(selection_prompt)
-        selection_text = response.text.strip()
-        
-        # Extract the first digit found
-        import re
-        match = re.search(r'\d+', selection_text)
-        if match:
-            selected_index = int(match.group()) - 1 # Convert 1-based AI output to 0-based index
-            # Boundary check
-            if selected_index < 0 or selected_index >= len(available_articles):
-                print(f"AI returned invalid index {selected_index+1}. Defaulting to first.")
-                selected_index = 0
-        else:
-            print(f"AI returned no number. Defaulting to first.")
-            selected_index = 0
-            
-    except Exception as e:
-        print(f"Selection failed: {e}. Defaulting to first option.")
-        selected_index = 0
-        
-    selected_article = available_articles[selected_index]
-    print(f"✅ AI Selected: {selected_article['title']} ({selected_article['type']})")
+    selected_article['social_prompt'] = f"""
+    Write a Facebook Ad for this article (LONG-FORM 200+ words).
+    Topic: {article_title}
+    
+    HYPER-DOPAMINE STRUCTURE:
+    1. Call out the audience (Logistics/Business Owners).
+    2. Agitate specific pain or FOMO related to this news.
+    3. Curiosity Gap: "We just saw this update..."
+    4. The Big Reveal: "{article_title}"
+    5. CTA: "Read the full breakdown: [LINK]"
+    6. HASHTAGS: Include 5-7 relevant hashtags (e.g. #AI, #Logistics, #Automation).
+    
+    REQUIREMENTS:
+    - Use emojis (🚨, 📉, 🚀) to stop the scroll.
+    - BE SPECIFIC.
+    """
 
+    # 5. EXECUTION LOOP (Same as before)
     for article in [selected_article]:
-        print(f"\n✍️ Writing: {article['title']}...")
+        print(f"\n✍️ Writing Blog Post...")
         
-        # 1. Generate Blog Content
+        # A. Generate Blog Content
         content_html = None
-        for attempt in range(5):
+        for attempt in range(3):
             try:
                 response = model.generate_content(f"{SYSTEM_PROMPT}\n\nTASK:\n{article['prompt']}")
                 content_html = response.text.replace("```html", "").replace("```", "")
                 break
-            except exceptions.ResourceExhausted:
-                time.sleep(20 * (2 ** attempt))
+            except Exception as e:
+                print(f"   Error generating blog: {e}. Retrying...")
+                time.sleep(5)
 
-        if not content_html: continue
+        if not content_html:
+            print("❌ Failed to generate blog content.")
+            continue
 
-        # 2. Generate Social Ad Copy
+        # B. Generate Social Ad Copy
+        print(f"✍️ Writing Facebook Ad...")
         social_copy = None
-        for attempt in range(5):
+        for attempt in range(3):
             try:
                 response = model.generate_content(f"{SYSTEM_PROMPT}\n\nTASK:\n{article['social_prompt']}")
                 social_copy = response.text.replace("```text", "").replace("```", "").strip()
                 
-                # Clean up any instruction labels that the AI might include
-                social_copy = social_copy.replace('**OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)**', '')
-                social_copy = social_copy.replace('OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)', '')
-                social_copy = social_copy.replace('**Facebook Ad:**', '')
-                social_copy = social_copy.replace('Facebook Ad:', '')
-                
-                # Remove leading markdown bold markers if present
-                import re
-                if social_copy.startswith('**'):
-                    social_copy = re.sub(r'^\*\*[^*]+\*\*\s*', '', social_copy)
-                
-                social_copy = social_copy.strip()
+                # Cleanup
+                social_copy = re.sub(r'^\*\*[^*]+\*\*\s*', '', social_copy) # Remove bold headers
+                social_copy = social_copy.replace('**Facebook Ad:**', '').strip()
                 break
-            except exceptions.ResourceExhausted:
-                time.sleep(20 * (2 ** attempt))
+            except Exception as e:
+                print(f"   Error generating ad: {e}. Retrying...")
+                time.sleep(5)
 
-        # 3. Create 'Corporate News' Visual Prompt
-        # Switched to Corporate/Polished style per user request
+        # C. Create 'Corporate News' Visual Prompt
         from news_bot.image_design_helper import analyze_article_visual_context, create_news_overlay_prompt
         
-        print(f"🎨 Designing Corporate News Graphic for: {article['title']}")
+        print(f"🎨 Designing Corporate News Graphic...")
         
         # Analyze article context for design specs
         design_specs = analyze_article_visual_context({
@@ -303,7 +227,7 @@ def generate_hvco():
         # Using Pollinations with high quality settings
         image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1200&height=630&nologo=true&model=flux"
 
-        # 4. Create Blog Post
+        # D. Create Blog Post File
         filename = blog_gen.create_post(
             title=article['title'],
             content=content_html,
@@ -318,20 +242,26 @@ def generate_hvco():
             image_url=image_url
         )
 
-        # 5. Post to Facebook as PHOTO POST (Screaming Visual + Ad Copy)
+        # E. Post to Facebook
         live_link = f"https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/{filename}"
         final_social_msg = social_copy.replace("[LINK]", live_link)
         
-        print(f"📢 Posting to Facebook: {article['title']}...")
+        print(f"📢 Posting to Facebook...")
         fb_pub.post_photo(photo_url=image_url, message=final_social_msg)
         
+        # F. Mark as Processed
+        tracker.mark_as_processed(article['link'], {
+            'title': article['title'], 
+            'blog_file': filename,
+            'image_url': image_url
+        })
+        
         print("💤 Cooling down API...")
-        time.sleep(30)
+        time.sleep(5)
 
     # Deploy Blog
     print("\n☁️ Deploying all changes to GitHub...")
     blog_gen.deploy_to_github()
-
 
 if __name__ == "__main__":
     generate_hvco()
