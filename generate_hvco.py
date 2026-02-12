@@ -150,7 +150,46 @@ def generate_hvco():
     from google.api_core import exceptions
     import urllib.parse
 
-    for article in ARTICLES:
+    # Intelligent Article Selection
+    print("🧠 Analyzing viral potential of available angles...")
+    
+    selection_prompt = f"""
+    You are a Viral Content Strategist. 
+    Review these 3 article angles and select the ONE with the highest potential for social media engagement and click-through rate.
+    
+    Analyze for:
+    1. emotional arousal (awe, anger, anxiety)
+    2. mass appeal (broad vs niche)
+    3. clickability of the hook
+    
+    OPTIONS:
+    1. {ARTICLES[0]['title']} ("{ARTICLES[0]['type']}")
+       Summary: {ARTICLES[0]['summary']}
+       
+    2. {ARTICLES[1]['title']} ("{ARTICLES[1]['type']}")
+       Summary: {ARTICLES[1]['summary']}
+       
+    3. {ARTICLES[2]['title']} ("{ARTICLES[2]['type']}")
+       Summary: {ARTICLES[2]['summary']}
+       
+    Return ONLY the number (1, 2, or 3) of the best article. 
+    """
+    
+    try:
+        response = model.generate_content(selection_prompt)
+        selection = response.text.strip()
+        if "1" in selection: selected_index = 0
+        elif "2" in selection: selected_index = 1
+        elif "3" in selection: selected_index = 2
+        else: selected_index = 0 # Fallback
+    except Exception as e:
+        print(f"Selection failed: {e}. Defaulting to first option.")
+        selected_index = 0
+        
+    selected_article = ARTICLES[selected_index]
+    print(f"✅ AI Selected: {selected_article['title']} ({selected_article['type']})")
+
+    for article in [selected_article]:
         print(f"\n✍️ Writing: {article['title']}...")
         
         # 1. Generate Blog Content
