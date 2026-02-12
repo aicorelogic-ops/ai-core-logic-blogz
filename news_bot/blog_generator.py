@@ -64,13 +64,14 @@ class BlogGenerator:
                 
         return False, None
 
-    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None):
+    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None, date_str=None):
         """
         Generates a static HTML page for the blog post.
         """
         # Create slug
         slug = self.create_slug(title)
-        date_str = datetime.now().strftime('%Y-%m-%d')
+        if not date_str:
+            date_str = datetime.now().strftime('%Y-%m-%d')
         filename = f"{date_str}-{slug}.html"
         filepath = os.path.join(self.posts_dir, filename)
         
@@ -365,7 +366,7 @@ class BlogGenerator:
     
     <a href="../index.html" class="back-btn">← Back to News Feed</a>
 </main>
-
+<script>
     window.onscroll = function() {{
         let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -385,7 +386,7 @@ class BlogGenerator:
         if not tldr_summary:
             tldr_summary = "Key insights and actionable takeaways to stay ahead in the AI landscape."
         
-        post_html = post_html.replace("{{TLDR_SUMMARY}}", tldr_summary)
+        post_html = post_html.replace("{TLDR_SUMMARY}", tldr_summary)
         
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(post_html)
