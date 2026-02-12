@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private-equity barons have a giant AI problem | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('https://www.economist.com/content-assets/images/20260214_WBD000.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Private-equity barons have a giant AI problem</h1>
+        <div class="meta-info">
+            <span>2026-02-12</span>
+            <span>•</span>
+            <span>2 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>Private equity firms are facing a massive debt crisis as AI makes their expensive software acquisitions obsolete.</li><li style='margin-bottom: 0.75rem;'>Legacy software companies are losing their pricing power because AI can now replicate their core functions for pennies.</li><li style='margin-bottom: 0.75rem;'>Investors must pivot to AI native models immediately or face total liquidation as interest rates and disruption collide.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <h2>A $400 Billion Debt-Bomb Is About To Explode Under Private Equity</h2>
+
+<p>The billionaire "barons" of private equity are staring into a black hole of their own making. They bet the house on expensive software companies using massive amounts of debt, and now Generative AI is coming to collect.</p>
+
+<p>This report exposes how the leveraged software gold rush is turning into a slaughterhouse. We analyze the market data showing that traditional software business models are being hollowed out from the inside. If you own, invest in, or lead a software-dependent firm, you are standing on a fault line.</p>
+
+<p>The "smartest guys in the room" are panicking because their trillion-dollar portfolios are built on outdated code and crushing interest rates. AI isn't just a new tool; it is a replacement for the very products they spent decades acquiring. The reckoning is here, and it’s going to be brutal.</p>
+
+<h3>The Leveraged Software Slaughterhouse</h3>
+<p>For years, private equity firms bought software companies like they were printing money. They loaded them with debt, hiked prices, and expected 20% annual returns forever. They thought software was "recession-proof" and "disruption-proof." They were wrong.</p>
+
+<ul>
+<li><strong>The Debt Trap:</strong> Trillions in leveraged loans are tied to software companies that are losing their competitive edge.</li>
+<li><strong>The Value Collapse:</strong> AI can now build in a weekend what these companies sell for $50,000 a year.</li>
+<li><strong>The Margin Killers:</strong> Open-source AI models are destroying the "moats" that private equity paid billions to own.</li>
+</ul>
+
+<h3>Why Your Software Investment Is Dying</h3>
+<p>Most legacy software is just a fancy user interface over a database. Generative AI makes that interface irrelevant. Customers are realizing they don't need to pay massive subscription fees for "seats" when an AI agent can do the work for pennies.</p>
+
+<p>The PE barons are stuck with companies that have high fixed costs and falling revenues. They can't innovate fast enough because they are too busy paying off the interest on their massive loans. It is a death spiral in slow motion.</p>
+
+<h3>Adapt Or Get Liquidated</h3>
+<p>The old playbook is dead. You cannot "cost-cut" your way out of a technological revolution. If your strategy doesn't involve a total AI core logic overhaul, you are just waiting for the lights to go out.</p>
+
+<p>The market is already shifting its capital toward lean, AI-native firms that operate at a fraction of the cost. The giants are stumbling, and the agile are going to eat their market share before the next quarterly report is even filed.</p>
+
+<p>The window to pivot is closing faster than anyone predicted. Are you going to wait for the collapse, or will you re-engineer your business model before the debt swallows you whole?</p>
+
+<p>Contact AI Core Logic for a strategy audit to see if your portfolio is at risk.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"Let's be real, the private equity "genius" was always just cheap debt and captive customers. AI has just killed the captive customer by making software creation cheap and ubiquitous. The real truth is that most SaaS companies are about to see their margins go to zero, leaving PE barons holding nothing but the bill for the debt."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        

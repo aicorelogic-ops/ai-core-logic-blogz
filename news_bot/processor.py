@@ -73,42 +73,34 @@ class NewsProcessor:
         
         Output 2: A FACEBOOK POST (Research-Backed Engagement Formula)
         
-        **CONTENT STRATEGY FRAMEWORK:**
-        Apply the PPT Formula for maximum impact:
-        1. **PREVIEW (Line 1)**: Front-load the most shocking/valuable insight in the FIRST 2-3 WORDS
-           - Users scan in F-pattern (top left is critical)
-           - First line must stand alone and arrest scrolling
+        Output 2: A FACEBOOK POST (Based on 'Mastering Digital Content Strategy' Notebook)
         
-        2. **PROOF (Line 2)**: Establish credibility or amp emotion
-           - Cite data, trends, or amplify the "why this matters NOW"
-           - Must evoke HIGH-AROUSAL emotion (choose ONE):
-             * ✅ AWE/EXCITEMENT (wonder, breakthrough)
-             * ✅ ANXIETY (urgency, fear of missing out) 
-             * ✅ ANGER (injustice, outrage)
-             * ❌ AVOID: Sadness, contentment (low arousal = no shares)
+        **CORE STRATEGY (High-Arousal & F-Pattern):**
+        Users scan in an F-pattern. You must front-load value and evoke high-arousal emotion (Awe, Anxiety, or Anger).
         
-        3. **TRANSITION (Lines 3-4)**: Deliver practical value in 1-2 punchy lines
-           - Short paragraphs (1-2 sentences each) get 2x more eye fixations
-           - Each line should be scannable on its own
+        **STRICT FORMAT (The PPT + TAC Formula):**
         
-        **FORMATTING FOR SCANNABILITY:**
-        - **MAX 60-80 WORDS TOTAL** (ultra-brevity)
-        - Line breaks after every 1-2 sentences (white space = focus)
-        - 2-3 emojis max (visual breaks, not clutter)
-        - NO markdown bolding
-        - Use [BRACKETS] around 1 key term for 38% higher CTR
+        1. **HOOK (The 'Preview' & 'Proof') - Lines 1-2:**
+           - **Concept**: Arrest attention immediately.
+           - **Rule**: Front-load the most shocking insight in the FIRST 3 WORDS.
+           - **formatting**: Use [BRACKETS] around one key keyword (e.g., [New Data], [Alert]) - *NotebookLM data says this boosts CTR by 38%*.
+           - **Emotion**: Must trigger AWE (Breakthrough/Future) or ANXIETY (Urgency/Risk).
         
-        **TAC CLOSE (Call to Action):**
-        - **T**ransition: Signal the end
-        - **A**sk: Specific 2-second question (not "thoughts?")
-        - **C**TA: Direct command ("Click," "Read," "Share")
+        2. **BODY (The 'Transition') - Lines 3-4:**
+           - **Concept**: Deliver the "Why it matters" in 1-2 punchy sentences.
+           - **Formatting**: Max 1-2 sentences per paragraph.
+           - **Style**: 6th-grade reading level. No fluff.
         
-        **HEADLINE HOOK:**
-        - 3 relevant hashtags (social proof + discoverability)
-        - End with: "Full story: [LINK] || Image Idea: [Brief scene for news graphic]"
+        3. **ClOSE (The 'Ask' & 'CTA') - Lines 5-6:**
+           - **Concept**: The TAC Formula (Transition, Ask, Call to Action).
+           - **Ask**: A specific, easy-to-answer question (e.g., "Will you adopt this?"). Avoid lazy "Thoughts?" questions.
+           - **CTA**: "Read the full analysis here: [LINK]"
         
-        **VISUAL GUIDANCE:**
-        - Suggest scene with FACES (multiple faces = maximum attention)
+        **CONSTRAINTS:**
+        - **Total Length**: 60-100 Words Max.
+        - **Visuals**: "Full story: [LINK] || Image Idea: [Describe a high-contrast image with a FACE or CHART to stop the scroll]"
+        - **Hashtags**: 3 relevant, high-traffic tags.
+        - **Prohibited**: Do NOT use "Link in bio". Do NOT use markdown bold/italic.
         - Align mood with arousal emotion (urgent/exciting/shocking)
         
         Output 3: A TL;DR SUMMARY (2-3 Bullet Points)
