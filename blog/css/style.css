@@ -211,7 +211,7 @@ footer {
     margin-top: 4rem;
 }
 
-/* Hero Section - Typographical Focus */
+/* Hero Section - Animated Digital Grid */
 #hero {
     height: 60vh;
     display: flex;
@@ -220,11 +220,52 @@ footer {
     text-align: center;
     position: relative;
     padding-top: 2rem;
+    overflow: hidden;
+
+    /* Base - Deep Space */
+    background-color: var(--bg-deep);
+
+    /* Grid Pattern - Subtle Cyan Lines */
+    background-image:
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
+/* Pulsing Glow Orb Animation */
 #hero::before {
-    display: none;
-    /* Remove previous glow blob */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw;
+    height: 60vw;
+    max-width: 800px;
+    max-height: 800px;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, rgba(0, 240, 255, 0.02) 50%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    animation: pulse-glow 8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+    0% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    /* Ensure text sits above the animation */
 }
 
 .hero-content h1 {
