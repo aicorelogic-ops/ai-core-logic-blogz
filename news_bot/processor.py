@@ -103,6 +103,10 @@ class NewsProcessor:
         - **Prohibited**: Do NOT use "Link in bio". Do NOT use markdown bold/italic.
         - Align mood with arousal emotion (urgent/exciting/shocking)
         
+        **REQUIRED ENDING:**
+        - **Hashtags**: Must end with 3-5 high-traffic, relevant hashtags (e.g., #AI #PrivateEquity #TechTrends).
+        - **Visual Idea**: Provide a brief visual description for the image generator.
+        
         Output 3: A TL;DR SUMMARY (2-3 Bullet Points)
         **PURPOSE**: Distill the entire article into actionable key takeaways
         

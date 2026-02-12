@@ -186,16 +186,18 @@ Return ONLY a number 0-100. No explanation."""
             print(f"   Design specs: {design_specs['category_badge']} | {design_specs['emotion_trigger']} mood")
             
             
-            # FALLBACK: Ultra-simple prompt to guarantee generation
-            # Pollinations seems to be rejecting complex prompts today
-            clean_prompt = f"News graphic about {article['title']}"
+            # NEW APPROACH: Enhanced "Stop the Scroll" Prompt
+            # Use the article title + high-contrast visual style keywords
+            
+            visual_style = "cinematic lighting, high contrast, 8k resolution, hyperrealistic, news graphic style"
+            base_prompt = f"Editorial news graphic about {article['title']}, {visual_style}"
             
             # Sanitize just in case
             import re
-            clean_prompt = re.sub(r'[^a-zA-Z0-9 ]', '', clean_prompt)
+            clean_prompt = re.sub(r'[^a-zA-Z0-9, ]', '', base_prompt)
             clean_prompt = urllib.parse.quote(clean_prompt.strip())
             
-            print(f"DEBUG: Using Simple Prompt: {clean_prompt}")
+            print(f"DEBUG: Using Enhanced Prompt: {clean_prompt}")
             
             # safe_prompt = urllib.parse.quote(clean_prompt) # Already quoted above
             photo_url = f"https://image.pollinations.ai/prompt/{clean_prompt}?width=1200&height=630&nologo=true"

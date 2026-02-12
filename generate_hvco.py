@@ -188,24 +188,32 @@ def generate_hvco():
             except exceptions.ResourceExhausted:
                 time.sleep(20 * (2 ** attempt))
 
-        # 3. Create 'Native Hyper-Dopamine' Visual Prompt
-        # NotebookLM Strategy: Raw, iPhone photo style, pattern interrupts (red circles, breaking news banners)
-        # Avoid polished "ad look" - use native social media aesthetic
-        import random
-        native_styles = [
-            f"iPhone smartphone photo: {article['title']}. Red circle highlighting key element, BREAKING NEWS banner overlay, raw authentic photography, native social media aesthetic, high engagement",
-            f"Raw smartphone photo with reaction shot inset: {article['title']}. Dual image composition, authentic native style, pattern interrupt visual, high contrast",
-            f"Breaking news style screenshot: {article['title']}. News notification aesthetic, bold text overlay, authentic smartphone capture, attention-grabbing"
-        ]
-        chosen_style = random.choice(native_styles)
-        screaming_prompt = urllib.parse.quote(chosen_style)
-        image_url = f"https://image.pollinations.ai/prompt/{screaming_prompt}?width=1200&height=630&nologo=true"
+        # 3. Create 'Corporate News' Visual Prompt
+        # Switched to Corporate/Polished style per user request
+        from news_bot.image_design_helper import analyze_article_visual_context, create_news_overlay_prompt
+        
+        print(f"🎨 Designing Corporate News Graphic for: {article['title']}")
+        
+        # Analyze article context for design specs
+        design_specs = analyze_article_visual_context({
+            'title': article['title'], 
+            'summary': article['summary']
+        })
+        
+        # Generate the Prompt
+        news_prompt = create_news_overlay_prompt({
+            'title': article['title']
+        }, design_specs)
+        
+        encoded_prompt = urllib.parse.quote(news_prompt)
+        # Using Pollinations with high quality settings
+        image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1200&height=630&nologo=true&model=flux"
 
         # 4. Create Blog Post
         filename = blog_gen.create_post(
             title=article['title'],
-            content_html=content_html,
-            original_link="https://aicorelogic-ops.github.io/ai-core-logic/",
+            content=content_html,
+            link="https://aicorelogic-ops.github.io/ai-core-logic/",
             image_url=image_url
         )
         

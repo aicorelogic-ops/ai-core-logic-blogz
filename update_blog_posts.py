@@ -13,31 +13,34 @@ def update_tldr_section(html_content):
     """Replace old TL;DR with new format (placeholder for now)"""
     
     # Old TL;DR pattern
-    old_tldr_pattern = r'<div class="quick-summary">\s*<strong>TL;DR:</strong>\s*<p>Our deep analysis.*?</p>\s*</div>'
+    old_tldr_pattern = r'<div class="quick-summary">.*?</div>'
     
     # New TL;DR with placeholder
     new_tldr = '''<div class="quick-summary">
-            <strong>💡 Key TakeAways:</strong> 
-            <p>Key insights and actionable takeaways from this analysis to help you stay ahead in the AI landscape.</p>
-        </div>'''
+        <strong>💡 Key TakeAways:</strong> 
+        <p>Key insights and actionable takeaways from this analysis to help you stay ahead in the AI landscape.</p>
+    </div>'''
     
-    # Replace
+    # Replace (using DOTALL to match across lines)
     updated_html = re.sub(old_tldr_pattern, new_tldr, html_content, flags=re.DOTALL)
     
     return updated_html
 
 def update_author_bio(html_content):
-    """Replace old circular logo author bio with new simplified design"""
+    """Replace old author bio with new Brand Logo + Dynamic Prospect design"""
     
-    # Old author bio pattern (with circular logo)
-    old_bio_pattern = r'<!-- Author Bio Section -->.*?<div class="author-bio".*?</div>\s*</div>'
+    # Old author bio pattern (matches both circular logo and simplified versions)
+    old_bio_pattern = r'<!-- (?:Author Bio Section|Editorial Attribution).*?-->\s*<div class="author-bio".*?</div>\s*</div>'
     
-    # New simplified bio
-    new_bio = '''<!-- Editorial Attribution (Simplified) -->
+    # New Brand Logo Bio
+    new_bio = '''<!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
         <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
-            <div>
-                <h4 style="margin: 0 0 0.75rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">📊 AI Core Logic Editorial</h4>
-                <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6;">We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy.</p>
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."</p>
+                </div>
             </div>
         </div>'''
     
