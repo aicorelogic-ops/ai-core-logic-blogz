@@ -146,7 +146,13 @@ def generate_page(filename, posts, active_filter, page_title):
         else:
              # Basic check: ensure URL is not empty string
              if len(post['image_url']) > 10:
-                bg_style = f"style=\"background-image: url('{post['image_url']}');\""
+                # Use multiple backgrounds: URL first, then gradient fallback. 
+                # If URL fails/404s, the gradient should be visible (depending on browser behavior) 
+                # or at least we have a consistent base if we used a transparent image.
+                # Actually, standard behavior for 404 is transparency, so simple layering might not work 
+                # if the browser treats 404 as "loaded but empty". 
+                # BUT: The best approach is `background-image: url(...), linear-gradient(...)`.
+                bg_style = f"style=\"background-image: url('{post['image_url']}'), linear-gradient(135deg, #1e293b, #0f172a);\""
              else:
                 bg_class = f"card-gradient-{random.randint(1, 3)}"
 
