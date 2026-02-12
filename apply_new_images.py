@@ -70,15 +70,27 @@ def update_posts():
         # Look for the hero header style
         # <header class="article-hero" style="background-image: url('...');">
         
-        pattern = r'(class="article-hero"[^>]*style="[^"]*background-image:\s*url\([\'"]?)(.*?)([\'"]?\))'
+        # Regex to replace background-image OR background shorthand
+        # The files use: background: url('../assets/...')
+        
+        # We need to capture the part *before* the URL and the part *after* the URL closing paren
+        # This regex looks for:
+        # 1. class="article-hero"
+        # 2. Any chars until style="
+        # 3. Any chars (non-quote) until 'background'
+        # 4. Optional '-image'
+        # 5. Colon and whitespace
+        # 6. 'url(' possibly with quote
+        
+        pattern = r'(class="article-hero"[^>]*style="[^"]*background(?:-image)?:\s*url\([\'"]?)(.*?)([\'"]?\))'
         
         def replacer(match):
             prefix = match.group(1)
-            old_url = match.group(2)
+            # The middle group is the old URL, we ignore it
             suffix = match.group(3)
             return f"{prefix}{relative_image_path}{suffix}"
 
-        new_content = re.sub(pattern, replacer, content)
+        new_content = re.sub(pattern, replacer, content, flags=re.DOTALL)
         
         # Also fix Og:Image if present
         og_pattern = r'(<meta property="og:image" content=")(.*?)(")'
