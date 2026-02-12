@@ -153,34 +153,34 @@ def generate_hvco():
     # Intelligent Article Selection
     print("🧠 Analyzing viral potential of available angles...")
 
-    # INJECT TEST ARTICLE FOR VERIFICATION
+    # INJECT LIVE TEST ARTICLE
     ARTICLES.append({
-        'title': 'The Psychology of Color in AI Branding: Why Soft Tones Convert Better',
-        'summary': 'New research shows that muted, professional color palettes in AI imagery increase trust and click-through rates by 40%.',
-        'link': 'https://example.com/ai-color-psychology',
-        'type': 'Data-Backed Insight',
-        'viral_score': 99,
+        'title': 'The Agentic Shift: Why Chatbots Are Dead and Agents Are The Future',
+        'summary': 'A strategic look at how autonomous AI agents are replacing simple chatbots in logistics, driving real ROI instead of just answering FAQs.',
+        'link': 'https://example.com/agentic-shift',
+        'type': 'Strategic Insight',
+        'viral_score': 98,
         'prompt': """
-        Write a blog post titled "The Psychology of Color in AI Branding".
+        Write a blog post titled "The Agentic Shift: Why Chatbots are Dead".
         
         STRUCTURE:
-        1. Hook: "Why do most AI brands look like a neon nightmare?"
-        2. The Research: Muted tones = Trust. Neon = Hype.
-        3. The Data: 40% higher CTR on professional, studio-lit visuals.
-        4. Application: How to audit your brand's visual identity.
+        1. Hook: "Stop building chatbots. They are digital answering machines."
+        2. The Shift: Agents DO work. Chatbots TALK about work.
+        3. Real World: An agent that negotiates freight vs a chatbot that quotes a tracking number.
+        4. The ROI: 10x productivity for teams that switch.
         """,
         'social_prompt': """
         Write a Facebook Ad for this article.
         
         STRUCTURE:
-        1. Stop the scroll: "Stop using neon purple robots."
-        2. Agitate: "It screams 'amateur' and kills your conversion rate."
-        3. Insight: "New data shows muted, professional tones build trust."
-        4. CTA: "Read the full color psychology guide: [LINK]"
+        1. Pattern Interrupt: "Chatbots are dead. 💀"
+        2. Agitate: "Your customers hate them. Your team ignores them."
+        3. Solution: "Meet the AI Agent. It doesn't chat. It WORKS."
+        4. CTA: "Read the future of automation: [LINK]"
         
         REQUIREMENTS:
-        - Use emojis (🎨, 📉, ✅)
-        - Ends with hashtags #AIBranding #DesignTips #MarketingPsychology
+        - Use emojis (🤖, 📉, 🚀)
+        - Ends with hashtags #AIAgents #LogisticsTech #Automation
         """
     })
 
