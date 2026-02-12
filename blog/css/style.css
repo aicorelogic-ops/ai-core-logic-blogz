@@ -232,34 +232,68 @@ footer {
     background-size: 40px 40px;
 }
 
-/* Pulsing Glow Orb Animation */
+/* Cyber Wave Animation */
 #hero::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60vw;
-    height: 60vw;
-    max-width: 800px;
-    max-height: 800px;
-    /* Increased Opacity: 0.12 -> 0.25 */
-    background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, rgba(0, 240, 255, 0.05) 40%, transparent 70%);
-    border-radius: 50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-radial-gradient(circle at 50% 50%,
+            rgba(0, 240, 255, 0.05) 0,
+            rgba(0, 240, 255, 0.05) 20px,
+            transparent 21px,
+            transparent 40px);
+    opacity: 0.3;
     z-index: 0;
     pointer-events: none;
-    animation: pulse-glow 4s ease-in-out infinite alternate;
+    animation: wave-ripple 20s linear infinite;
+    mask-image: radial-gradient(circle, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
 }
 
-@keyframes pulse-glow {
+/* Secondary Wave Layer */
+#hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180%;
+    height: 180%;
+    background: repeating-radial-gradient(circle at 60% 40%,
+            rgba(152, 226, 198, 0.03) 0,
+            /* Mint accent */
+            rgba(152, 226, 198, 0.03) 25px,
+            transparent 26px,
+            transparent 50px);
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+    animation: wave-ripple-reverse 30s linear infinite;
+    mask-image: radial-gradient(circle, black 20%, transparent 60%);
+    -webkit-mask-image: radial-gradient(circle, black 20%, transparent 60%);
+}
+
+@keyframes wave-ripple {
     0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0.4;
+        transform: translate(-50%, -50%) rotate(0deg);
     }
 
     100% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 1.0;
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes wave-ripple-reverse {
+    0% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(0deg);
     }
 }
 
