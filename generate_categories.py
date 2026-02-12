@@ -139,56 +139,38 @@ def generate_page(filename, posts, active_filter, page_title):
     
     # 3. Generate Post Grid
     
-    # Available Local Assets (Generic Tech/AI visuals)
-    LOCAL_ASSETS = [
-        "assets/photo_2026-02-06_16-51-45.jpg",
-        "assets/photo_2026-02-06_16-51-47.jpg",
-        "assets/photo_2026-02-06_16-51-50.jpg",
-        "assets/photo_2026-02-06_16-51-52.jpg",
-        "assets/photo_2026-02-06_16-51-54.jpg",
-        "assets/photo_2026-02-06_16-51-57.jpg",
-        "assets/photo_2026-02-06_16-51-59.jpg",
-        "assets/photo_2026-02-06_16-52-02.jpg",
-        "assets/photo_2026-02-06_16-52-04.jpg",
-        "assets/photo_2026-02-06_16-52-07.jpg",
-        "assets/photo_2026-02-06_16-52-09.jpg",
-        "assets/photo_2026-02-06_16-52-17.jpg"
-    ]
-    
-    # Manual Overrides (Filename -> Specific Asset)
-    IMAGE_OVERRIDES = {
-        # Musk - Swapping from 54 (Our Team) to 17 (Generic Dark/Market)
-        "2026-02-10-why-has-elon-musk-merged-his-rocket-company-with-h.html": "assets/photo_2026-02-06_16-52-17.jpg",
-        # US Software Stocks - Using 47
-        "2026-02-10-us-software-stocks-tumble-sparks-concerns-that-ai-.html": "assets/photo_2026-02-06_16-51-47.jpg",
+    # NEW THEMATIC ASSETS (Generated 2026-02-12)
+    THEME_ASSETS = {
+        "Logistics": "assets/theme_logistics.png",
+        "Automation": "assets/theme_automation.png",
+        "Intelligence": "assets/theme_intelligence.png",
+        "Tech Stack": "assets/theme_techstack.png",
+        "Finance": "assets/theme_finance.png",
+        "Office": "assets/theme_office.png"
     }
 
     posts_html = ""
     for post in posts:
         bg_image = ""
         
-        # 1. Check Manual Overrides First
-        if post['filename'] in IMAGE_OVERRIDES:
-            bg_image = IMAGE_OVERRIDES[post['filename']]
-        else:
-            # 2. Use Extracted Image if valid
-            bg_image = post['image_url']
+        # 1. Assign Image based on Category or Keywords
+        title_lower = post['title'].lower()
         
-        # 3. Validation: Check for broken providers
-        if bg_image and ("via.placeholder.com" in bg_image or "pollinations.ai" in bg_image):
-            bg_image = "" 
+        if "stock" in title_lower or "market" in title_lower or "finance" in title_lower or "money" in title_lower or "investment" in title_lower:
+            bg_image = THEME_ASSETS["Finance"]
+        elif "manager" in title_lower or "corporate" in title_lower or "business" in title_lower or "office" in title_lower or "job" in title_lower:
+             bg_image = THEME_ASSETS["Office"]
+        elif "code" in title_lower or "python" in title_lower or "api" in title_lower or "tech" in title_lower or "software" in title_lower:
+             bg_image = THEME_ASSETS["Tech Stack"]
+        elif "robot" in title_lower or "agent" in title_lower or "musk" in title_lower or "rocket" in title_lower:
+             bg_image = THEME_ASSETS["Automation"]
+        elif "logistics" in title_lower or "supply chain" in title_lower or "shipping" in title_lower:
+             bg_image = THEME_ASSETS["Logistics"]
+        elif post['category'] in THEME_ASSETS:
+            bg_image = THEME_ASSETS[post['category']]
+        else:
+            bg_image = THEME_ASSETS["Intelligence"]
 
-        # 4. Resolve relative paths
-        if bg_image and bg_image.startswith("../assets/"):
-            bg_image = bg_image.replace("../assets/", "assets/")
-            
-        # 5. Fallback: If still empty, deterministically assign a local asset
-        if not bg_image:
-             # Use hash of title to pick a consistent random image from LOCAL_ASSETS
-             # This ensures the same post always gets the same image, but different posts get different images
-             asset_index = hash(post['title']) % len(LOCAL_ASSETS)
-             bg_image = LOCAL_ASSETS[asset_index]
-             
         print(f"Post: {post['filename']} | Image: {bg_image}") # DEBUG
 
         posts_html += f"""
