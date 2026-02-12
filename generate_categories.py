@@ -172,6 +172,41 @@ def generate_page(filename, posts, active_filter, page_title):
             bg_image = THEME_ASSETS["Intelligence"]
 
         print(f"Post: {post['filename']} | Image: {bg_image}") # DEBUG
+        
+        # --- CRITICAL FIX: SYNC POST FILE ---
+        # We must update the actual post HTML to match this EXACT image decision.
+        # This prevents the "Grid shows X, Post shows Y" bug.
+        
+        post_path = os.path.join(POSTS_DIR, post['filename'])
+        try:
+            with open(post_path, "r", encoding="utf-8") as f:
+                p_content = f.read()
+            
+            # Relative path for inside /posts/ folder
+            rel_image = "../" + bg_image
+            
+            # Regex to find the hero header background 
+            # Matches: class="article-hero" ... style="background-image: url('...');" or background: url(...)
+            pattern = r'(class="article-hero"[^>]*style="[^"]*background(?:-image)?:\s*url\([\'"]?)(.*?)([\'"]?\))'
+            
+            def replacer(match):
+                prefix = match.group(1)
+                return f"{prefix}{rel_image}{match.group(3)}"
+            
+            new_p_content = re.sub(pattern, replacer, p_content, flags=re.DOTALL)
+            
+            # Also update og:image if present
+            og_pattern = r'(<meta property="og:image" content=")(.*?)(")'
+            new_p_content = re.sub(og_pattern, lambda m: f'{m.group(1)}{rel_image}{m.group(3)}', new_p_content)
+            
+            if new_p_content != p_content:
+                with open(post_path, "w", encoding="utf-8") as f:
+                    f.write(new_p_content)
+                print(f"   -> Synced post file: {post['filename']}")
+                
+        except Exception as e:
+            print(f"   -> ERROR syncing post file: {e}")
+        # ------------------------------------
 
         posts_html += f"""
         <article class="article-card">
