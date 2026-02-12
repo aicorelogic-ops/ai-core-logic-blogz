@@ -153,23 +153,42 @@ def generate_page(filename, posts, active_filter, page_title):
     for post in posts:
         bg_image = ""
         
-        # 1. Assign Image based on Category or Keywords
-        title_lower = post['title'].lower()
+        # 1. Check for Existing Valid Image (e.g. External News Image)
+        # If the post already has a good image, we should use it for the grid too.
+        existing_image = post.get('image_url', '')
         
-        if "stock" in title_lower or "market" in title_lower or "finance" in title_lower or "money" in title_lower or "investment" in title_lower:
-            bg_image = THEME_ASSETS["Finance"]
-        elif "manager" in title_lower or "corporate" in title_lower or "business" in title_lower or "office" in title_lower or "job" in title_lower:
-             bg_image = THEME_ASSETS["Office"]
-        elif "code" in title_lower or "python" in title_lower or "api" in title_lower or "tech" in title_lower or "software" in title_lower:
-             bg_image = THEME_ASSETS["Tech Stack"]
-        elif "robot" in title_lower or "agent" in title_lower or "musk" in title_lower or "rocket" in title_lower:
-             bg_image = THEME_ASSETS["Automation"]
-        elif "logistics" in title_lower or "supply chain" in title_lower or "shipping" in title_lower:
-             bg_image = THEME_ASSETS["Logistics"]
-        elif post['category'] in THEME_ASSETS:
-            bg_image = THEME_ASSETS[post['category']]
+        # Validation: Ignore empty, placeholders, logos, or assets (unless it's a theme asset)
+        is_valid_existing = False
+        if existing_image and "via.placeholder.com" not in existing_image and "pollinations.ai" not in existing_image:
+            if "assets/" not in existing_image or "theme_" in existing_image: 
+                 # It's either external, or one of our themes (fine), or a manual asset
+                 is_valid_existing = True
+            elif "logo" in existing_image.lower() or "icon" in existing_image.lower():
+                 is_valid_existing = False
+            else:
+                 # Standard local asset
+                 is_valid_existing = True
+
+        if is_valid_existing:
+            bg_image = existing_image
         else:
-            bg_image = THEME_ASSETS["Intelligence"]
+            # 2. Fallback to Thematic Assignment
+            title_lower = post['title'].lower()
+            
+            if "stock" in title_lower or "market" in title_lower or "finance" in title_lower or "money" in title_lower or "investment" in title_lower:
+                bg_image = THEME_ASSETS["Finance"]
+            elif "manager" in title_lower or "corporate" in title_lower or "business" in title_lower or "office" in title_lower or "job" in title_lower:
+                 bg_image = THEME_ASSETS["Office"]
+            elif "code" in title_lower or "python" in title_lower or "api" in title_lower or "tech" in title_lower or "software" in title_lower:
+                 bg_image = THEME_ASSETS["Tech Stack"]
+            elif "robot" in title_lower or "agent" in title_lower or "musk" in title_lower or "rocket" in title_lower:
+                 bg_image = THEME_ASSETS["Automation"]
+            elif "logistics" in title_lower or "supply chain" in title_lower or "shipping" in title_lower:
+                 bg_image = THEME_ASSETS["Logistics"]
+            elif post['category'] in THEME_ASSETS:
+                bg_image = THEME_ASSETS[post['category']]
+            else:
+                bg_image = THEME_ASSETS["Intelligence"]
 
         print(f"Post: {post['filename']} | Image: {bg_image}") # DEBUG
         
