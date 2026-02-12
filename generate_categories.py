@@ -132,11 +132,27 @@ def generate_page(filename, posts, active_filter, page_title):
         template = template.replace(f'<a href="{filename}">{active_filter}</a>', f'<a href="{filename}" class="active">{active_filter}</a>')
     
     # 3. Generate Post Grid
+    import random
     posts_html = ""
     for post in posts:
+        # Determine background inline style or class
+        bg_style = ""
+        bg_class = ""
+        
+        # Check for valid image (and filter out placeholders or potentially blocked/broken ones if needed)
+        # We treat via.placeholder as "missing" so it gets a nice gradient instead of a gray box
+        if not post['image_url'] or "via.placeholder.com" in post['image_url']:
+             bg_class = f"card-gradient-{random.randint(1, 3)}"
+        else:
+             # Basic check: ensure URL is not empty string
+             if len(post['image_url']) > 10:
+                bg_style = f"style=\"background-image: url('{post['image_url']}');\""
+             else:
+                bg_class = f"card-gradient-{random.randint(1, 3)}"
+
         posts_html += f"""
         <article class="article-card">
-            <div class="card-image-placeholder" style="background-image: url('{post['image_url']}');">
+            <div class="card-image-placeholder {bg_class}" {bg_style}>
                 <span class="category-pill">{post['category']}</span>
             </div>
             <div class="card-content">

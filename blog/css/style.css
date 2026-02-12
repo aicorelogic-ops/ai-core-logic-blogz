@@ -125,6 +125,21 @@ header {
     background-size: cover;
     background-position: center;
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    /* Default Fallback */
+}
+
+/* Specific Gradient Classes for fallback diversity */
+.card-gradient-1 {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+
+.card-gradient-2 {
+    background: linear-gradient(135deg, #334155, #1e293b);
+}
+
+.card-gradient-3 {
+    background: linear-gradient(135deg, #475569, #334155);
 }
 
 .read-more::after {
