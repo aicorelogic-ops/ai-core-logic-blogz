@@ -124,27 +124,29 @@ def create_news_overlay_prompt(article, design_specs, image_idea=None):
     }
     mood = mood_map.get(design_specs['emotion_trigger'], 'professional lighting')
     
-    # Create comprehensive prompt
-    prompt = f"""Professional news network graphic in the style of ABC News or Bloomberg television:
+    # Create comprehensive prompt based on "Inspiration Pictures" Analysis
+    # Style: Minimalist News Broadcast / Tribute / Modern Corporate
+    prompt = f"""Professional news graphic in the style of high-end broadcast journalism (ABC News / Bloomberg):
 
-PHOTO BACKGROUND: {scene_desc}, photojournalism quality, {mood}
-
-TEXT OVERLAY ELEMENTS:
-- Large bold white sans-serif headline at BOTTOM with dark gradient backdrop: "{headline}"
-- Small category badge in TOP-LEFT corner: "{design_specs['category_badge']}" in {design_specs['color_scheme']} color
-- Subtle dark gradient overlay (50% opacity) across bottom third for text readability
-- Clean professional typography similar to ABC News or Variety magazine graphics
-
-STYLE SPECIFICATIONS:
-- High-quality photojournalistic image, not amateur or casual
-- Corporate news network aesthetic
-- Text must be clearly readable and prominent
-- {design_specs['emotion_trigger']} visual mood
-- Composition suitable for social media thumbnail
-- No watermarks or logos except subtle "NEWS" badge
-
-TECHNICAL: 1200x630 aspect ratio, optimized for Facebook feed"""
-
+    SUBJECT: {scene_desc}, {mood}
+    
+    VISUAL STYLE (Strict Adherence):
+    - Lighting: Even studio lighting, bright, polished.
+    - Color Palette: Muted soft colors, neutral tones, cool blues, warm whites, limited color range.
+    - Composition: Portrait/Close-up focus on subject (face/upper body), cleanly overlaid on background.
+    - Elements: Clean lines, soft focus background, graphic overlay, circular frame element if applicable.
+    
+    TEXT OVERLAY:
+    - Headline: "{headline}" (Bold, Sans-Serif, White text on dark/gradient background at bottom)
+    - Badge: "{design_specs['category_badge']}" (Small, top-left, professional)
+    
+    AESTHETIC:
+    - Emotional, poignant, and reflective but professional.
+    - "News Broadcast" aesthetic but artistic and clean.
+    - High-contrast but soft, not harsh.
+    - 1200x630 aspect ratio.
+    """
+    
     return prompt
 
 

@@ -64,10 +64,18 @@ class BlogGenerator:
                 
         return False, None
 
-    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None, date_str=None):
+    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None, date_str=None, force_new=False):
         """
         Generates a static HTML page for the blog post.
+        AUTO-PREVENTS DUPLICATES unless force_new=True.
         """
+        # 0. DUPLICATE CHECK
+        if not force_new:
+            is_dup, existing_file = self.is_duplicate_title(title, threshold=0.90)
+            if is_dup:
+                print(f"⚠️ SKIPPING: Post '{title}' already exists as '{existing_file}'")
+                return existing_file
+
         # Create slug
         slug = self.create_slug(title)
         if not date_str:

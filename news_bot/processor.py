@@ -101,6 +101,7 @@ class NewsProcessor:
         - **Visuals**: "Full story: [LINK] || Image Idea: [Describe a high-contrast image with a FACE or CHART to stop the scroll]"
         - **Hashtags**: 3 relevant, high-traffic tags.
         - **Prohibited**: Do NOT use "Link in bio". Do NOT use markdown bold/italic.
+        - **EMOJI RULE**: Use 2-3 relevant emojis in the body to break up text and add visual interest (e.g., 🚨, 📉, 🤖). make it NOT boring.
         - Align mood with arousal emotion (urgent/exciting/shocking)
         
         **REQUIRED ENDING:**

@@ -152,10 +152,62 @@ def generate_hvco():
 
     # Intelligent Article Selection
     print("🧠 Analyzing viral potential of available angles...")
+
+    # INJECT TEST ARTICLE FOR VERIFICATION
+    ARTICLES.append({
+        'title': 'The Psychology of Color in AI Branding: Why Soft Tones Convert Better',
+        'summary': 'New research shows that muted, professional color palettes in AI imagery increase trust and click-through rates by 40%.',
+        'link': 'https://example.com/ai-color-psychology',
+        'type': 'Data-Backed Insight',
+        'viral_score': 99,
+        'prompt': """
+        Write a blog post titled "The Psychology of Color in AI Branding".
+        
+        STRUCTURE:
+        1. Hook: "Why do most AI brands look like a neon nightmare?"
+        2. The Research: Muted tones = Trust. Neon = Hype.
+        3. The Data: 40% higher CTR on professional, studio-lit visuals.
+        4. Application: How to audit your brand's visual identity.
+        """,
+        'social_prompt': """
+        Write a Facebook Ad for this article.
+        
+        STRUCTURE:
+        1. Stop the scroll: "Stop using neon purple robots."
+        2. Agitate: "It screams 'amateur' and kills your conversion rate."
+        3. Insight: "New data shows muted, professional tones build trust."
+        4. CTA: "Read the full color psychology guide: [LINK]"
+        
+        REQUIREMENTS:
+        - Use emojis (🎨, 📉, ✅)
+        - Ends with hashtags #AIBranding #DesignTips #MarketingPsychology
+        """
+    })
+
+    # FILTER DUPLICATES FIRST
+    available_articles = []
+    print("🔍 Checking for duplicates...")
+    for art in ARTICLES:
+        is_dup, existing_file = blog_gen.is_duplicate_title(art['title'])
+        if is_dup:
+            print(f"   [SKIP] Duplicate found: '{art['title']}' (in {existing_file})")
+        else:
+            available_articles.append(art)
     
+    if not available_articles:
+        print("❌ All articles have already been posted. No new content to generate.")
+        return
+
+    print(f"✅ Found {len(available_articles)} fresh articles for analysis.")
+    
+    # DYNAMICALLY BUILD PROMPT BASED ON AVAILABLE ARTICLES
+    options_text = ""
+    for i, art in enumerate(available_articles):
+        options_text += f"{i+1}. {art['title']} (\"{art['type']}\")\n   Summary: {art['summary']}\n\n"
+
     selection_prompt = f"""
     You are a Viral Content Strategist. 
-    Review these 3 article angles and select the ONE with the highest potential for social media engagement and click-through rate.
+    Review these {len(available_articles)} article angles and select the ONE with the highest potential for social media engagement and click-through rate.
     
     Analyze for:
     1. emotional arousal (awe, anger, anxiety)
@@ -163,30 +215,33 @@ def generate_hvco():
     3. clickability of the hook
     
     OPTIONS:
-    1. {ARTICLES[0]['title']} ("{ARTICLES[0]['type']}")
-       Summary: {ARTICLES[0]['summary']}
+    {options_text}
        
-    2. {ARTICLES[1]['title']} ("{ARTICLES[1]['type']}")
-       Summary: {ARTICLES[1]['summary']}
-       
-    3. {ARTICLES[2]['title']} ("{ARTICLES[2]['type']}")
-       Summary: {ARTICLES[2]['summary']}
-       
-    Return ONLY the number (1, 2, or 3) of the best article. 
+    Return ONLY the number (1 to {len(available_articles)}) of the best article. 
     """
     
     try:
         response = model.generate_content(selection_prompt)
-        selection = response.text.strip()
-        if "1" in selection: selected_index = 0
-        elif "2" in selection: selected_index = 1
-        elif "3" in selection: selected_index = 2
-        else: selected_index = 0 # Fallback
+        selection_text = response.text.strip()
+        
+        # Extract the first digit found
+        import re
+        match = re.search(r'\d+', selection_text)
+        if match:
+            selected_index = int(match.group()) - 1 # Convert 1-based AI output to 0-based index
+            # Boundary check
+            if selected_index < 0 or selected_index >= len(available_articles):
+                print(f"AI returned invalid index {selected_index+1}. Defaulting to first.")
+                selected_index = 0
+        else:
+            print(f"AI returned no number. Defaulting to first.")
+            selected_index = 0
+            
     except Exception as e:
         print(f"Selection failed: {e}. Defaulting to first option.")
         selected_index = 0
         
-    selected_article = ARTICLES[selected_index]
+    selected_article = available_articles[selected_index]
     print(f"✅ AI Selected: {selected_article['title']} ({selected_article['type']})")
 
     for article in [selected_article]:
