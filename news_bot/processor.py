@@ -60,9 +60,11 @@ class NewsProcessor:
         5. **SABRI SUBY STYLE**: 80% agitation of pain/desire, 20% solution.
         
         6. **TAC CONCLUSION (Transition, Ask, Call to Action)**:
-           - TRANSITION: Signal the end of the content.
-           - ASK: Ask a specific question to encourage comments/shares.
-           - CALL TO ACTION: Tell them exactly what to do next.
+           - TRANSITION: Signal the end of the content (Natural flow, NO labels).
+           - ASK: Ask a specific question to encourage reflection.
+           - CALL TO ACTION: Direct them to "Contact AI Core Logic for a strategy audit" or "Follow for more updates."
+           - **CRITICAL**: Do NOT offer downloads, whitepapers, or PDF guides. We do not have them.
+           - **CRITICAL**: Do NOT use labels like "TRANSITION:", "ASK:", or "CALL TO ACTION:" in the output. Just write the text.
         
         **CONTENT RULES**:
         - Use H2 for major segments and H3 for sub-points.

@@ -41,5 +41,9 @@
     "facebook_photo_id": null,
     "facebook_video_id": null,
     "processed_date": "2026-02-12T11:06:34.079935"
+  },
+  "https://www.ft.com/content/954ed03b-4119-4412-be9f-59f68b537a95": {
+    "facebook_photo_id": "122101574733254103",
+    "processed_date": "2026-02-12T11:47:27.011716"
   }
 }
