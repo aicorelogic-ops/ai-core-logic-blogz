@@ -30,15 +30,18 @@ class NewsCollector:
                 
                 # Image Extraction
                 image_url = None
-                if "media_content" in entry:
-                    image_url = entry.media_content[0]["url"]
-                elif "media_thumbnail" in entry:
-                    image_url = entry.media_thumbnail[0]["url"]
-                elif "links" in entry:
-                    for link in entry.links:
-                        if link.rel == "enclosure" and "image" in link.type:
-                            image_url = link.href
-                            break
+                try:
+                    if "media_content" in entry and entry.media_content:
+                        image_url = entry.media_content[0].get("url")
+                    elif "media_thumbnail" in entry and entry.media_thumbnail:
+                        image_url = entry.media_thumbnail[0].get("url")
+                    elif "links" in entry:
+                        for link in entry.links:
+                            if link.rel == "enclosure" and "image" in link.type:
+                                image_url = link.href
+                                break
+                except Exception:
+                    pass
                 
                 if any(kw in title or kw in summary for kw in KEYWORDS):
                     recent_news.append({

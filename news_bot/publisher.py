@@ -37,12 +37,17 @@ class FacebookPublisher:
             self._handle_error(e, response if 'response' in locals() else None)
             return None
 
-    def post_photo(self, photo_url, message):
+    def post_photo(self, photo_source, message):
         """
         Publishes a photo post to the Facebook Page.
-        This is typically more 'attention-grabbing' than a standard link post.
+        Accepts either a local file path OR a URL.
         
-        Includes retry logic for AI-generated images that may take time to render.
+        Args:
+            photo_source: Either an absolute file path (str) or URL (str)
+            message: Caption for the Facebook post
+        
+        Returns:
+            str: Facebook post ID if successful, None otherwise
         """
         if not self.token or not self.page_id:
             print("Error: Missing Facebook Page Token or Page ID.")
@@ -50,69 +55,54 @@ class FacebookPublisher:
 
         url = f"{self.base_url}/{self.page_id}/photos"
         
-        # Pre-check: Verify image URL is accessible (important for AI-generated images)
-        import time
-        max_retries = 3
-        retry_delay = 5  # seconds
-        
-        # Combine verification and download to ensure we have valid content
+        # Determine if photo_source is a local file or URL
         image_content = None
-        for attempt in range(max_retries):
+        
+        if os.path.exists(photo_source):
+            # LOCAL FILE - Read directly (most reliable!)
+            print(f"📁 Reading local image file: {photo_source}")
             try:
-                print(f"Downloading image (attempt {attempt + 1}/{max_retries})...")
-                content = self._download_image_content(photo_url)
-                
-                if content and len(content) > 1000:
-                    print(f"✅ Image downloaded successfully ({len(content)} bytes).")
-                    image_content = content
-                    break
-                else:
-                    print(f"⚠️ Image download failed or too small (<1KB). Retrying in {retry_delay}s...")
-                    time.sleep(retry_delay)
+                with open(photo_source, 'rb') as f:
+                    image_content = f.read()
+                print(f"✅ Local file loaded ({len(image_content):,} bytes)")
             except Exception as e:
-                print(f"❌ Image download error: {e}. Retrying in {retry_delay}s...")
-                time.sleep(retry_delay)
-        
-        if not image_content:
-            print("❌ Failed to retrieve valid image content after retries.")
-            return None
-        
-        # 2. Now post to Facebook using BINARY UPLOAD
-        try:
-            print("Retrieving image for binary upload...")
+                print(f"❌ Error reading local file: {e}")
+                return None
+        else:
+            # URL - Download with retry logic
+            print(f"🌐 Downloading image from URL: {photo_source}")
+            import time
+            max_retries = 3
+            retry_delay = 5
             
-            # Handle local file case if needed (though we passed URL mostly)
+            for attempt in range(max_retries):
+                try:
+                    print(f"   Attempt {attempt + 1}/{max_retries}...")
+                    content = self._download_image_content(photo_source)
+                    
+                    if content and len(content) > 1000:
+                        print(f"✅ Image downloaded ({len(content):,} bytes)")
+                        image_content = content
+                        break
+                    else:
+                        print(f"⚠️ Image too small or empty. Retrying in {retry_delay}s...")
+                        time.sleep(retry_delay)
+                except Exception as e:
+                    print(f"❌ Download error: {e}. Retrying in {retry_delay}s...")
+                    time.sleep(retry_delay)
+            
             if not image_content:
-                if photo_url.startswith("file://"):
-                   # ... local file logic ...
-                   pass 
+                print("❌ Failed to retrieve valid image after retries.")
+                return None
+        
+        # Upload image to Facebook
+        try:
+            print(f"📤 Uploading image to Facebook ({len(image_content):,} bytes)...")
             
-            # Since we likely have image_content from above loop:
-            if not image_content: 
-                 # Fallback for file:// or if logic above failed silently
-                 if photo_url.startswith("file://"):
-                    local_path = photo_url.replace("file://", "")
-                    if os.name == 'nt':
-                        local_path = local_path.lstrip('/')
-                    with open(local_path, "rb") as f:
-                        image_content = f.read()
-                 else:
-                    # Should have been caught above, but just in case
-                    return None
-
-            
-            content_size = len(image_content)
-            print(f"Image Size: {content_size} bytes.")
-            
-            if content_size < 1000:
-                print(f"WARNING: Image too small! Content preview: {str(image_content[:200])}")
-            
-            # 2. Prepare multipart upload
             files = {
                 'source': ('image.jpg', image_content, 'image/jpeg')
             }
             
-            # Send token in query params to avoid multipart confusion
             params = {
                 "access_token": self.token
             }
@@ -122,17 +112,15 @@ class FacebookPublisher:
                 "published": "true"
             }
 
-            print("Uploading binary image data to Facebook (Token in Params)...")
             response = requests.post(url, files=files, data=data, params=params, timeout=60)
             
-            # Check for specific subcode errors
             if response.status_code >= 400:
                 print(f"Facebook API Error Response: {response.text}")
                 
             response.raise_for_status()
-            data = response.json()
-            print(f"Successfully posted photo to Facebook! ID: {data.get('id')}")
-            return data.get('id')
+            result = response.json()
+            print(f"✅ Successfully posted photo to Facebook! ID: {result.get('id')}")
+            return result.get('id')
             
         except requests.exceptions.RequestException as e:
             self._handle_error(e, response if 'response' in locals() else None)

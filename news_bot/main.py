@@ -180,29 +180,28 @@ Return ONLY a number 0-100. No explanation."""
             
             import urllib.parse
             
-            # NEW APPROACH: Use news overlay style inspired by ABC News / Variety graphics
-            print(f"Analyzing article for visual design specs...")
-            design_specs = analyze_article_visual_context(article)
-            print(f"   Design specs: {design_specs['category_badge']} | {design_specs['emotion_trigger']} mood")
+            # NEW APPROACH: Use Google Gemini Imagen 3 for Viral Images
+            print(f"Generating viral image with Imagen 3...")
             
+            # 1. Initialize Generator
+            from .image_generator import ImageGenerator
+            img_gen = ImageGenerator()
             
-            # NEW APPROACH: Enhanced "Stop the Scroll" Prompt
-            # Use the article title + high-contrast visual style keywords
-            
+            # 2. Construct Prompt
             visual_style = "cinematic lighting, high contrast, 8k resolution, hyperrealistic, news graphic style"
             base_prompt = f"Editorial news graphic about {article['title']}, {visual_style}"
             
-            # Sanitize just in case
-            import re
-            clean_prompt = re.sub(r'[^a-zA-Z0-9, ]', '', base_prompt)
-            clean_prompt = urllib.parse.quote(clean_prompt.strip())
+            # 3. Generate & Save Locally
+            print(f"   Prompt: {base_prompt[:50]}...")
+            local_image_path = img_gen.generate_viral_image(base_prompt)
             
-            print(f"DEBUG: Using Enhanced Prompt: {clean_prompt}")
-            
-            # safe_prompt = urllib.parse.quote(clean_prompt) # Already quoted above
-            photo_url = f"https://image.pollinations.ai/prompt/{clean_prompt}?width=1200&height=630&nologo=true"
-            
-            photo_post_id = publisher.post_photo(photo_url=photo_url, message=fb_caption)
+            if local_image_path:
+                print(f"✅ Image generated: {local_image_path}")
+                # 4. Post to Facebook using local file
+                photo_post_id = publisher.post_photo(photo_source=local_image_path, message=fb_caption)
+            else:
+                print("❌ Failed to generate image.")
+                photo_post_id = None
             
             # F. REEL GENERATION REMOVED PER USER REQUEST
             # (Previously created and posted viral reels here)
