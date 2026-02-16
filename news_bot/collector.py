@@ -6,8 +6,8 @@ class NewsCollector:
     def __init__(self):
         self.feeds = RSS_FEEDS
 
-    def fetch_news(self, hours_back=72):
-        """Fetch news from the last N hours."""
+    def fetch_news(self, hours_back=72, max_posts_per_feed=3):
+        """Fetch news from the last N hours, limiting to first X posts per feed."""
         recent_news = []
         time_threshold = datetime.now() - timedelta(hours=hours_back)
 
@@ -15,7 +15,8 @@ class NewsCollector:
             print(f"Checking {feed_url}...")
             feed = feedparser.parse(feed_url)
             
-            for entry in feed.entries:
+            # Only process first N entries from each feed (most recent posts)
+            for entry in feed.entries[:max_posts_per_feed]:
                 # Check date
                 published = getattr(entry, "published_parsed", None)
                 if published:

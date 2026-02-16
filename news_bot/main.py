@@ -15,8 +15,8 @@ def run_bot():
     
     # 1. Collect
     collector = NewsCollector()
-    # Using 72 hours window for testing to ensure we find something
-    articles = collector.fetch_news(hours_back=72)
+    # Fetch only the first 3 posts from each RSS feed to analyze for viral potential
+    articles = collector.fetch_news(hours_back=72, max_posts_per_feed=3)
     print(f"Found {len(articles)} potential articles.")
 
     if not articles:
