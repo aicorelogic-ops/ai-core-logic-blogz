@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
             --text: #E2E8F0;
             --text-dim: #94A3B8;
         }
-        
+
         body {
             background-color: var(--bg);
             color: var(--text);
@@ -23,7 +23,7 @@
             margin: 0;
             line-height: 1.6;
         }
-        
+
         /* Navbar */
         nav {
             display: flex;
@@ -37,29 +37,31 @@
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             text-decoration: none;
         }
-        
+
         .logo-img {
             width: 40px;
             height: 40px;
             object-fit: contain;
         }
-        
+
         .logo-text {
             font-weight: 700;
             font-size: 1.25rem;
             color: #fff;
             letter-spacing: -0.5px;
         }
-        
-        .logo-text span { color: var(--primary); }
-        
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
         .nav-links a {
             color: var(--text-dim);
             text-decoration: none;
@@ -67,27 +69,29 @@
             font-weight: 500;
             transition: color 0.2s;
         }
-        
-        .nav-links a:hover { color: var(--primary); }
-        
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
         /* Hero Section */
         .article-hero {
             position: relative;
             height: 50vh;
             min-height: 400px;
-            background: url('https://image.pollinations.ai/prompt/iPhone%20photo%20amateur%20candid%20shot%2C%20first-person%20POV%20perspective%2C%20messy%20office%20desk%20with%20papers%20and%20coffee%20cup%2C%20computer%20screen%20showing%20shocking%20data%20about%20%27SS%26C%20Blue%20Prism%20On%20the%20journey%20from%20RPA%27%2C%20hand-drawn%20RED%20CIRCLE%20around%20a%20specific%20detail%20on%20the%20screen%2C%20RED%20ARROW%20pointing%20to%20a%20problem%2C%20harsh%20office%20lighting%2C%20grainy%20quality%2C%20user-generated%20content%20aesthetic%2C%20flash%20photography%2C%20NOT%20professional%2C%20NOT%20stock%20photo%2C%20leaked%20evidence%20style%2C%20blurriness%2C%20authentic%20unpolished%20look%20--negative_prompt%3A%20stock%20photo%2C%203D%20render%2C%20perfect%20symmetry%2C%20smiling%20corporate%20people%2C%20polished%20advertising%2C%20professional%20studio%20lighting%2C%20smooth%20skin%2C%20makeup%2C%20perfect%20composition%2C%20branding%2C%20watermark%2C%20text%20overlay%20%28except%20chyron%29?width=1200&height=630&nologo=true') center/cover no-repeat;
+            background: url('../assets/blue-prism-fix.jpg') center/cover no-repeat;
             display: flex;
             align-items: flex-end;
             padding-bottom: 4rem;
         }
-        
+
         .article-hero::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5, 5, 7, 0.7) 50%, rgba(5, 5, 7, 0.3) 100%);
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 1;
@@ -95,7 +99,7 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         .category-pill {
             background: rgba(0, 240, 255, 0.1);
             color: var(--primary);
@@ -109,7 +113,7 @@
             margin-bottom: 1rem;
             border: 1px solid rgba(0, 240, 255, 0.2);
         }
-        
+
         h1 {
             font-size: clamp(2rem, 5vw, 3.5rem);
             line-height: 1.1;
@@ -118,7 +122,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .meta-info {
             font-size: 0.9rem;
             color: var(--text-dim);
@@ -135,8 +139,13 @@
             border-radius: 0 8px 8px 0;
             font-size: 1.05rem;
         }
-        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
-        
+
+        .quick-summary strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
         /* Article Body */
         .article-container {
             width: 90%;
@@ -144,24 +153,26 @@
             margin: 0 auto;
             padding: 4rem 0;
         }
-        
+
         .article-body {
             font-size: 1.15rem;
             line-height: 1.8;
             color: #CBD5E1;
         }
-        
+
         .article-body h2 {
             color: #fff;
             margin: 3rem 0 1.5rem 0;
             font-size: 1.75rem;
         }
-        
-        .article-body p { margin-bottom: 1.5rem; }
-        
+
+        .article-body p {
+            margin-bottom: 1.5rem;
+        }
+
         /* Footer */
         footer {
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding: 3rem 0;
             text-align: center;
             margin-top: 4rem;
@@ -179,118 +190,156 @@
             font-weight: 600;
             transition: transform 0.2s;
         }
-        
-        .back-btn:hover { transform: scale(1.05); }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
+
 <body>
 
-<nav>
-    <a href="../index.html" class="logo">
-        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
-        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
-    </a>
-    <div class="nav-links">
-        <a href="../index.html">Home</a>
-    </div>
-</nav>
-
-<header class="article-hero">
-    <div class="hero-content">
-        <span class="category-pill">AI Market Analysis</span>
-        <h1>SS&C Blue Prism: On the journey from RPA to agentic automation</h1>
-        <div class="meta-info">
-            <span>2026-02-17</span>
-            <span>•</span>
-            <span>2 min read</span>
+    <nav>
+        <a href="../index.html" class="logo">
+            <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+            <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+        </a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
         </div>
-    </div>
-</header>
+    </nav>
 
-<main class="article-container">
-    <!-- Quick Summary Section -->
-    <div class="quick-summary">
-        <strong>💡 Key TakeAways:</strong> 
-        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>Rule based RPA is dying because rigid bots break the moment they encounter a single unexpected variable.</li><li style='margin-bottom: 0.75rem;'>Agentic AI uses reasoning to adapt to changes, allowing automation to scale without constant human intervention.</li><li style='margin-bottom: 0.75rem;'>Companies must transition to autonomous agents now or face massive maintenance costs and total competitive irrelevance.</li></ul>
-    </div>
-
-    <!-- Main Content -->
-    <div class="article-body">
-        <h2>Your Current RPA Bots Are About To Become Expensive Digital Paperweights.</h2>
-
-<p>Most automation projects are failing. They are brittle, rigid, and break the second a single variable changes. This post reveals why the "old way" of RPA is dead and how Agentic AI is the only path to survival.</p>
-
-<p>SS&C Blue Prism is currently moving the world's largest enterprises away from brainless bots toward autonomous agents. We’ve seen the data, and the companies sticking to old rules are being left behind in the dust.</p>
-
-<p>If you don't evolve your automation strategy in the next 12 months, your competitors will use AI to move ten times faster than you ever could.</p>
-
-<h2>The Era of "Rule-Based" Automation Is Officially Over</h2>
-
-<p>SS&C Blue Prism is leading a massive shift from traditional RPA to Agentic AI. This transition is happening right now across global industries because old bots are too stupid to handle the modern world. While RPA follows a script, Agentic AI uses reasoning to solve problems on the fly.</p>
-
-<p>Traditional RPA is like a train on tracks; if there is a pebble on the rail, it crashes. Agentic AI is like a 4x4 off-road vehicle that finds its own path to the destination regardless of the terrain.</p>
-
-<h2>Your Business Is Bleeding Cash On Bot Maintenance</h2>
-
-<h3>The Hidden Costs Of Obsolete RPA</h3>
-
-<ul>
-<li><strong>Maintenance Hell:</strong> You spend more time fixing broken bots than actually automating new processes.</li>
-<li><strong>Rigid Failure:</strong> If a UI element shifts by one pixel, your entire workflow grinds to a screaming halt.</li>
-<li><strong>Zero Reasoning:</strong> Your current bots can't "think" or make decisions, requiring constant human babysitting.</li>
-</ul>
-
-<p>Stop pouring money into a sinking ship. The "terrifying" leap to agentic automation is actually the only way to stop the bleeding and start scaling.</p>
-
-<h2>The Agentic Revolution: Automation With A Brain</h2>
-
-<h3>Why Agents Will Slaughter Traditional Bots</h3>
-
-<ul>
-<li><strong>Dynamic Adaptability:</strong> Agents understand context and adjust their behavior when they encounter unexpected data.</li>
-<li><strong>Goal-Oriented Action:</strong> You give an agent a "mission" instead of a list of clicks, and it figures out how to execute.</li>
-<li><strong>Self-Healing Workflows:</strong> These systems identify errors and fix them without needing a developer to intervene.</li>
-</ul>
-
-<p>SS&C Blue Prism is providing the bridge for this journey. They are taking companies from the rigid "if-this-then-that" world into a future where AI handles the heavy lifting of decision-making.</p>
-
-<h2>Don't Get Left Behind In The Automation Stone Age</h2>
-
-<p>The transition to agentic AI isn't a luxury; it's a survival requirement. You can either embrace the power of agents that think for themselves, or you can keep paying developers to patch up your broken, brainless bots.</p>
-
-<p>Is your organization brave enough to let go of the rigid rules that are currently holding your productivity hostage?</p>
-
-<p>Contact AI Core Logic for a strategy audit and let's see if your business is ready for the agentic age.</p>
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
-        
-        
-        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
-        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
-             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
-                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
-                <div>
-                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
-                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"Let's be real, the RPA bubble has finally burst because rigid "if-this-then-that" bots just can't scale in a chaotic world. The bottom line is that if your automation doesn't have a "brain" to reason, it’s just a liability waiting to break. You need agents that think, not just bots that follow orders blindly."</p>
-                </div>
+    <header class="article-hero">
+        <div class="hero-content">
+            <span class="category-pill">AI Market Analysis</span>
+            <h1>SS&C Blue Prism: On the journey from RPA to agentic automation</h1>
+            <div class="meta-info">
+                <span>2026-02-17</span>
+                <span>•</span>
+                <span>2 min read</span>
             </div>
         </div>
-        
-    </div>
-    
-    <a href="../index.html" class="back-btn">← Back to News Feed</a>
-</main>
-<script>
-    window.onscroll = function() {
-        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        let scrolled = (winScroll / height) * 100;
-        document.getElementById("scroll-progress").style.width = scrolled + "%";
-    };
-</script>
+    </header>
 
-<footer>
-    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
-</footer>
+    <main class="article-container">
+        <!-- Quick Summary Section -->
+        <div class="quick-summary">
+            <strong>💡 Key TakeAways:</strong>
+            <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'>
+                <li style='margin-bottom: 0.75rem;'>Rule based RPA is dying because rigid bots break the moment they
+                    encounter a single unexpected variable.</li>
+                <li style='margin-bottom: 0.75rem;'>Agentic AI uses reasoning to adapt to changes, allowing automation
+                    to scale without constant human intervention.</li>
+                <li style='margin-bottom: 0.75rem;'>Companies must transition to autonomous agents now or face massive
+                    maintenance costs and total competitive irrelevance.</li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="article-body">
+            <h2>Your Current RPA Bots Are About To Become Expensive Digital Paperweights.</h2>
+
+            <p>Most automation projects are failing. They are brittle, rigid, and break the second a single variable
+                changes. This post reveals why the "old way" of RPA is dead and how Agentic AI is the only path to
+                survival.</p>
+
+            <p>SS&C Blue Prism is currently moving the world's largest enterprises away from brainless bots toward
+                autonomous agents. We’ve seen the data, and the companies sticking to old rules are being left behind in
+                the dust.</p>
+
+            <p>If you don't evolve your automation strategy in the next 12 months, your competitors will use AI to move
+                ten times faster than you ever could.</p>
+
+            <h2>The Era of "Rule-Based" Automation Is Officially Over</h2>
+
+            <p>SS&C Blue Prism is leading a massive shift from traditional RPA to Agentic AI. This transition is
+                happening right now across global industries because old bots are too stupid to handle the modern world.
+                While RPA follows a script, Agentic AI uses reasoning to solve problems on the fly.</p>
+
+            <p>Traditional RPA is like a train on tracks; if there is a pebble on the rail, it crashes. Agentic AI is
+                like a 4x4 off-road vehicle that finds its own path to the destination regardless of the terrain.</p>
+
+            <h2>Your Business Is Bleeding Cash On Bot Maintenance</h2>
+
+            <h3>The Hidden Costs Of Obsolete RPA</h3>
+
+            <ul>
+                <li><strong>Maintenance Hell:</strong> You spend more time fixing broken bots than actually automating
+                    new processes.</li>
+                <li><strong>Rigid Failure:</strong> If a UI element shifts by one pixel, your entire workflow grinds to
+                    a screaming halt.</li>
+                <li><strong>Zero Reasoning:</strong> Your current bots can't "think" or make decisions, requiring
+                    constant human babysitting.</li>
+            </ul>
+
+            <p>Stop pouring money into a sinking ship. The "terrifying" leap to agentic automation is actually the only
+                way to stop the bleeding and start scaling.</p>
+
+            <h2>The Agentic Revolution: Automation With A Brain</h2>
+
+            <h3>Why Agents Will Slaughter Traditional Bots</h3>
+
+            <ul>
+                <li><strong>Dynamic Adaptability:</strong> Agents understand context and adjust their behavior when they
+                    encounter unexpected data.</li>
+                <li><strong>Goal-Oriented Action:</strong> You give an agent a "mission" instead of a list of clicks,
+                    and it figures out how to execute.</li>
+                <li><strong>Self-Healing Workflows:</strong> These systems identify errors and fix them without needing
+                    a developer to intervene.</li>
+            </ul>
+
+            <p>SS&C Blue Prism is providing the bridge for this journey. They are taking companies from the rigid
+                "if-this-then-that" world into a future where AI handles the heavy lifting of decision-making.</p>
+
+            <h2>Don't Get Left Behind In The Automation Stone Age</h2>
+
+            <p>The transition to agentic AI isn't a luxury; it's a survival requirement. You can either embrace the
+                power of agents that think for themselves, or you can keep paying developers to patch up your broken,
+                brainless bots.</p>
+
+            <p>Is your organization brave enough to let go of the rigid rules that are currently holding your
+                productivity hostage?</p>
+
+            <p>Contact AI Core Logic for a strategy audit and let's see if your business is ready for the agentic age.
+            </p>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+
+
+            <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+            <div class="author-bio"
+                style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+                <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                    <img src="../assets/brand-logo.png" alt="AI Core Logic"
+                        style="width: 60px; height: 60px; object-fit: contain;">
+                    <div>
+                        <h4
+                            style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">
+                            AI Core Logic Editorial</h4>
+                        <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">
+                            "Let's be real, the RPA bubble has finally burst because rigid "if-this-then-that" bots just
+                            can't scale in a chaotic world. The bottom line is that if your automation doesn't have a
+                            "brain" to reason, it’s just a liability waiting to break. You need agents that think, not
+                            just bots that follow orders blindly."</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <a href="../index.html" class="back-btn">← Back to News Feed</a>
+    </main>
+    <script>
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        };
+    </script>
+
+    <footer>
+        <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+    </footer>
 </body>
+
 </html>
-        
