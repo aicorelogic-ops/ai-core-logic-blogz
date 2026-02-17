@@ -88,6 +88,10 @@ def get_posts():
         else:
             best_cat = "Intelligence"
             
+        # Fix relative paths for index (../assets/ -> assets/)
+        if image_url.startswith("../assets/"):
+            image_url = image_url.replace("../assets/", "assets/")
+
         posts.append({
             "filename": filepath.name,
             "title": title,
