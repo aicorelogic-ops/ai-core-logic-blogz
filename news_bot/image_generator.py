@@ -21,29 +21,40 @@ class ImageGenerator:
         from .settings import OPENAI_API_KEY
         self.openai_key = OPENAI_API_KEY if OPENAI_API_KEY else None
         
-        print(f"✅ Multi-Provider Image Generator initialized")
+        print(f"✅ Image Generator initialized")
+        print(f"   Primary: Vertex AI Imagen 3.0 (Google Cloud, free tier)")
+        print(f"   Fallback: Pollinations AI (free)")
+        print(f"   Optional: {'DALL-E 3 (paid)' if self.openai_key else 'DALL-E 3 - add OPENAI_API_KEY'}")
         print(f"   Output: {self.output_dir}")
-        print(f"   Providers: Pollinations AI (free), {'DALL-E 3 (paid), ' if self.openai_key else ''}PIL fallback")
     
     
-    def generate_viral_image(self, prompt, output_filename=None, use_dalle=False):
+    def generate_viral_image(self, prompt, output_filename=None, use_dalle=False, use_vertex=True):
         """
-        Generate a viral-style image using multiple providers with fallbacks.
+        Generate a viral-style image using multiple providers.
         
         Priority:
-        1. DALL-E 3 (if use_dalle=True and API key available)
-        2. Pollinations AI (free, but can be slow/unreliable)
-        3. PIL text graphics (always works)
+        1. Vertex AI Imagen 3.0 (if use_vertex=True, Google Cloud, free tier available)
+        2. DALL-E 3 (if use_dalle=True and API key available)
+        2. Pollinations AI (free, occasional rate limits)
         
         Args:
             prompt (str): Text prompt describing the image to generate
             output_filename (str, optional): Custom filename. Auto-generated if not provided.
-            use_dalle (bool): If True, try DALL-E 3 first (requires API key)
+            use_dalle (bool): If True, try DALL-E 3 (requires API key)
+            use_vertex (bool): If True, try Vertex AI Imagen first (default: True)
         
         Returns:
-            str: Absolute path to the saved image file
+            str: Absolute path to the saved image file, or None if all providers fail
         """
-        # Try DALL-E 3 first if requested and available
+        # Try Vertex AI Imagen first (Google Cloud - free tier available)
+        if use_vertex:
+            try:
+                return self._generate_with_vertex(prompt, output_filename)
+            except Exception as e:
+                print(f"❌ Vertex AI Imagen failed: {e}")
+                print(f"🔄 Trying next provider...")
+        
+        # Try DALL-E 3 second if requested and available
         if use_dalle and self.openai_key:
             try:
                 return self._generate_with_dalle(prompt, output_filename)
@@ -56,10 +67,65 @@ class ImageGenerator:
             return self._generate_with_pollinations(prompt, output_filename)
         except Exception as e:
             print(f"❌ Pollinations AI failed: {e}")
-            print(f"🔄 Falling back to PIL text graphic...")
+            print(f"⚠️ No fallback - returning None (post will be skipped)")
+            return None
+    
+    
+    def _generate_with_vertex(self, prompt, output_filename=None):
+        """Generate image using Vertex AI Imagen 3.0 (Google Cloud, free tier available)."""
+        print(f"🎨 Generating with Vertex AI Imagen 3.0...")
+        print(f"   Prompt: {prompt[:100]}...")
         
-        # Final fallback: PIL text graphics
-        return self._generate_with_pil(prompt, output_filename)
+        import os
+        import vertexai
+        from vertexai.preview.vision_models import ImageGenerationModel
+        from pathlib import Path
+        
+        # Get Vertex AI config
+        from .settings import VERTEX_PROJECT_ID, VERTEX_LOCATION, VERTEX_KEY_PATH
+        
+        # Set credentials if provided
+        if VERTEX_KEY_PATH:
+            key_path = Path(__file__).parent / VERTEX_KEY_PATH
+            if key_path.exists():
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(key_path)
+                print(f"   Using service account: {VERTEX_KEY_PATH}")
+            else:
+                raise Exception(f"Service account key not found: {key_path}")
+        
+        # Initialize Vertex AI
+        vertexai.init(project=VERTEX_PROJECT_ID, location=VERTEX_LOCATION)
+        
+        # Load the model - imagen-3.0-generate-001 is the working model
+        model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
+        print(f"   ✅ Model loaded")
+        
+        # Generate image
+        print(f"   Generating image...")
+        response = model.generate_images(
+            prompt=prompt,
+            number_of_images=1,
+            aspect_ratio="16:9",  # Good for social media
+            safety_filter_level="block_some",
+            person_generation="allow_adult"
+        )
+        
+        if not response.images:
+            raise Exception("No images in response")
+        
+        print(f"   ✅ Image generated!")
+        
+        # Generate filename
+        if not output_filename:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_filename = f"vertex_img_{timestamp}.jpg"
+        
+        # Save to local file
+        filepath = self.output_dir / output_filename
+        response.images[0].save(location=str(filepath))
+        
+        print(f"✅ Vertex AI image saved: {filepath}")
+        return str(filepath)
     
     
     def _generate_with_dalle(self, prompt, output_filename=None):
@@ -101,27 +167,40 @@ class ImageGenerator:
     
     
     def _generate_with_pollinations(self, prompt, output_filename=None):
-        """Generate image using Pollinations AI (free but can be slow/unreliable)."""
+        """Generate image using Pollinations AI (free, works great, occasional rate limits)."""
         print(f"🎨 Generating with Pollinations AI...")
         print(f"   Prompt: {prompt[:100]}...")
         
-        # Use Pollinations AI
+        # Use Pollinations AI URL
         safe_prompt = urllib.parse.quote(prompt)
         image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
         
-        # Retry logic (Pollinations can be slow or down)
-        max_retries = 2
-        timeout = 45
+        # Retry logic for occasional rate limiting (HTTP 530)
+        max_retries = 3
         
         for attempt in range(max_retries):
             try:
+                if attempt > 0:
+                    # Exponential backoff: wait 2s, 4s, 8s...
+                    import time
+                    wait_time = 2 ** attempt
+                    print(f"   Waiting {wait_time}s before retry...")
+                    time.sleep(wait_time)
+                
                 print(f"   Attempt {attempt + 1}/{max_retries}: Downloading...")
                 
-                response = requests.get(image_url, timeout=timeout)
+                # Simple, straightforward request
+                response = requests.get(image_url, timeout=60)
                 
-                # Check for errors
+                # Check status
                 if response.status_code != 200:
-                    raise Exception(f"HTTP {response.status_code}")
+                    # Rate limit or service issue
+                    error_msg = f"HTTP {response.status_code}: {response.text[:100]}"
+                    if attempt < max_retries - 1:
+                        print(f"   ⚠️ {error_msg}, retrying...")
+                        continue
+                    else:
+                        raise Exception(error_msg)
                 
                 # Check if we got actual image data
                 if len(response.content) < 1000:
@@ -136,12 +215,13 @@ class ImageGenerator:
                     print(f"   ⏱️ Timeout, retrying...")
                     continue
                 else:
-                    raise Exception("Pollinations timeout")
+                    raise Exception("Pollinations timeout after all retries")
             except Exception as e:
-                if attempt < max_retries - 1:
-                    print(f"   ❌ Error: {e}, retrying...")
+                if attempt < max_retries - 1 and "HTTP" in str(e):
+                    # Retry HTTP errors (rate limiting)
                     continue
                 else:
+                    # Don't retry other errors or last attempt
                     raise
         
         # Generate filename
