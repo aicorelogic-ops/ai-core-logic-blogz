@@ -161,39 +161,57 @@ Return ONLY a number 0-100. No explanation."""
                 parts = fb_caption.split("|| Image Idea:")
                 fb_caption = parts[0].strip()
                 image_idea = parts[1].strip()
-            # Format 3: Image Idea: (AI forgot delimiter)
+            # Format 3: || Visual idea: (new format)
+            elif "|| Visual idea:" in fb_caption:
+                parts = fb_caption.split("|| Visual idea:")
+                fb_caption = parts[0].strip()
+                image_idea = parts[1].strip()
+            # Format 4: Image Idea: (AI forgot delimiter)
             elif "Image Idea:" in fb_caption:
                 parts = fb_caption.split("Image Idea:")
                 fb_caption = parts[0].strip()
                 image_idea = parts[1].strip()
-            # Format 4: Image Design: (AI forgot delimiter)
+            # Format 5: Image Design: (AI forgot delimiter)
             elif "Image Design:" in fb_caption:
                 parts = fb_caption.split("Image Design:")
+                fb_caption = parts[0].strip()
+                image_idea = parts[1].strip()
+            # Format 6: Visual idea: (AI forgot delimiter)
+            elif "Visual idea:" in fb_caption:
+                parts = fb_caption.split("Visual idea:")
                 fb_caption = parts[0].strip()
                 image_idea = parts[1].strip()
             
             # Final cleanup: remove any remaining image-related instruction text
             import re
-            fb_caption = re.sub(r'\s*\|\|\s*Image (Design|Idea):.*$', '', fb_caption, flags=re.IGNORECASE | re.DOTALL)
-            fb_caption = re.sub(r'\s*Image (Design|Idea):.*$', '', fb_caption, flags=re.IGNORECASE | re.DOTALL)
+            fb_caption = re.sub(r'\s*\|\|\s*(Image (Design|Idea)|Visual idea):.*$', '', fb_caption, flags=re.IGNORECASE | re.DOTALL)
+            fb_caption = re.sub(r'\s*(Image (Design|Idea)|Visual idea):.*$', '', fb_caption, flags=re.IGNORECASE | re.DOTALL)
             fb_caption = fb_caption.strip()
+
             
             import urllib.parse
             
-            # NEW APPROACH: Use Google Gemini Imagen 3 for Viral Images
-            print(f"Generating viral image with Imagen 3...")
+            # NEW APPROACH: Use Pollinations AI (same as blog posts)
+            print(f"Generating viral image with Pollinations AI...")
             
             # 1. Initialize Generator
             from .image_generator import ImageGenerator
             img_gen = ImageGenerator()
             
-            # 2. Construct Prompt
-            visual_style = "cinematic lighting, high contrast, 8k resolution, hyperrealistic, news graphic style"
-            base_prompt = f"Editorial news graphic about {article['title']}, {visual_style}"
+            # 2. Construct Viral Prompt
+            # Use the AI-generated image description if available, otherwise use viral framework
+            if image_idea:
+                # AI created a detailed visual description - use it!
+                print(f"   Using AI image description: {image_idea[:80]}...")
+                prompt = image_idea
+            else:
+                # Use the same viral prompt framework as blog posts
+                print(f"   Using viral prompt framework...")
+                prompt = img_gen.create_viral_prompt(article['title'])
             
             # 3. Generate & Save Locally
-            print(f"   Prompt: {base_prompt[:50]}...")
-            local_image_path = img_gen.generate_viral_image(base_prompt)
+            print(f"   Full prompt: {prompt[:100]}...")
+            local_image_path = img_gen.generate_viral_image(prompt)
             
             if local_image_path:
                 print(f"✅ Image generated: {local_image_path}")

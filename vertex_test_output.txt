@@ -1,0 +1,37 @@
+﻿Testing Vertex AI Imagen 3...
+Project ID: gen-lang-client-0358826540
+Location: us-central1
+Key Path: vertex-ai-key.json
+python : Traceback (most recent 
+call last):
+At line:1 char:1
++ python test_vertex_ai.py 2>&1 | 
+Out-File -Encoding utf8 
+vertex_test_o ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotS 
+   pecified: (Traceback (most rec  
+  ent call last)::String) [], Re   
+ moteException
+    + FullyQualifiedErrorId : Nati 
+   veCommandError
+ 
+  File "C:\Users\OlgaKorniichuk\Doc
+uments\antiGravity 
+Projects\Facebok 
+AI.corelogic\test_vertex_ai.py", 
+line 30, in <module>
+    print(f"\u2705 Using service 
+account: {KEY_PATH}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\
+cp1252.py", line 19, in encode
+    return codecs.charmap_encode(in
+put,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' 
+codec can't encode character 
+'\u2705' in position 0: character 
+maps to <undefined>

@@ -12,6 +12,14 @@ FB_PAGE_ID = os.getenv("FB_PAGE_ID")
 # AI Config
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
+# OpenAI Config (optional, for DALL-E 3 image generation)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # Optional: for premium image generation
+
+# Vertex AI Config (for Imagen) - DEPRECATED, models unavailable
+VERTEX_PROJECT_ID = os.getenv("VERTEX_PROJECT_ID")  # e.g., "my-project-123456"
+VERTEX_LOCATION = os.getenv("VERTEX_LOCATION", "us-central1")  # Default region
+VERTEX_KEY_PATH = os.getenv("VERTEX_KEY_PATH")  # Optional: path to service account JSON
+
 # News Sources (RSS)
 # News Sources (RSS)
 RSS_FEEDS = [

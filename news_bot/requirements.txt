@@ -6,3 +6,5 @@ google-generativeai
 fastapi
 uvicorn
 pydantic
+Pillow
+google-cloud-aiplatform

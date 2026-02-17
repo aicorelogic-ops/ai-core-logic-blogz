@@ -66,5 +66,12 @@
     "facebook_photo_id": "122102693415254103",
     "facebook_video_id": null,
     "processed_date": "2026-02-16T00:27:08.084046"
+  },
+  "https://venturebeat.com/security/machine-identities-missing-link-ransomware-playbooks": {
+    "title": "Most ransomware playbooks don't address machine credentials. Attackers know it.",
+    "blog_path": "blog/posts/2026-02-16-most-ransomware-playbooks-don-t-address-machine-cr.html",
+    "facebook_photo_id": "122102850441254103",
+    "facebook_video_id": null,
+    "processed_date": "2026-02-16T18:14:15.687648"
   }
 }

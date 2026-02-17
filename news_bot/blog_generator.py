@@ -83,49 +83,38 @@ class BlogGenerator:
         filename = f"{date_str}-{slug}.html"
         filepath = os.path.join(self.posts_dir, filename)
         
-        # If no image provided, generate one using Viral Pattern Interrupt Strategy
+        # If no image provided, generate one using the robust ImageGenerator
         if not image_url:
-            # Extract the "Bleeding Neck" problem or shocking detail from title
-            image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
-            
-            # Apply Direct Response Marketer Framework for Scroll-Stopping Visuals
-            import random
-            
-            # Option A: "Raw Native" / Leaked Evidence (UGC Style)
-            raw_native = (
-                f"iPhone photo amateur candid shot, first-person POV perspective, "
-                f"computer screen showing shocking data about '{image_hook}', "
-                f"messy desk with papers and coffee cup, "
-                f"RED CIRCLE hand-drawn around key detail, RED ARROW pointing to problem, "
-                f"harsh office lighting, grainy quality, user-generated content aesthetic, "
-                f"flash photography, NOT professional, NOT stock photo, leaked evidence style"
-            )
-            
-            # Option B: "Breaking News" (Viral News Chyron)
-            breaking_news = (
-                f"Breaking news TV screenshot style, person looking genuinely SHOCKED or TERRIFIED, "
-                f"holding document with '{image_hook}' visible, "
-                f"news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
-                f"TMZ style viral news aesthetic, candid amateur photo, "
-                f"harsh flash lighting, NOT cinematic, NOT studio quality, "
-                f"dimly lit background, real reaction not posed, grainy iPhone quality"
-            )
-            
-            # Option C: The "Weird" / "Gross" Visual (Confusion Trigger)
-            weird_visual = (
-                f"Close-up macro photo of weird unexpected detail about '{image_hook}', "
-                f"magnified mistake or strange contradiction, confusing composition, "
-                f"makes viewer ask 'what the hell is that?', "
-                f"amateur photography, grainy texture, harsh lighting, "
-                f"NOT aesthetically pleasing, pattern interrupt visual, "
-                f"user-generated content style, candid first-person POV"
-            )
-            
-            # Randomly select one framework for variety
-            chosen_style = random.choice([raw_native, breaking_news, weird_visual])
-            
-            safe_prompt = urllib.parse.quote(chosen_style)
-            image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
+            try:
+                from .image_generator import ImageGenerator
+                img_gen = ImageGenerator()
+                
+                # Create viral prompt using the same framework
+                viral_prompt = img_gen.create_viral_prompt(title)
+                
+                # Generate image (will try Pollinations, then fall back to PIL)
+                local_image_path = img_gen.generate_viral_image(viral_prompt)
+                
+                if local_image_path:
+                    # Use the local file path as the image URL
+                    # For blog posts, we'll need to copy this to blog/assets later
+                    # For now, use a placeholder or the Pollinations URL as fallback
+                    image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+                    safe_prompt = urllib.parse.quote(viral_prompt)
+                    image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
+                else:
+                    # Ultimate fallback: use a generic Pollinations URL
+                    image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+                    fallback_prompt = f"Editorial news graphic about {image_hook}"
+                    safe_prompt = urllib.parse.quote(fallback_prompt)
+                    image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
+            except Exception as e:
+                print(f"Warning: ImageGenerator failed: {e}")
+                # Fallback to old method
+                image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+                fallback_prompt = f"Editorial news graphic about {image_hook}"
+                safe_prompt = urllib.parse.quote(fallback_prompt)
+                image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
         
         # Calculate read time
         read_time = self.calculate_read_time(content)
