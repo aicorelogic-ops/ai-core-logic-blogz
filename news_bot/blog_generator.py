@@ -405,7 +405,8 @@ class BlogGenerator:
         try:
             # Use subprocess to run the script, ensuring it's in the correct directory
             # We need to ensure the script can find its own modules, so we add the current dir to sys.path
-            repo_root = os.path.dirname(self.posts_dir) # blog/
+            abs_posts_dir = os.path.abspath(self.posts_dir)
+            repo_root = os.path.dirname(abs_posts_dir) # blog/
             repo_root = os.path.dirname(repo_root) # root
             
             subprocess.run([
