@@ -397,18 +397,24 @@ class BlogGenerator:
         This ensures the new post is correctly categorized and added to all relevant pages.
         """
         import subprocess
+        import sys
         print("Rebuilding site structure (Index + Categories)...")
         
         # Path to generate_categories.py (assumed to be in project root)
-        # We need to find the root directory relative to this file
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.dirname(current_dir) # up one level from 'news_bot'
-        script_path = os.path.join(project_root, "generate_categories.py")
-        
+        # Call the script that rebuilds the entire site
         try:
-            subprocess.run(["python", script_path], check=True, cwd=project_root)
-            print("Site rebuild complete.")
-        except Exception as e:
+            # Use subprocess to run the script, ensuring it's in the correct directory
+            # We need to ensure the script can find its own modules, so we add the current dir to sys.path
+            repo_root = os.path.dirname(self.posts_dir) # blog/
+            repo_root = os.path.dirname(repo_root) # root
+            
+            subprocess.run([
+                sys.executable,  # Use the same Python interpreter
+                "-m", "news_bot.generate_categories", # Run the module
+                # Add any necessary arguments here if the script supported them
+            ], cwd=repo_root, check=True, capture_output=True, text=True)
+            print("✅ Successfully rebuilt site structure (index, categories).")
+        except subprocess.CalledProcessError as e:
             print(f"Error rebuilding site: {e}")
 
     def deploy_to_github(self):
