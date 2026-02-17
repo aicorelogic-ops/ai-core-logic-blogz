@@ -105,5 +105,16 @@
     "blog_path": "blog/posts/2026-02-17-anthropic-s-sonnet-4-6-matches-flagship-ai-perform.html",
     "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-17-anthropic-s-sonnet-4-6-matches-flagship-ai-perform.html",
     "processed_date": "2026-02-17T12:45:07.560616"
+  },
+  "https://www.artificialintelligence-news.com/news/ssc-blue-prism-on-the-journey-from-rpa-to-agentic-automation/": {
+    "title": "SS&C Blue Prism: On the journey from RPA to agentic automation",
+    "blog_path": "blog/posts/2026-02-17-ss-c-blue-prism--on-the-journey-from-rpa-to-agenti.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-17-ss-c-blue-prism--on-the-journey-from-rpa-to-agenti.html",
+    "processed_date": "2026-02-17T12:54:36.541237"
+  },
+  "https://techcrunch.com/2026/02/17/mistral-ai-buys-koyeb-in-first-acquisition-to-back-its-cloud-ambitions/": {
+    "title": "Mistral AI buys Koyeb in first acquisition to back its cloud ambitions",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-17T12:57:51.741817"
   }
 }

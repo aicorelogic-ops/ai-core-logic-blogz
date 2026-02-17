@@ -96,12 +96,27 @@ class BlogGenerator:
                 local_image_path = img_gen.generate_viral_image(viral_prompt)
                 
                 if local_image_path:
-                    # Use the local file path as the image URL
-                    # For blog posts, we'll need to copy this to blog/assets later
-                    # For now, use a placeholder or the Pollinations URL as fallback
-                    image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
-                    safe_prompt = urllib.parse.quote(viral_prompt)
-                    image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
+                    # COPY LOCAL IMAGE TO ASSETS
+                    import shutil
+                    # Ensure assets dir exists
+                    assets_dir = os.path.join(os.path.dirname(self.posts_dir), "assets")
+                    os.makedirs(assets_dir, exist_ok=True)
+                    
+                    # Create target filename based on slug
+                    target_img_name = f"{slug}.jpg"
+                    target_path = os.path.join(assets_dir, target_img_name)
+                    
+                    try:
+                        shutil.copy2(local_image_path, target_path)
+                        print(f"✅ Copied generated image to {target_path}")
+                        # Use relative URL for the blog post
+                        image_url = f"../assets/{target_img_name}"
+                    except Exception as e:
+                        print(f"❌ Error copying image: {e}")
+                        # Fallback to Pollinations if copy fails
+                        image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+                        safe_prompt = urllib.parse.quote(viral_prompt)
+                        image_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1200&height=630&nologo=true"
                 else:
                     # Ultimate fallback: use a generic Pollinations URL
                     image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
