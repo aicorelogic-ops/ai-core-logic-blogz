@@ -76,7 +76,7 @@ def retry_latest_post():
     prompt = f"""
     You are a Direct Response Copywriter.
     Input Title: {article_data['title']}
-    Input URL: https://aicorelogic-ops.github.io/ai-core-logic/{article_data['blog_path']}
+    Input URL: https://aicorelogic-ops.github.io/ai-core-logic-blogz/{article_data['blog_path']}
     
     TASK: Write a Facebook Post using the NotebookLM "PPT + TAC" Formula.
     - Hook: [BRACKETS] in first 3 words.
@@ -91,7 +91,7 @@ def retry_latest_post():
         caption = response.text.strip()
     except Exception as e:
         print(f"Error generating caption: {e}")
-        caption = f"New Article: {article_data['title']}\n\nRead here: https://aicorelogic-ops.github.io/ai-core-logic/{article_data['blog_path']}"
+        caption = f"New Article: {article_data['title']}\n\nRead here: https://aicorelogic-ops.github.io/ai-core-logic-blogz/{article_data['blog_path']}"
 
     # Verify Output (Print safely for Windows)
     print(f"Caption: {caption.encode('ascii', 'ignore').decode('ascii')}")

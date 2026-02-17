@@ -432,7 +432,7 @@ class BlogGenerator:
             # Note: This relies on your cached credentials.
             subprocess.run(["C:\\Program Files\\Git\\cmd\\git.exe", "push"], check=True)
             
-            print("Successfully deployed to https://aicorelogic-ops.github.io/ai-core-logic/")
+            print("Successfully deployed to https://aicorelogic-ops.github.io/ai-core-logic-blogz/")
             return True
         except Exception as e:
             print(f"Deploy failed: {e}")

@@ -134,7 +134,7 @@ Return ONLY a number 0-100. No explanation."""
             
             # C. Prepare Facebook Link
             # Production URL structure for GitHub Pages
-            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic/blog/posts/{filename}" 
+            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/{filename}" 
             
             fb_message = content_package['facebook_msg'].replace("[LINK]", blog_url)
             
