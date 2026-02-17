@@ -59,5 +59,12 @@
     "facebook_photo_id": null,
     "facebook_video_id": null,
     "processed_date": "2026-02-15T23:21:05.526261"
+  },
+  "https://venturebeat.com/security/how-to-test-openclaw-without-giving-an-autonomous-agent-shell-access-to-your": {
+    "title": "How to test OpenClaw without giving an autonomous agent shell access to your corporate laptop",
+    "blog_path": "blog/posts/2026-02-16-how-to-test-openclaw-without-giving-an-autonomous-.html",
+    "facebook_photo_id": "122102693415254103",
+    "facebook_video_id": null,
+    "processed_date": "2026-02-16T00:27:08.084046"
   }
 }
