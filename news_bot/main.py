@@ -1,7 +1,7 @@
 import time
 from .collector import NewsCollector
 from .processor import NewsProcessor
-from .publisher import FacebookPublisher
+# from .publisher import FacebookPublisher  # Removed - Facebook posting now in facebook_blog_poster.py
 from .blog_generator import BlogGenerator
 from .article_tracker import ArticleTracker
 # from .viral_reel_generator import ViralReelGenerator  # Removed per user request
@@ -77,9 +77,8 @@ Return ONLY a number 0-100. No explanation."""
     best_article, best_score = max(articles_with_scores, key=lambda x: x[1])
     print(f"\nSelected BEST article (Score: {best_score}): {best_article['title'].encode('ascii', 'ignore').decode('ascii')}\n")
     
-    # 3. Process & Publish the BEST article
+    # 3. Process & Generate Blog for the BEST article
     processor = NewsProcessor()
-    publisher = FacebookPublisher()
     blog_gen = BlogGenerator()
     # viral_gen = ViralReelGenerator()  # Removed per user request
 
@@ -132,105 +131,25 @@ Return ONLY a number 0-100. No explanation."""
                 image_url=article.get('image_url')
             )
             
-            # C. Prepare Facebook Link
-            # Production URL structure for GitHub Pages
-            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/{filename}" 
-            
-            fb_message = content_package['facebook_msg'].replace("[LINK]", blog_url)
-            
-            # D. Deploy to GitHub
+            # C. Deploy to GitHub
             is_deployed = blog_gen.deploy_to_github()
             
             if not is_deployed:
                 print("GitHub deploy reported failure (might just be 'no changes'), proceeding anyway...")
-
-            # E. Post Viral Photo to Facebook
-            print(f"Publishing to Facebook as viral photo post...")
             
-            fb_caption = content_package['facebook_msg'].replace("[LINK]", blog_url)
-            image_idea = ""
+            # Generate blog URL for tracking
+            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/{filename}"
             
-            # Extract Image Design/Idea specs - handle multiple formats
-            # Format 1: || Image Design: (preferred)
-            if "|| Image Design:" in fb_caption:
-                parts = fb_caption.split("|| Image Design:")
-                fb_caption = parts[0].strip()
-                image_idea = parts[1].strip()
-            # Format 2: || Image Idea: (legacy)
-            elif "|| Image Idea:" in fb_caption:
-                parts = fb_caption.split("|| Image Idea:")
-                fb_caption = parts[0].strip()
-                image_idea = parts[1].strip()
-            # Format 3: || Visual idea: (new format)
-            elif "|| Visual idea:" in fb_caption:
-                parts = fb_caption.split("|| Visual idea:")
-                fb_caption = parts[0].strip()
-                image_idea = parts[1].strip()
-            # Format 4: Image Idea: (AI forgot delimiter)
-            elif "Image Idea:" in fb_caption:
-                parts = fb_caption.split("Image Idea:")
-                fb_caption = parts[0].strip()
-                image_idea = parts[1].strip()
-            # Format 5: Image Design: (AI forgot delimiter)
-            elif "Image Design:" in fb_caption:
-                parts = fb_caption.split("Image Design:")
-                fb_caption = parts[0].strip()
-                image_idea = parts[1].strip()
-            # Format 6: Visual idea: (AI forgot delimiter)
-            elif "Visual idea:" in fb_caption:
-                parts = fb_caption.split("Visual idea:")
-                fb_caption = parts[0].strip()
-                image_idea = parts[1].strip()
+            print(f"✅ Blog post created and deployed: {filename}")
+            print(f"   URL: {blog_url}")
+            print(f"📢 To post to Facebook, run: python -m news_bot.facebook_blog_poster")
             
-            # Final cleanup: remove any remaining image-related instruction text
-            import re
-            fb_caption = re.sub(r'\s*\|\|\s*(Image (Design|Idea)|Visual idea):.*$', '', fb_caption, flags=re.IGNORECASE | re.DOTALL)
-            fb_caption = re.sub(r'\s*(Image (Design|Idea)|Visual idea):.*$', '', fb_caption, flags=re.IGNORECASE | re.DOTALL)
-            fb_caption = fb_caption.strip()
-
-            
-            import urllib.parse
-            
-            # NEW APPROACH: Use Pollinations AI (same as blog posts)
-            print(f"Generating viral image with Pollinations AI...")
-            
-            # 1. Initialize Generator
-            from .image_generator import ImageGenerator
-            img_gen = ImageGenerator()
-            
-            # 2. Construct Viral Prompt
-            # Use the AI-generated image description if available, otherwise use viral framework
-            if image_idea:
-                # AI created a detailed visual description - use it!
-                print(f"   Using AI image description: {image_idea[:80]}...")
-                prompt = image_idea
-            else:
-                # Use the same viral prompt framework as blog posts
-                print(f"   Using viral prompt framework...")
-                prompt = img_gen.create_viral_prompt(article['title'])
-            
-            # 3. Generate & Save Locally
-            print(f"   Full prompt: {prompt[:100]}...")
-            local_image_path = img_gen.generate_viral_image(prompt)
-            
-            if local_image_path:
-                print(f"✅ Image generated: {local_image_path}")
-                # 4. Post to Facebook using local file
-                photo_post_id = publisher.post_photo(photo_source=local_image_path, message=fb_caption)
-            else:
-                print("❌ Failed to generate image.")
-                photo_post_id = None
-            
-            # F. REEL GENERATION REMOVED PER USER REQUEST
-            # (Previously created and posted viral reels here)
-            video_post_id = None
-            
-            # F. TRACK ARTICLE AS PROCESSED
+            # D. Track as processed (blog created)
             tracker.mark_as_processed(article['link'], {
                 'title': article['title'],
                 'blog_path': f"blog/posts/{filename}",
-                'facebook_photo_id': photo_post_id,
-                'facebook_video_id': video_post_id
+                'blog_url': blog_url,
+                'processed_date': datetime.now().isoformat()
             })
             
             # Sleep to avoid spamming

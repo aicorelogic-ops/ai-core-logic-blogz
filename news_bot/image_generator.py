@@ -309,49 +309,69 @@ class ImageGenerator:
     def create_viral_prompt(self, title):
         """
         Create a viral-style prompt using Direct Response Marketing frameworks.
-        Same as blog_generator.py for consistency.
+        Based on "Pattern Interrupt" and "Burning Intrigue" principles.
         
         Args:
             title (str): Article title to base the prompt on
         
         Returns:
-            str: Viral-style image prompt
+            str: Viral-style image prompt optimized for Vertex AI Imagen 3.0
         """
-        # Extract the hook from title
-        image_hook = title[:60] if len(title) <= 60 else title.split(':')[0][:60]
+        # Extract the hook from title (The "Bleeding Neck" or "Specific Benefit")
+        # We need the most shocking/specific part of the title
+        clean_title = title.replace(":", "").replace("-", "")
+        # Get first 6-8 words which usually contain the subject
+        image_hook = " ".join(clean_title.split()[:8])
         
-        # Option A: "Raw Native" / Leaked Evidence (UGC Style)
+        # Framework 1: "Raw Native" / Leaked Evidence (UGC Style)
+        # Best for: Business mistakes, hidden costs, shocking data
         raw_native = (
             f"iPhone photo amateur candid shot, first-person POV perspective, "
+            f"messy office desk with papers and coffee cup, "
             f"computer screen showing shocking data about '{image_hook}', "
-            f"messy desk with papers and coffee cup, "
-            f"RED CIRCLE hand-drawn around key detail, RED ARROW pointing to problem, "
+            f"hand-drawn RED CIRCLE around a specific detail on the screen, "
+            f"RED ARROW pointing to a problem, "
             f"harsh office lighting, grainy quality, user-generated content aesthetic, "
-            f"flash photography, NOT professional, NOT stock photo, leaked evidence style"
+            f"flash photography, NOT professional, NOT stock photo, leaked evidence style, "
+            f"blurriness, authentic unpolished look"
         )
         
-        # Option B: "Breaking News" (Viral News Chyron)
+        # Framework 2: "Breaking News" (Viral News Chyron)
+        # Best for: Major announcements, industry shifts, warnings
         breaking_news = (
             f"Breaking news TV screenshot style, person looking genuinely SHOCKED or TERRIFIED, "
-            f"holding document with '{image_hook}' visible, "
-            f"news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
-            f"TMZ style viral news aesthetic, candid amateur photo, "
+            f"holding a document regarding '{image_hook}', "
+            f"bold yellow news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
+            f"TMZ style viral news aesthetic, "
             f"harsh flash lighting, NOT cinematic, NOT studio quality, "
-            f"dimly lit background, real reaction not posed, grainy iPhone quality"
+            f"dimly lit background, real reaction not posed, grainy quality, "
+            f"live broadcast aesthetic, urgent atmosphere"
         )
         
-        # Option C: The "Weird" / "Gross" Visual (Confusion Trigger)
+        # Framework 3: The "Weird" / "Gross" Visual (Confusion Trigger)
+        # Best for: Specific objects, technical details, "hidden" things
         weird_visual = (
-            f"Close-up macro photo of weird unexpected detail about '{image_hook}', "
+            f"Close-up macro photo of a weird unexpected detail regarding '{image_hook}', "
             f"magnified mistake or strange contradiction, confusing composition, "
-            f"makes viewer ask 'what the hell is that?', "
+            f"makes the viewer ask 'what the hell is that?', "
             f"amateur photography, grainy texture, harsh lighting, "
             f"NOT aesthetically pleasing, pattern interrupt visual, "
-            f"user-generated content style, candid first-person POV"
+            f"user-generated content style, candid first-person POV, "
+            f"gritty texture, high contrast"
         )
         
-        # Randomly select one framework for variety
-        return random.choice([raw_native, breaking_news, weird_visual])
+        # Randomly select one framework to maintain variety and "pattern interrupt"
+        # We could add logic to pick based on keywords, but random often creates better curiosity gaps
+        selected_prompt = random.choice([raw_native, breaking_news, weird_visual])
+        
+        # Add Negative Prompt constraints (what to avoid)
+        negative_constraints = (
+            " --negative_prompt: stock photo, 3D render, perfect symmetry, "
+            "smiling corporate people, polished advertising, professional studio lighting, "
+            "smooth skin, makeup, perfect composition, branding, watermark, text overlay (except chyron)"
+        )
+        
+        return selected_prompt + negative_constraints
     
     
     def cleanup_old_images(self, days_old=7):

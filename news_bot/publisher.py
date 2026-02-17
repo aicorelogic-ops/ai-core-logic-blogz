@@ -290,6 +290,38 @@ class FacebookPublisher:
             print(f"Download invalid: {e}")
             return None
 
+    def post_comment(self, object_id, message):
+        """
+        Publishes a comment on a specific Facebook object (post, photo, video).
+        
+        Args:
+            object_id: The ID of the post/photo to comment on.
+            message: The comment text.
+            
+        Returns:
+            str: Comment ID if successful, None otherwise.
+        """
+        if not self.token:
+            print("Error: Missing Facebook Page Token.")
+            return None
+
+        url = f"{self.base_url}/{object_id}/comments"
+        payload = {
+            "message": message,
+            "access_token": self.token
+        }
+
+        try:
+            print(f"💬 Posting comment on {object_id}...")
+            response = requests.post(url, data=payload)
+            response.raise_for_status()
+            data = response.json()
+            print(f"✅ Successfully posted comment! ID: {data.get('id')}")
+            return data.get('id')
+        except requests.exceptions.RequestException as e:
+            self._handle_error(e, response if 'response' in locals() else None)
+            return None
+
 if __name__ == "__main__":
     # Test run
     publisher = FacebookPublisher()

@@ -71,44 +71,7 @@ class NewsProcessor:
         - Keep paragraphs 1-3 sentences for mobile readability.
         - Take a strong stance. Be opinionated.
         
-        Output 2: A FACEBOOK POST (Research-Backed Engagement Formula)
-        
-        Output 2: A FACEBOOK POST (Based on 'Mastering Digital Content Strategy' Notebook)
-        
-        **CORE STRATEGY (High-Arousal & F-Pattern):**
-        Users scan in an F-pattern. You must front-load value and evoke high-arousal emotion (Awe, Anxiety, or Anger).
-        
-        **STRICT FORMAT (The PPT + TAC Formula):**
-        
-        1. **HOOK (The 'Preview' & 'Proof') - Lines 1-2:**
-           - **Concept**: Arrest attention immediately.
-           - **Rule**: Front-load the most shocking insight in the FIRST 3 WORDS.
-           - **formatting**: Use [BRACKETS] around one key keyword (e.g., [New Data], [Alert]) - *NotebookLM data says this boosts CTR by 38%*.
-           - **Emotion**: Must trigger AWE (Breakthrough/Future) or ANXIETY (Urgency/Risk).
-        
-        2. **BODY (The 'Transition') - Lines 3-4:**
-           - **Concept**: Deliver the "Why it matters" in 1-2 punchy sentences.
-           - **Formatting**: Max 1-2 sentences per paragraph.
-           - **Style**: 6th-grade reading level. No fluff.
-        
-        3. **ClOSE (The 'Ask' & 'CTA') - Lines 5-6:**
-           - **Concept**: The TAC Formula (Transition, Ask, Call to Action).
-           - **Ask**: A specific, easy-to-answer question (e.g., "Will you adopt this?"). Avoid lazy "Thoughts?" questions.
-           - **CTA**: "Read the full analysis here: [LINK]"
-        
-        **CONSTRAINTS:**
-        - **Total Length**: 60-100 Words Max.
-        - **Visuals**: "Full story: [LINK] || Image Idea: [Describe a high-contrast image with a FACE or CHART to stop the scroll]"
-        - **Hashtags**: 3 relevant, high-traffic tags.
-        - **Prohibited**: Do NOT use "Link in bio". Do NOT use markdown bold/italic.
-        - **EMOJI RULE**: Use 2-3 relevant emojis in the body to break up text and add visual interest (e.g., 🚨, 📉, 🤖). make it NOT boring.
-        - Align mood with arousal emotion (urgent/exciting/shocking)
-        
-        **REQUIRED ENDING:**
-        - **Hashtags**: Must end with 3-5 high-traffic, relevant hashtags (e.g., #AI #PrivateEquity #TechTrends).
-        - **Visual Idea**: Provide a brief visual description for the image generator.
-        
-        Output 3: A TL;DR SUMMARY (2-3 Bullet Points)
+        Output 2: A TL;DR SUMMARY (2-3 Bullet Points)
         **PURPOSE**: Distill the entire article into actionable key takeaways
         
         **FORMAT**:
@@ -117,7 +80,7 @@ class NewsProcessor:
         - Focus on ACTIONABLE insights or shocking facts
         - Use plain text (no markdown symbols like • or -)
         
-        Output 4: EDITORIAL PROSPECT (Unique Insight)
+        Output 3: EDITORIAL PROSPECT (Unique Insight)
         **PURPOSE**: A short, punchy opinion/take on why this matters (for the author bio section)
         
         **FORMAT**:
@@ -129,9 +92,8 @@ class NewsProcessor:
         CRITICAL RETURN FORMAT:
         - Separate outputs with EXACT delimiter: "|||||"
         - First part = HTML blog
-        - Second part = Plain text Facebook post
-        - Third part = TL;DR bullet points
-        - Fourth part = Editorial Prospect text
+        - Second part = TL;DR bullet points
+        - Third part = Editorial Prospect text
         """
 
         try:
@@ -142,32 +104,18 @@ class NewsProcessor:
             if "|||||" in text:
                 parts = text.split("|||||")
                 blog_html = parts[0].strip()
-                facebook_msg = parts[1].strip() if len(parts) > 1 else ""
-                tldr_raw = parts[2].strip() if len(parts) > 2 else ""
-                editorial_prospect = parts[3].strip() if len(parts) > 3 else "We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."
+                tldr_raw = parts[1].strip() if len(parts) > 1 else ""
+                editorial_prospect = parts[2].strip() if len(parts) > 2 else "We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."
                 
-                # Clean up Facebook message - remove any instruction labels or formatting indicators
-                # Remove common AI output labels
-                facebook_msg = facebook_msg.replace('**OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)**', '')
-                facebook_msg = facebook_msg.replace('OUTPUT 2: A FACEBOOK POST (Plain Text, LONG-FORM 200+ words)', '')
-                facebook_msg = facebook_msg.replace('**OUTPUT 2:**', '')
-                facebook_msg = facebook_msg.replace('OUTPUT 2:', '')
-                facebook_msg = facebook_msg.replace('**Facebook Post:**', '')
-                facebook_msg = facebook_msg.replace('Facebook Post:', '')
-                
-                # Clean up any remaining markdown bold markers in plain text
-                import re
-                # Only remove ** markers if they're wrapping instruction-like text at the start
-                if facebook_msg.startswith('**'):
-                    facebook_msg = re.sub(r'^\*\*[^*]+\*\*\s*', '', facebook_msg)
-                
-                facebook_msg = facebook_msg.strip()
+                # Facebook msg is no longer generated here
+                facebook_msg = ""
+
                 
                 # Process TL;DR - format as HTML bullet list
                 tldr_html = ""
                 if tldr_raw:
                     # Clean up labels
-                    tldr_raw = tldr_raw.replace('**OUTPUT 3:**', '').replace('OUTPUT 3:', '')
+                    tldr_raw = tldr_raw.replace('**OUTPUT 2:**', '').replace('OUTPUT 2:', '')
                     tldr_raw = tldr_raw.replace('**TL;DR:**', '').replace('TL;DR:', '').strip()
                     
                     # Split into bullets and format
