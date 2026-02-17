@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qodo 2.1 solves your coding agents' 'amnesia' problem, giving them an 11% precision boost | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('https://images.ctfassets.net/jdtwqhzvc2n1/6bfLu3ANKmskAcjdLWLNiK/8b012747fae811defd7cc142d2a77b74/rFdPJQ1tsZu6KUqgSktND_8bblXVf5.png?w=300&q=30') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Qodo 2.1 solves your coding agents' 'amnesia' problem, giving them an 11% precision boost</h1>
+        <div class="meta-info">
+            <span>2026-02-17</span>
+            <span>•</span>
+            <span>2 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>Qodo 2.1 introduces a persistent Rules System that eliminates AI session amnesia and boosts coding precision by 11 percent.</li><li style='margin-bottom: 0.75rem;'>The system replaces manual rule files with an automated governance layer that learns from real pull request feedback loops.</li><li style='margin-bottom: 0.75rem;'>Enterprise teams can now deploy stateful AI agents that maintain organizational standards across every single code review session.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <h1>YOUR AI CODER HAS SHORT-TERM MEMORY LOSS AND IT IS COSTING YOU MILLIONS.</h1>
+
+<p>Most AI coding tools are functional "goldfish" that forget everything the second you close the tab. This "amnesia" forces your expensive developers to use hacky workarounds that break at scale. Today, that cycle ends.</p>
+
+<p>Qodo 2.1 just released a persistent "Rules System" that gives AI agents a long-term memory, resulting in an immediate 11% precision boost. We’ve analyzed the data, and the shift from "stateless" to "stateful" AI is no longer optional for the enterprise.</p>
+
+<p>Stop treating your AI like a temp worker and start treating it like a lead architect.</p>
+
+<h2><b>THE "MEMENTO" PROBLEM IS KILLING YOUR PRODUCTIVITY</b></h2>
+
+<p>Current AI tools wake up from scratch every single time you call them. They have no idea what happened five minutes ago, let alone five months ago. Developers are literally tattooing notes on their codebases using "hacky" markdown files just to keep the AI on track.</p>
+
+<p>This is the <i>Memento</i> problem—a total lack of short-term memory that forces your team to manage 100,000 "sticky notes" of context. It’s random, it’s inefficient, and it’s dangerous for enterprise-grade software. Qodo 2.1 solves this by replacing static files with an intelligent governance layer that actually remembers your organization's subjective standards.</p>
+
+<h2><b>HOW QODO 2.1 CURES AI AMNESIA</b></h2>
+
+<ul>
+<li><b>Automatic Rule Discovery:</b> No more manual rule writing; the AI learns your standards from actual code patterns and PR feedback.</li>
+<li><b>Intelligent Maintenance:</b> A dedicated "Expert Agent" kills off duplicate or outdated rules before they cause "rule decay."</li>
+<li><b>Scalable Enforcement:</b> Rules are automatically triggered during code reviews, providing instant fixes instead of just pointing out flaws.</li>
+<li><b>Real-World Analytics:</b> You can finally measure exactly how well your standards are being followed across the entire organization.</li>
+</ul>
+
+<h3><b>FROM REACTIVE GUESSWORK TO PROACTIVE GOVERNANCE</b></h3>
+
+<p>The old way was reactive—the AI waited for you to ask a question. The new way is proactive. Qodo’s system acts as a "central nervous system" for your code, checking every line against a unified source of truth. This isn't just a minor update; it is a fundamental shift in how software is built.</p>
+
+<h3><b>THE 11% PRECISION BREAKTHROUGH</b></h3>
+
+<p>By tightly coupling memory with the AI agents, Qodo achieved an 11% jump in precision and recall. In real-world testing, this system identified 580 defects across 100 production pull requests that other tools missed. If you aren't using a stateful machine, you are leaving security and quality to chance.</p>
+
+<p>Is your development team still wasting hours re-teaching your AI the same rules every single morning?</p>
+
+<p>Contact AI Core Logic for a strategy audit.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"The bottom line is that most companies are playing with AI toys that forget their own name every ten minutes. If your coding agents don't have a "central nervous system" of persistent rules, you're just generating faster garbage. Qodo’s shift to stateful memory is the first real step toward AI that actually understands institutional knowledge instead of just guessing."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        
