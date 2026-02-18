@@ -323,46 +323,19 @@ class ImageGenerator:
         # Get first 6-8 words which usually contain the subject
         image_hook = " ".join(clean_title.split()[:8])
         
-        # Framework 1: "Raw Native" / Leaked Evidence (UGC Style)
-        # Best for: Business mistakes, hidden costs, shocking data
-        raw_native = (
-            f"iPhone photo amateur candid shot, first-person POV perspective, "
-            f"messy office desk with papers and coffee cup, "
-            f"computer screen showing shocking data about '{image_hook}', "
-            f"hand-drawn RED CIRCLE around a specific detail on the screen, "
-            f"RED ARROW pointing to a problem, "
-            f"harsh office lighting, grainy quality, user-generated content aesthetic, "
-            f"flash photography, NOT professional, NOT stock photo, leaked evidence style, "
-            f"blurriness, authentic unpolished look"
+        # Hybrid "Mega Prompt" combining Leaked Evidence, Breaking News, and Gritty Detail
+        # Combines: Messy desk (raw), Shocked expression (breaking), Red circle/contrast (weird/evidence)
+        hybrid_prompt = (
+            f"Viral 'Leaked Evidence' aesthetic: A chaotic, high-stakes scene viewed through a smartphone camera with harsh flash. "
+            f"Subject is looking genuinely SHOCKED or TERRIFIED while holding a document or screen showing '{image_hook}'. "
+            f"A hand-drawn RED CIRCLE frantically highlights a specific detail. "
+            f"The setting is a messy, dark office desk with coffee cups and scattered papers. "
+            f"Visual style: High contrast, grainy CCTV or 'caught on camera' texture, urgent 'BREAKING NEWS' atmosphere "
+            f"but with a gritty, amateur, unpolished reality. "
+            f"Makes the viewer feel they are seeing something forbidden or exposed."
         )
         
-        # Framework 2: "Breaking News" (Viral News Chyron)
-        # Best for: Major announcements, industry shifts, warnings
-        breaking_news = (
-            f"Breaking news TV screenshot style, person looking genuinely SHOCKED or TERRIFIED, "
-            f"holding a document regarding '{image_hook}', "
-            f"bold yellow news chyron banner at bottom saying 'BREAKING NEWS' or 'EXPOSED', "
-            f"TMZ style viral news aesthetic, "
-            f"harsh flash lighting, NOT cinematic, NOT studio quality, "
-            f"dimly lit background, real reaction not posed, grainy quality, "
-            f"live broadcast aesthetic, urgent atmosphere"
-        )
-        
-        # Framework 3: The "Weird" / "Gross" Visual (Confusion Trigger)
-        # Best for: Specific objects, technical details, "hidden" things
-        weird_visual = (
-            f"Close-up macro photo of a weird unexpected detail regarding '{image_hook}', "
-            f"magnified mistake or strange contradiction, confusing composition, "
-            f"makes the viewer ask 'what the hell is that?', "
-            f"amateur photography, grainy texture, harsh lighting, "
-            f"NOT aesthetically pleasing, pattern interrupt visual, "
-            f"user-generated content style, candid first-person POV, "
-            f"gritty texture, high contrast"
-        )
-        
-        # Randomly select one framework to maintain variety and "pattern interrupt"
-        # We could add logic to pick based on keywords, but random often creates better curiosity gaps
-        selected_prompt = random.choice([raw_native, breaking_news, weird_visual])
+        selected_prompt = hybrid_prompt
         
         # Add Negative Prompt constraints (what to avoid)
         negative_constraints = (
