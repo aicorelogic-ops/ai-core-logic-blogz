@@ -134,5 +134,16 @@
     "blog_path": "blog/posts/2026-02-18-heron-power-raises--140m-to-ramp-production-of-gri.html",
     "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-18-heron-power-raises--140m-to-ramp-production-of-gri.html",
     "processed_date": "2026-02-18T07:36:07.412771"
+  },
+  "https://www.theverge.com/ai-artificial-intelligence/880562/perplexity-ditches-ai-ads": {
+    "title": "Perplexity joins anti-ad camp as AI companies battle over trust and revenue",
+    "blog_path": "blog/posts/2026-02-18-perplexity-joins-anti-ad-camp-as-ai-companies-batt.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-18-perplexity-joins-anti-ad-camp-as-ai-companies-batt.html",
+    "processed_date": "2026-02-18T07:43:06.313814"
+  },
+  "https://venturebeat.com/orchestration/anthropics-sonnet-4-6-matches-flagship-ai-performance-at-one-fifth-the-cost": {
+    "title": "Anthropic's Sonnet 4.6 matches flagship AI performance at one-fifth the cost, accelerating enterprise adoption",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-18T13:37:47.086274"
   }
 }

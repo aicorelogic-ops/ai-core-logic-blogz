@@ -206,40 +206,23 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         fb_post = self.generate_facebook_post(blog)
         print(f"   Preview: {fb_post[:100]}...")
         
-        # Generate viral image with Vertex AI
-        print("\n🎨 Generating image with Vertex AI Imagen...")
-        from .image_generator import ImageGenerator
-        img_gen = ImageGenerator()
-        viral_prompt = img_gen.create_viral_prompt(blog['title'])
-        local_image_path = img_gen.generate_viral_image(viral_prompt)
+        # REFACTOR: Switch to "Link Post" strategy (Clickable Card) instead of "Photo Post"
+        # We no longer need to generate a local image because Facebook will pull the image 
+        # from the blog's meta tags (which we fixed).
         
-        if not local_image_path:
-            print("❌ Image generation failed. Aborting.")
-            return
-        
-        print(f"✅ Image generated: {local_image_path}")
-        
-        # Post to Facebook
-        print("\n📤 Posting to Facebook...")
+        print("\n📤 Posting LINK to Facebook (Link Preview mode)...")
         from .publisher import FacebookPublisher
         publisher = FacebookPublisher()
         
-        photo_id = publisher.post_photo(photo_source=local_image_path, message=fb_post)
+        # We use post_feed with the 'link' parameter to create a clickable card
+        # The 'message' is the text content
+        post_id = publisher.post_feed(message=fb_post, link=blog['url'])
         
-        if photo_id:
-            print(f"✅ Posted to Facebook! Photo ID: {photo_id}")
-            self.tracker.mark_posted(blog['filename'], photo_id, blog['url'])
-            
-            # Post link in comments
-            print(f"💬 Posting link in comments...")
-            import time
-            time.sleep(2) # Wait a moment to ensure post is processed
-            comment_id = publisher.post_comment(photo_id, f"Read the full article here: {blog['url']}")
-            
-            if comment_id:
-                print(f"✅ Link posted in comments! ID: {comment_id}")
-            else:
-                print(f"⚠️ Failed to post link comment. You may need to add it manually.")
+        if post_id:
+            print(f"✅ Posted Link to Facebook! ID: {post_id}")
+            self.tracker.mark_posted(blog['filename'], post_id, blog['url'])
+        else:
+            print("❌ Facebook posting failed")
         else:
             print("❌ Facebook posting failed")
 

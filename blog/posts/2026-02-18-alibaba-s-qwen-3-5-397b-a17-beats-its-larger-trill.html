@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('https://images.ctfassets.net/jdtwqhzvc2n1/7KLUCxdexYBxBe7M2ZwlYA/d4fa942fad8cccbccda18459bb6d406b/Gemini_Generated_Image_rmmft9rmmft9rmmf.png?w=300&q=30') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost</h1>
+        <div class="meta-info">
+            <span>2026-02-18</span>
+            <span>•</span>
+            <span>2 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>Qwen 3.5 outperforms trillion parameter models while running sixty percent cheaper and nineteen times faster than previous versions.</li><li style='margin-bottom: 0.75rem;'>Native multimodal architecture beats Claude and GPT on complex vision tasks without requiring expensive proprietary API subscriptions.</li><li style='margin-bottom: 0.75rem;'>Stop renting expensive AI and start owning frontier level intelligence with the royalty free Apache two point zero license.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <h1>Alibaba just killed the trillion-parameter hype train with a model that costs 94% less to run.</h1>
+
+<p>The "bigger is better" era of AI is officially over.</p>
+
+<p>Alibaba just dropped Qwen 3.5, and it’s punching a hole right through the chest of every massive, overpriced model on the market.</p>
+
+<p>This new open-weight beast outperforms Alibaba’s own trillion-parameter predecessor while using a fraction of the compute power.</p>
+
+<p>If you are tired of being a "tenant" to Silicon Valley’s expensive APIs, your eviction notice to the Big Three just arrived.</p>
+
+<h2>The Trillion-Parameter Lie Just Imploded</h2>
+
+<p>For years, the "experts" told you that more parameters meant more intelligence. They lied.</p>
+
+<p>Qwen 3.5-397B-A17 is proof that efficiency is the new king of the mountain.</p>
+
+<p>It packs 397 billion total parameters but only wakes up 17 billion per token, making it a surgical strike of intelligence instead of a blunt instrument.</p>
+
+<ul>
+    <li><strong>19x Faster Decoding:</strong> It screams past the old Qwen3-Max flagship.</li>
+    <li><strong>60% Cheaper to Run:</strong> Stop lighting your budget on fire with inefficient inference bills.</li>
+    <li><strong>1/18th the Cost:</strong> It delivers world-class results for a sliver of what Google Gemini 3 Pro charges.</li>
+</ul>
+
+<h2>Native Vision: No More Frankenstein Models</h2>
+
+<p>Most AI companies take a language model and "bolt on" a vision system as an afterthought. It’s clunky, slow, and stupid.</p>
+
+<p>Qwen 3.5 was trained from day one on text, images, and video simultaneously. It sees the world like a human does, not like a machine trying to translate a picture into words.</p>
+
+<p>It’s already crushing Claude Opus 4.5 on multimodal tasks and trading blows with GPT-5.2.</p>
+
+<h3>The End of API Slavery</h3>
+
+<p>Why are you still renting your company's brain? Qwen 3.5 is released under the Apache 2.0 license.</p>
+
+<p>That means you own it. You control it. You can run it on your own hardware without paying a "tax" to a competitor every time a customer asks a question.</p>
+
+<p>The 256K context window means it can digest entire libraries of your corporate data without breaking a sweat.</p>
+
+<p>The gap between "rented" AI and "owned" AI has officially vanished into thin air.</p>
+
+<p>Are you going to keep paying a "convenience tax" to Silicon Valley, or are you ready to own your infrastructure and your future?</p>
+
+<p>Contact AI Core Logic for a strategy audit and let's see if your team is ready to deploy frontier-class intelligence on your terms.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"The bottom line is the era of bigger is better in AI is officially dead. While everyone was obsessed with parameter counts, Alibaba figured out how to make a small active model destroy a trillion parameter giant. If you aren't pivoting to high efficiency open weights today, you are building your entire enterprise on sinking sand."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        
