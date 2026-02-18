@@ -185,8 +185,12 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         all_blogs = self.scanner.get_all_blogs()
         print(f"   Found {len(all_blogs)} total blog posts")
         
-        unpublished = self.tracker.get_unpublished_blogs(all_blogs)
-        print(f"   {len(unpublished)} unpublished to Facebook")
+        # User Constraint: Only look at the 4 newest posts
+        recent_blogs = all_blogs[:4]
+        print(f"   Refining scope to top {len(recent_blogs)} newest posts")
+        
+        unpublished = self.tracker.get_unpublished_blogs(recent_blogs)
+        print(f"   {len(unpublished)} unpublished in recent window")
         
         if not unpublished:
             print("✅ All blogs have been posted to Facebook!")
