@@ -317,31 +317,39 @@ class ImageGenerator:
         Returns:
             str: Viral-style image prompt optimized for Vertex AI Imagen 3.0
         """
-        # Extract the hook from title (The "Bleeding Neck" or "Specific Benefit")
-        # We need the most shocking/specific part of the title
+        # Extract the subject/topic from the title
         clean_title = title.replace(":", "").replace("-", "")
-        # Get first 6-8 words which usually contain the subject
+        # Get the core subject (first 6-8 words)
         image_hook = " ".join(clean_title.split()[:8])
         
-        # Hybrid "Mega Prompt" combining Leaked Evidence, Breaking News, and Gritty Detail
-        # Combines: Messy desk (raw), Shocked expression (breaking), Red circle/contrast (weird/evidence)
-        hybrid_prompt = (
-            f"Viral 'Leaked Evidence' aesthetic: A chaotic, high-stakes scene viewed through a smartphone camera with harsh flash. "
-            f"Subject is looking genuinely SHOCKED or TERRIFIED while holding a document or screen showing '{image_hook}'. "
-            f"A hand-drawn RED CIRCLE frantically highlights a specific detail. "
-            f"The setting is a messy, dark office desk with coffee cups and scattered papers. "
-            f"Visual style: High contrast, grainy CCTV or 'caught on camera' texture, urgent 'BREAKING NEWS' atmosphere "
-            f"but with a gritty, amateur, unpolished reality. "
-            f"Makes the viewer feel they are seeing something forbidden or exposed."
+        # New "Content-First" Viral Prompt Strategy
+        # We want the image to actually depict the TOPIC, but with a viral/dramatic style.
+        # Format: [Subject Action/Scene] + [Viral Visual Style] + [Atmosphere]
+        
+        viral_style = (
+            "Visual Style: Hyper-realistic 8k resolution, cinematic lighting, high contrast, "
+            "dramatic shadows, depth of field, detailed texture. "
+            "Aesthetic: 'Breaking News' intensity, urgency, modern, slightly gritty but professional."
         )
         
-        selected_prompt = hybrid_prompt
+        # Construct the scene description based on the hook
+        scene_description = (
+            f"A dramatic, high-stakes scene depicting '{image_hook}'. "
+            f"Make the subject matter the central focus. "
+            f"If technology: show glowing servers, data streams, or futuristic interfaces. "
+            f"If business/finance: show intense boardroom discussions, stock crashes, or piles of money. "
+            f"If policy/law: show gavels, documents, or government buildings with storm clouds. "
+            f"Key elements: A sense of motion, impact, or consequence. "
+            f"The image should tell a story about '{image_hook}' without using text."
+        )
+
+        selected_prompt = f"{scene_description} {viral_style}"
         
         # Add Negative Prompt constraints (what to avoid)
         negative_constraints = (
-            " --negative_prompt: stock photo, 3D render, perfect symmetry, "
-            "smiling corporate people, polished advertising, professional studio lighting, "
-            "smooth skin, makeup, perfect composition, branding, watermark, text overlay (except chyron)"
+            " --negative_prompt: blurry, low quality, cartoon, anime, effortless, "
+            "boring, plain white background, distorted faces, bad anatomy, "
+            "watermark, text, signature, ugly, deformed"
         )
         
         return selected_prompt + negative_constraints
