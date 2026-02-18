@@ -28,20 +28,18 @@ class ImageGenerator:
         print(f"   Output: {self.output_dir}")
     
     
-    def generate_viral_image(self, prompt, output_filename=None, use_dalle=False, use_vertex=True):
+
+    def generate_image(self, prompt, output_filename=None, use_dalle=False, use_vertex=True, title=None):
         """
-        Generate a viral-style image using multiple providers.
-        
-        Priority:
-        1. Vertex AI Imagen 3.0 (if use_vertex=True, Google Cloud, free tier available)
-        2. DALL-E 3 (if use_dalle=True and API key available)
-        2. Pollinations AI (free, occasional rate limits)
+        Generates an image from a text prompt using available providers.
+        Tries Vertex AI first, then DALL-E 3, then Pollinations AI.
         
         Args:
             prompt (str): Text prompt describing the image to generate
             output_filename (str, optional): Custom filename. Auto-generated if not provided.
             use_dalle (bool): If True, try DALL-E 3 (requires API key)
             use_vertex (bool): If True, try Vertex AI Imagen first (default: True)
+            title (str, optional): Blog title for text overlay.
         
         Returns:
             str: Absolute path to the saved image file, or None if all providers fail
@@ -49,7 +47,7 @@ class ImageGenerator:
         # Try Vertex AI Imagen first (Google Cloud - free tier available)
         if use_vertex:
             try:
-                return self._generate_with_vertex(prompt, output_filename)
+                return self._generate_with_vertex(prompt, output_filename, title=title)
             except Exception as e:
                 print(f"❌ Vertex AI Imagen failed: {e}")
                 print(f"🔄 Trying next provider...")
@@ -57,7 +55,7 @@ class ImageGenerator:
         # Try DALL-E 3 second if requested and available
         if use_dalle and self.openai_key:
             try:
-                return self._generate_with_dalle(prompt, output_filename)
+                return self._generate_with_dalle(prompt, output_filename, title=title)
             except Exception as e:
                 print(f"❌ DALL-E 3 failed: {e}")
                 print(f"🔄 Falling back to Pollinations AI...")
@@ -71,7 +69,7 @@ class ImageGenerator:
             return None
     
     
-    def _generate_with_vertex(self, prompt, output_filename=None):
+    def _generate_with_vertex(self, prompt, output_filename=None, title=None):
         """Generate image using Vertex AI Imagen 3.0 (Google Cloud, free tier available)."""
         print(f"🎨 Generating with Vertex AI Imagen 3.0...")
         print(f"   Prompt: {prompt[:100]}...")
@@ -105,7 +103,7 @@ class ImageGenerator:
         response = model.generate_images(
             prompt=prompt,
             number_of_images=1,
-            aspect_ratio="16:9",  # Good for social media
+            aspect_ratio="1:1",  # Changed to square for better social feed/overlay
             safety_filter_level="block_some",
             person_generation="allow_adult"
         )
@@ -125,10 +123,92 @@ class ImageGenerator:
         response.images[0].save(location=str(filepath))
         
         print(f"✅ Vertex AI image saved: {filepath}")
+        
+        # Apply overlay if title provided
+        if title:
+            self.add_news_overlay(filepath, title)
+            
         return str(filepath)
     
     
-    def _generate_with_dalle(self, prompt, output_filename=None):
+    def add_news_overlay(self, image_path, title):
+        """Adds a news-style text overlay to the image."""
+        try:
+            from PIL import Image, ImageDraw, ImageFont
+            
+            # Load image
+            img = Image.open(image_path).convert("RGBA")
+            width, height = img.size
+            
+            # Create overlay layer
+            overlay = Image.new('RGBA', (width, height), (0,0,0,0))
+            draw = ImageDraw.Draw(overlay)
+            
+            # 1. Dark Gradient at Bottom (40% height)
+            gradient_start_y = int(height * 0.6)
+            for y in range(gradient_start_y, height):
+                alpha = int((y - gradient_start_y) / (height - gradient_start_y) * 220)
+                draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            
+            # 2. Text Configuration
+            font_size = int(height * 0.06)  # 6% of height
+            try:
+                font = ImageFont.truetype("arialbd.ttf", font_size)
+            except IOError:
+                try:
+                    font = ImageFont.truetype("arial.ttf", font_size)
+                except IOError:
+                    font = ImageFont.load_default()
+            
+            # 3. Text Wrapping
+            import textwrap
+            chars_per_line = 25 
+            lines = textwrap.wrap(title.upper(), width=chars_per_line)
+            lines = lines[:3] # Limit lines
+            
+            # 4. Draw Text
+            line_height = int(font_size * 1.3)
+            total_text_height = len(lines) * line_height
+            
+            margin_x = int(width * 0.05)
+            margin_bottom = int(height * 0.08)
+            current_y = height - margin_bottom - total_text_height
+            
+            # Draw Tag
+            tag_text = "AI.CORELOGIC UPDATE"
+            tag_font_size = int(font_size * 0.4)
+            try:
+                tag_font = ImageFont.truetype("arialbd.ttf", tag_font_size)
+            except:
+                tag_font = font
+            
+            # Tag background
+            tag_bg_y1 = current_y - int(tag_font_size * 2.0)
+            tag_bg_y2 = current_y - int(tag_font_size * 0.5)
+            draw.rectangle(
+                [margin_x, tag_bg_y1, margin_x + int(width*0.35), tag_bg_y2],
+                fill="#FF0050"
+            )
+            draw.text((margin_x + 5, tag_bg_y1 + int(tag_font_size*0.2)), tag_text, font=tag_font, fill="white")
+
+            # Draw Title Lines
+            for line in lines:
+                # Shadow
+                draw.text((margin_x + 2, current_y + 2), line, font=font, fill=(0,0,0,180))
+                # Text
+                draw.text((margin_x, current_y), line, font=font, fill="white")
+                current_y += line_height
+            
+            # Composite
+            out = Image.alpha_composite(img, overlay)
+            out = out.convert("RGB")
+            out.save(image_path, quality=95)
+            print(f"   ✅ Added News Overlay to {image_path}")
+            
+        except Exception as e:
+            print(f"❌ Failed to add overlay: {e}") 
+    
+    def _generate_with_dalle(self, prompt, output_filename=None, title=None):
         """Generate image using DALL-E 3 (paid, ~$0.04/image)."""
         print(f"🎨 Generating with DALL-E 3...")
         print(f"   Prompt: {prompt[:100]}...")
@@ -140,7 +220,7 @@ class ImageGenerator:
         response = openai.images.generate(
             model="dall-e-3",
             prompt=prompt,
-            size="1792x1024",  # Landscape format
+            size="1024x1024",  # Square format
             quality="standard",
             n=1,
         )
@@ -148,6 +228,7 @@ class ImageGenerator:
         image_url = response.data[0].url
         
         # Download the image
+        import requests
         img_response = requests.get(image_url, timeout=30)
         img_response.raise_for_status()
         
@@ -163,6 +244,11 @@ class ImageGenerator:
         
         print(f"✅ DALL-E 3 image saved: {filepath}")
         print(f"   Size: {len(img_response.content)} bytes")
+        
+        # Apply overlay if title provided
+        if title:
+            self.add_news_overlay(filepath, title)
+            
         return str(filepath)
     
     
@@ -382,7 +468,7 @@ if __name__ == "__main__":
     print(f"   {viral_prompt[:150]}...")
     
     # Test with Pollinations (will fall back to PIL if Pollinations is down)
-    image_path = generator.generate_viral_image(viral_prompt)
+    image_path = generator.generate_image(viral_prompt, title=test_title)
     
     if image_path:
         print(f"\n✅ Test successful! Image saved to: {image_path}")

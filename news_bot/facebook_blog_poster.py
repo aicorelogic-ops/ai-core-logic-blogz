@@ -173,11 +173,11 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         
         try:
             response = model.generate_content(prompt)
-            return response.text.strip()
+            return response.text.strip() + "\n\n#AICoreLogic"
         except Exception as e:
             print(f"⚠️ AI generation failed: {e}")
             # Fallback post
-            return f"🚀 New Analysis: {blog['title']}\n\nRead more: {blog['url']}"
+            return f"🚀 New Analysis: {blog['title']}\n\n#AICoreLogic\n\nRead more: {blog['url']}"
     
     def run(self):
         """Main execution flow."""
@@ -218,7 +218,7 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         from .image_generator import ImageGenerator
         img_gen = ImageGenerator()
         viral_prompt = img_gen.create_viral_prompt(blog['title'])
-        local_image_path = img_gen.generate_viral_image(viral_prompt)
+        local_image_path = img_gen.generate_image(viral_prompt, title=blog['title'])
         
         if not local_image_path:
             print("❌ Image generation failed. Aborting.")
