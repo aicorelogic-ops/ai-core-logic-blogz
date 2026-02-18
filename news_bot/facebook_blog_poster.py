@@ -206,23 +206,60 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         fb_post = self.generate_facebook_post(blog)
         print(f"   Preview: {fb_post[:100]}...")
         
-        # REFACTOR: Switch to "Link Post" strategy (Clickable Card) instead of "Photo Post"
-        # We no longer need to generate a local image because Facebook will pull the image 
-        # from the blog's meta tags (which we fixed).
+        # Facebook Strategy: "Status Update with Photo attachment"
+        # User requested: "Not a picture post, but a text post with a picture attached"
+        # Logic: 
+        # 1. Upload photo with published=False (to get ID)
+        # 2. Post to FEED with attached_media pointing to that ID
+        # 3. Post link in comments
         
-        print("\n📤 Posting LINK to Facebook (Link Preview mode)...")
+        # Generate viral image with Vertex AI
+        print("\n🎨 Generating image with Vertex AI Imagen...")
+        from .image_generator import ImageGenerator
+        img_gen = ImageGenerator()
+        viral_prompt = img_gen.create_viral_prompt(blog['title'])
+        local_image_path = img_gen.generate_viral_image(viral_prompt)
+        
+        if not local_image_path:
+            print("❌ Image generation failed. Aborting.")
+            return
+        
+        print(f"✅ Image generated: {local_image_path}")
+        
+        # Post to Facebook
+        print("\n📤 Uploading media & Posting Status Update...")
         from .publisher import FacebookPublisher
         publisher = FacebookPublisher()
         
-        # We use post_feed with the 'link' parameter to create a clickable card
-        # The 'message' is the text content
-        post_id = publisher.post_feed(message=fb_post, link=blog['url'])
+        # Step 1: Upload photo without publishing (published=False)
+        print("   Step 1: Uploading hidden photo...")
+        photo_id = publisher.post_photo(photo_source=local_image_path, published=False)
+        
+        if not photo_id:
+            print("❌ Failed to upload photo. Aborting.")
+            return
+            
+        print(f"   Photo uploaded (ID: {photo_id})")
+        
+        # Step 2: Post status update with attached media
+        print("   Step 2: Posting status with attached photo...")
+        # We attach the photo ID to the status update
+        post_id = publisher.post_content(message=fb_post, attached_media=[{'media_fbid': photo_id}])
         
         if post_id:
-            print(f"✅ Posted Link to Facebook! ID: {post_id}")
+            print(f"✅ Posted Status with Photo! ID: {post_id}")
             self.tracker.mark_posted(blog['filename'], post_id, blog['url'])
-        else:
-            print("❌ Facebook posting failed")
+            
+            # Post link in comments
+            print(f"💬 Posting link in comments...")
+            import time
+            time.sleep(2) # Wait a moment to ensure post is processed
+            comment_id = publisher.post_comment(post_id, f"Read the full article here: {blog['url']}")
+            
+            if comment_id:
+                print(f"✅ Link posted in comments! ID: {comment_id}")
+            else:
+                print(f"⚠️ Failed to post link comment. You may need to add it manually.")
         else:
             print("❌ Facebook posting failed")
 

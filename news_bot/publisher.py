@@ -9,10 +9,11 @@ class FacebookPublisher:
         self.token = FB_PAGE_ACCESS_TOKEN
         self.page_id = FB_PAGE_ID
 
-    def post_content(self, message, link=None):
+    def post_content(self, message, link=None, attached_media=None):
         """
         Publishes a post to the Facebook Page feed.
         If a link is provided, it becomes a 'link post'.
+        If attached_media is provided, it becomes a 'status with media'.
         """
         if not self.token or not self.page_id:
             print("Error: Missing Facebook Page Token or Page ID.")
@@ -26,6 +27,13 @@ class FacebookPublisher:
         
         if link:
             payload["link"] = link
+            
+        if attached_media:
+            # attached_media should be a list of dicts: [{'media_fbid': '...'}]
+            # It must be JSON encoded string for form-data, or part of JSON body
+            # We'll use json encoding to be safe with requests data=payload
+            import json
+            payload["attached_media"] = json.dumps(attached_media)
 
         try:
             response = requests.post(url, data=payload)
@@ -37,7 +45,7 @@ class FacebookPublisher:
             self._handle_error(e, response if 'response' in locals() else None)
             return None
 
-    def post_photo(self, photo_source, message):
+    def post_photo(self, photo_source, message=None, published=True):
         """
         Publishes a photo post to the Facebook Page.
         Accepts either a local file path OR a URL.
@@ -45,9 +53,10 @@ class FacebookPublisher:
         Args:
             photo_source: Either an absolute file path (str) or URL (str)
             message: Caption for the Facebook post
+            published: Boolean, set to False to upload without posting (for attached_media)
         
         Returns:
-            str: Facebook post ID if successful, None otherwise
+            str: Facebook photo ID if successful, None otherwise
         """
         if not self.token or not self.page_id:
             print("Error: Missing Facebook Page Token or Page ID.")
@@ -97,7 +106,7 @@ class FacebookPublisher:
         
         # Upload image to Facebook
         try:
-            print(f"📤 Uploading image to Facebook ({len(image_content):,} bytes)...")
+            print(f"📤 Uploading image to Facebook ({len(image_content):,} bytes). Published={published}...")
             
             files = {
                 'source': ('image.jpg', image_content, 'image/jpeg')
@@ -107,10 +116,13 @@ class FacebookPublisher:
                 "access_token": self.token
             }
             
+            # Convert boolean published to string "true"/"false"
             data = {
-                "caption": message,
-                "published": "true"
+                "published": str(published).lower()
             }
+            
+            if message:
+                data["caption"] = message
 
             response = requests.post(url, files=files, data=data, params=params, timeout=60)
             
