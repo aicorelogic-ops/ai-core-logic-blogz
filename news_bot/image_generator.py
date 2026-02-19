@@ -481,12 +481,14 @@ class ImageGenerator:
             
             Instructions:
             1. Identify the Main Identifying Entity (Person or Company).
-            2. Identify the Brand Color associated with that entity (e.g. Facebook=Blue, NVIDIA=Green).
-            3. Identify the Dominant Emotion (Awe, Urgency, Frustration).
-            4. Fill in the variables in the template below.
+            2. CRITICAL: DO NOT hallucinate or insert public figures (like Mark Zuckerberg, Elon Musk, Sam Altman) unless they are explicitly the MAIN SUBJECT of the article.
+            3. If no specific person is mentioned, use a generic, diverse professional model or a conceptual representation of the technology.
+            4. Identify the Brand Color associated with the entity (e.g. Chrome=Yellow/Green/Red/Blue, Facebook=Blue).
+            5. Identify the Dominant Emotion (Awe, Urgency, Frustration, Focus).
+            6. Fill in the variables in the template below.
             
             Template:
-            "[Target Entity - Person: Insert Name or Description relative to brand]. The subject's expression clearly conveys [Insert Emotion]. The image prominently features the [Insert Company Name] logo integrated into the scene. The lighting and background are dominated by [Insert Brand Color] tones. {style_guide}"
+            "[Target Entity - Person: Insert Name ONLY if in article, otherwise describe a generic professional or the technology itself]. The subject's expression clearly conveys [Insert Emotion]. The image prominently features the [Insert Company/Product Name] logo integrated into the scene. The lighting and background are dominated by [Insert Brand Color] tones. {style_guide}"
             
             Output:
             Return ONLY the final prompt text.
