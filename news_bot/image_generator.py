@@ -146,9 +146,10 @@ class ImageGenerator:
         
         print(f"✅ Vertex AI image saved: {filepath}")
         
-        # Apply overlay if title provided
-        if title:
-            self.add_news_overlay(filepath, title)
+        # NOTE: Text overlay is now requested directly in the AI prompt (Infotainment Style)
+        # So we skip the Python-based overlay to avoid double-texting.
+        # if title:
+        #    self.add_news_overlay(filepath, title)
             
         return str(filepath)
     
@@ -460,38 +461,39 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
             
-            # NEW "Clean & Professional" Style Guide
-            style_guide = (
-                "VISUAL STYLE: Professional editorial photography. Authentic, modern, and understated. "
-                "NO surrealism, NO cartoon illustrations, NO chaotic collages, and NO hyper-futuristic glowing elements. "
-                "It must look like a high-quality, non-stocky photo from a premium lifestyle or business magazine."
-            )
+            # NEW "Infotainment News Graphic" Style Guide
+            # 3-Layer Composition: Background + Inset + Overlay
             
             user_prompt = f"""
-            Role: Expert AI Art Director for a Tech News publication.
+            Role: Expert AI Art Director for a Viral Tech News Page (Facebook).
             
-            Task: Analyze the blog post text and identify the core subject matter and the overall tone. Use those details to fill in the variables below, then generate a featured image for the blog post.
+            Task: Create a prompt for a "Infotainment News Graphic" about the following article.
             
             Article Title: {title}
             Article Summary: {summary}
             
+            VISUAL FORMULA (The "Distinguished Idea"):
+            1. The Contextual Base: A professional, high-resolution photo setting the scene.
+            2. The Social Proof Inset: A circular 'picture-in-picture' element (close-up of person/document).
+            3. The Information Overlay: High-contrast text at the bottom.
+            
             DYNAMIC VARIABLES:
-            • [Core Subject]: [Identify the single most tangible, relatable object, setting, or person discussed in the text. CRITICAL: DO NOT hallucinate specific public figures (like Mark Zuckerberg) unless they are the MAIN focus.]
-            • [Key Visual Details]: [Identify specific visual elements mentioned in the text to include, such as the Company Logo (MUST be integrated naturally/organically), specific devices, or specific people (e.g. CEOs) ONLY if they are the main topic.]
-            • [Color Palette]: [Select a professional color psychology match: e.g., Blue for trust/business, Green for health/nature, White/Light Gray for purity/minimalism, or muted Earth Tones for durability/reliability]
+            • [MAIN BACKGROUND SCENE]: [Identify the best high-res background scene (e.g. showroom, stage, office). Must be photographic and realistic.]
+            • [KEY PERSON/DETAIL]: [Identify the best subject for the circular inset (Specific Person like Elon Musk if mentioned, or a specific document/screen). If no specific person, use a representative professional.]
+            • [INSERT SHORT HEADLINE]: [Write a punchy 3-5 word headline in ALL CAPS.]
+            • [INSERT WORDS TO HIGHLIGHT]: [Pick the 1-2 most important "power words" from the headline to highlight in yellow.]
             
-            COMPOSITION RULES:
-            1. Subject Focus: Feature a clean, clear depiction of the [Core Subject]. If the topic relates to people, include a clear human face (or multiple faces), as human faces naturally draw the viewer's eye.
-            2. Active Whitespace: The image must embrace empty space. Leave at least 40% of the canvas as clean, blurred, or solid-color negative space. Do not fill every corner of the image. This prevents visual clutter and creates a feeling of elegance and high quality.
-            3. Visual Integration: Incorporate [Key Visual Details] subtly. Logos should appear on devices, walls, or lapel pins, not floating in mid-air.
-            4. Color & Lighting: Use the [Color Palette] as the dominant tone. Ensure the lighting is natural, soft, and realistic.
-            5. Simplicity: The design must be simple and easily understandable in a single glance. Eliminate any meaningless frills or background elements that do not directly reinforce the blog's message.
-            
-            Template:
-            "A high-quality editorial photograph featuring [Core Subject]. The composition incorporates [Key Visual Details] naturally into the scene. The dominant color palette is [Color Palette]. The lighting is natural and soft. The composition uses active whitespace to create an elegant, uncluttered look. {style_guide}"
+            Output Template:
+            "Create a news-style Facebook graphic for a post about {title}. 
+            1. Composition: A professional, high-resolution photo of [MAIN BACKGROUND SCENE] as the base. 
+            2. Inset Element: Include a clean, circular 'picture-in-picture' inset in the RIGHT middle area featuring a close-up portrait of [KEY PERSON/DETAIL]. 
+            3. Text Overlay: At the bottom third, add a bold, white sans-serif headline that says: '[INSERT SHORT HEADLINE]'. 
+            4. Text Highlights: Change the color of the words '[INSERT WORDS TO HIGHLIGHT]' to bright yellow (#FFFF00). 
+            5. Branding: Place a small, professional 'ai.corelogic' logo in the top right corner. 
+            6. Aesthetic: The style must be journalistic and authoritative. Avoid 3D renders or 'cartoon' AI styles. It should look like a screenshot from a high-end news broadcast or digital media outlet."
             
             Output:
-            Return ONLY the final prompt text.
+            Return ONLY the final prompt text with the variables filled in.
             """
             
             response = model.generate_content(user_prompt)
@@ -506,8 +508,8 @@ class ImageGenerator:
         except Exception as e:
             print(f"⚠️ LLM Prompt Generation failed: {e}. Falling back to template.")
             # Fallback to old template logic but with new style
-            style_guide = "VISUAL STYLE: Professional editorial business photography. High-end, clean, and modern. Close-up human face. Brand colors."
-            return f"A realistic editorial photograph about '{title}'. {style_guide}"
+            style_guide = "VISUAL STYLE: Broadcast News Graphic. Split screen or Picture-in-Picture. High Contrast."
+            return f"A news graphic about '{title}' with a circular inset of a relevant person and a bold headline at the bottom. {style_guide}"
 
     def create_viral_prompt(self, title):
         """Legacy wrapper for backward compatibility."""
