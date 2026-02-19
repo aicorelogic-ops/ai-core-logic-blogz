@@ -114,8 +114,8 @@ Return ONLY a number 0-100. No explanation."""
         content_package = processor.summarize(article)
         
         if content_package:
-            # A. Create Blog Post
-            filename = blog_gen.create_post(
+            # A. Create Blog Post HTML
+            fname, generated_image_url = blog_gen.create_post(
                 article['title'], 
                 content_package['blog_html'], 
                 article['link'],
@@ -128,11 +128,14 @@ Return ONLY a number 0-100. No explanation."""
             )
             
             # B. Update Index
+            # If create_post generated a new image, use it. Otherwise fall back to what we had.
+            final_image_url = generated_image_url if generated_image_url else article.get('image_url')
+            
             blog_gen.update_index(
-                article['title'], 
-                "New AI Analysis available.", # Simple snippet
-                filename,
-                image_url=article.get('image_url')
+                article['title'],
+                content_package['tldr_summary'],
+                fname,
+                image_url=final_image_url
             )
             
             # C. Deploy to GitHub

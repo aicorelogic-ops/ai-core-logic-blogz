@@ -74,7 +74,7 @@ class BlogGenerator:
             is_dup, existing_file = self.is_duplicate_title(title, threshold=0.90)
             if is_dup:
                 print(f"⚠️ SKIPPING: Post '{title}' already exists as '{existing_file}'")
-                return existing_file
+                return existing_file, None
 
         # Create slug
         slug = self.create_slug(title)
@@ -94,7 +94,7 @@ class BlogGenerator:
                 viral_prompt = img_gen.create_content_aware_prompt(title, summary=summary)
                 
                 # Generate image (will try Pollinations, then fall back to PIL)
-                local_image_path = img_gen.generate_viral_image(viral_prompt)
+                local_image_path = img_gen.generate_image(viral_prompt, title=title)
                 
                 if local_image_path:
                     # COPY LOCAL IMAGE TO ASSETS
@@ -405,7 +405,7 @@ class BlogGenerator:
             f.write(post_html)
             
         print(f"Blog post created: {filepath}")
-        return filename
+        return filename, image_url
 
     def update_index(self, title, summary, filename, image_url=None):
         """
