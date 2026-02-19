@@ -8,5 +8,21 @@
     "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
     "status": "duplicate_skipped",
     "processed_date": "2026-02-19T12:07:17.945072"
+  },
+  "https://venturebeat.com/technology/google-launches-gemini-3-1-pro-retaking-ai-crown-with-2x-reasoning": {
+    "title": "Google launches Gemini 3.1 Pro, retaking AI crown with 2X+ reasoning performance boost",
+    "blog_path": "blog/posts/2026-02-19-google-launches-gemini-3-1-pro--retaking-ai-crown-.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-19-google-launches-gemini-3-1-pro--retaking-ai-crown-.html",
+    "processed_date": "2026-02-19T12:07:55.551033"
+  },
+  "https://venturebeat.com/orchestration/new-agent-framework-matches-human-engineered-ai-systems-and-adds-zero": {
+    "title": "New agent framework matches human-engineered AI systems — and adds zero inference cost to deploy",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-19T12:22:06.566321"
+  },
+  "https://venturebeat.com/infrastructure/when-accurate-ai-is-still-dangerously-incomplete": {
+    "title": "When accurate AI is still dangerously incomplete",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-19T12:22:06.627212"
   }
 }

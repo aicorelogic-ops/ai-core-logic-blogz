@@ -434,29 +434,32 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
             
-            # Brand Style Guide (Strict)
+            # NEW "Dynamic" Style Guide (Human-centric, Editorial)
             style_guide = (
-                "VISUAL STYLE: Professional AI & Tech news graphic. High-tech, authoritative, and data-centric. "
-                "Aesthetic: Clean, modern, editorial quality. Cinematic lighting, high contrast. "
-                "NO cartoons, NO anime, NO illustrations. MUST look like a photo or high-end 3D render."
+                "VISUAL STYLE: Professional editorial photography. High-end, clean, and modern. "
+                "COMPOSITION RULES: "
+                "1. Subject: MUST feature a clear, close-up human face (or multiple faces) as the primary focal point. NO abstract data-nodes or floating binary code. "
+                "2. Negative Space: Use extreme, deliberate negative space (empty background) on at least 50% of the canvas to create a luxurious, premium, and uncluttered feel. "
+                "TECHNICAL AESTHETIC: Cinematic lighting, high contrast, sharp focus on the subject. NO cartoons, NO anime, NO illustrations, NO 3D-rendered looking avatars. MUST look like an award-winning Pulitzer-level photograph."
             )
             
             user_prompt = f"""
             Role: Expert AI Art Director for a Tech News publication.
             
-            Task: Write a text-to-image prompt for Google Vertex AI Imagen 3.0 based on this article.
+            Task: Analyze the article title and summary, then write a text-to-image prompt for Google Vertex AI Imagen 3.0 following the strict template below.
             
             Article Title: {title}
             Article Summary: {summary}
             
-            Guidelines:
-            1. Analyze the summary to find a SPECIFIC visual metaphor or scene (e.g., if about "robot hands", show a robot hand; if about "stock market crash", show a digital board crashing; if about "CEOs", show a silhouette in a boardroom).
-            2. DO NOT use generic "AI nodes" or "glowing brains" unless the article is specifically about that.
-            3. DESCRIBE the scene in detail: lighting, camera angle, subject, background.
-            4. INCORPORATE the mandatory visual style: {style_guide}
+            Steps:
+            1. Analyze the content to determine the Dominant Emotion (e.g., Awe, Urgency, Frustration, Skepticism, Hope).
+            2. Select a Color Palette that psychologically matches that emotion (e.g., Red for urgency, Blue for trust, Stark Black/White for seriousness).
+            3. Write the prompt using this EXACT template:
+            
+            "[Insert Subject Description here: e.g., A close-up portrait of a stressed executive rubbing their temples]. The subject's expression clearly conveys [Insert Emotion]. The lighting is dramatic and the color palette is dominated by [Insert Color]. {style_guide}"
             
             Output:
-            Return ONLY the prompt text. No "Here is the prompt:" prefix.
+            Return ONLY the final prompt text. Do not include labels like "Emotion:" or "Color:". Just the prompt.
             """
             
             response = model.generate_content(user_prompt)
@@ -470,10 +473,9 @@ class ImageGenerator:
             
         except Exception as e:
             print(f"⚠️ LLM Prompt Generation failed: {e}. Falling back to template.")
-            # Fallback to old template logic
-            clean_title = title.replace(":", "").replace("-", "")
-            image_hook = " ".join(clean_title.split()[:8])
-            return f"A realistic and professional image depicting '{image_hook}'. {style_guide}"
+            # Fallback to old template logic but with new style
+            style_guide = "VISUAL STYLE: Professional editorial photography. High-end, clean, and modern. Close-up human face. Cinematic lighting."
+            return f"A realistic editorial photograph about '{title}'. {style_guide}"
 
     def create_viral_prompt(self, title):
         """Legacy wrapper for backward compatibility."""
