@@ -145,16 +145,16 @@ Return ONLY a number 0-100. No explanation."""
                 print("GitHub deploy reported failure (might just be 'no changes'), proceeding anyway...")
             
             # Generate blog URL for tracking
-            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/{filename}"
+            blog_url = f"https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/{fname}"
             
-            print(f"✅ Blog post created and deployed: {filename}")
+            print(f"✅ Blog post created and deployed: {fname}")
             print(f"   URL: {blog_url}")
             print(f"📢 To post to Facebook, run: python -m news_bot.facebook_blog_poster")
             
             # D. Track as processed (blog created)
             tracker.mark_as_processed(article['link'], {
                 'title': article['title'],
-                'blog_path': f"blog/posts/{filename}",
+                'blog_path': f"blog/posts/{fname}",
                 'blog_url': blog_url,
                 'processed_date': datetime.now().isoformat()
             })
