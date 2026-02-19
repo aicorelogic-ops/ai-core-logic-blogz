@@ -227,33 +227,24 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         print(f"✅ Image generated: {local_image_path}")
         
         # Post to Facebook
-        print("\n📤 Uploading media & Posting Status Update...")
+        print("\n📤 Posting Photo to Facebook Timeline...")
         from .publisher import FacebookPublisher
         publisher = FacebookPublisher()
         
-        # Step 1: Upload photo without publishing (published=False)
-        print("   Step 1: Uploading hidden photo...")
-        photo_id = publisher.post_photo(photo_source=local_image_path, published=False)
-        
-        if not photo_id:
-            print("❌ Failed to upload photo. Aborting.")
-            return
-            
-        print(f"   Photo uploaded (ID: {photo_id})")
-        
-        # Step 2: Post status update with attached media
-        print("   Step 2: Posting status with attached photo...")
-        # We attach the photo ID to the status update
-        post_id = publisher.post_content(message=fb_post, attached_media=[{'media_fbid': photo_id}])
+        # Direct Photo Posting (The Photo IS the Post)
+        # This ensures it appears on the Timeline/Feed as a large Photo Post
+        # and avoids the "hidden" status of attached_media
+        print(f"   Posting to Feed with caption...")
+        post_id = publisher.post_photo(photo_source=local_image_path, message=fb_post, published=True)
         
         if post_id:
-            print(f"✅ Posted Status with Photo! ID: {post_id}")
+            print(f"✅ Posted Photo to Timeline! ID: {post_id}")
             self.tracker.mark_posted(blog['filename'], post_id, blog['url'])
             
             # Post link in comments
             print(f"💬 Posting link in comments...")
             import time
-            time.sleep(2) # Wait a moment to ensure post is processed
+            time.sleep(5) # Wait a bit longer for the photo to fully propagate
             comment_id = publisher.post_comment(post_id, f"Read the full article here: {blog['url']}")
             
             if comment_id:
