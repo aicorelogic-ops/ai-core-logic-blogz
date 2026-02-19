@@ -434,32 +434,36 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
             
-            # NEW "Dynamic" Style Guide (Human-centric, Editorial)
+            # NEW "Brand Integration" Style Guide (Strict)
             style_guide = (
-                "VISUAL STYLE: Professional editorial photography. High-end, clean, and modern. "
+                "VISUAL STYLE: Professional editorial business photography. High-end, clean, and modern. "
                 "COMPOSITION RULES: "
-                "1. Subject: MUST feature a clear, close-up human face (or multiple faces) as the primary focal point. NO abstract data-nodes or floating binary code. "
-                "2. Negative Space: Use extreme, deliberate negative space (empty background) on at least 50% of the canvas to create a luxurious, premium, and uncluttered feel. "
-                "TECHNICAL AESTHETIC: Cinematic lighting, high contrast, sharp focus on the subject. NO cartoons, NO anime, NO illustrations, NO 3D-rendered looking avatars. MUST look like an award-winning Pulitzer-level photograph."
+                "1. Subject: The image MUST feature a clear, close-up human face. If a specific person is mentioned (e.g. Mark Zuckerberg), generate a highly accurate, photorealistic portrait. If not, feature a relatable professional. "
+                "2. Brand Integration: The image MUST prominently display the authentic, recognizable LOGO and business name of the target company. Integrate it organically (e.g., on a glass wall, monitor, or lapel pin). "
+                "3. Negative Space: Leave at least 50% of the canvas as 'active whitespace' (clean, empty, or blurred background) to isolate the logo and subject. "
+                "4. Color Palette: The lighting and background must heavily feature the BRAND COLOR to signal identity. "
+                "TECHNICAL AESTHETIC: Cinematic lighting, high contrast, sharp focus on the subject. NO cartoons, NO anime. MUST look like a premium, award-winning business magazine cover."
             )
             
             user_prompt = f"""
             Role: Expert AI Art Director for a Tech News publication.
             
-            Task: Analyze the article title and summary, then write a text-to-image prompt for Google Vertex AI Imagen 3.0 following the strict template below.
+            Task: Analyze the article and write a text-to-image prompt for Google Vertex AI Imagen 3.0.
             
             Article Title: {title}
             Article Summary: {summary}
             
-            Steps:
-            1. Analyze the content to determine the Dominant Emotion (e.g., Awe, Urgency, Frustration, Skepticism, Hope).
-            2. Select a Color Palette that psychologically matches that emotion (e.g., Red for urgency, Blue for trust, Stark Black/White for seriousness).
-            3. Write the prompt using this EXACT template:
+            Instructions:
+            1. Identify the Main Identifying Entity (Person or Company).
+            2. Identify the Brand Color associated with that entity (e.g. Facebook=Blue, NVIDIA=Green).
+            3. Identify the Dominant Emotion (Awe, Urgency, Frustration).
+            4. Fill in the variables in the template below.
             
-            "[Insert Subject Description here: e.g., A close-up portrait of a stressed executive rubbing their temples]. The subject's expression clearly conveys [Insert Emotion]. The lighting is dramatic and the color palette is dominated by [Insert Color]. {style_guide}"
+            Template:
+            "[Target Entity - Person: Insert Name or Description relative to brand]. The subject's expression clearly conveys [Insert Emotion]. The image prominently features the [Insert Company Name] logo integrated into the scene. The lighting and background are dominated by [Insert Brand Color] tones. {style_guide}"
             
             Output:
-            Return ONLY the final prompt text. Do not include labels like "Emotion:" or "Color:". Just the prompt.
+            Return ONLY the final prompt text.
             """
             
             response = model.generate_content(user_prompt)
@@ -474,7 +478,7 @@ class ImageGenerator:
         except Exception as e:
             print(f"⚠️ LLM Prompt Generation failed: {e}. Falling back to template.")
             # Fallback to old template logic but with new style
-            style_guide = "VISUAL STYLE: Professional editorial photography. High-end, clean, and modern. Close-up human face. Cinematic lighting."
+            style_guide = "VISUAL STYLE: Professional editorial business photography. High-end, clean, and modern. Close-up human face. Brand colors."
             return f"A realistic editorial photograph about '{title}'. {style_guide}"
 
     def create_viral_prompt(self, title):
