@@ -419,53 +419,65 @@ class ImageGenerator:
             return None
     
     
-    def create_viral_prompt(self, title):
+    
+    def create_content_aware_prompt(self, title, summary=""):
         """
-        Create a viral-style prompt using Direct Response Marketing frameworks.
-        Based on "Pattern Interrupt" and "Burning Intrigue" principles.
-        
-        Args:
-            title (str): Article title to base the prompt on
-        
-        Returns:
-            str: Viral-style image prompt optimized for Vertex AI Imagen 3.0
+        Uses Gemini to generate a highly specific, content-aware image prompt.
+        Ensures variety by analyzing the actual story details.
         """
-        # Extract the subject/topic from the title
-        clean_title = title.replace(":", "").replace("-", "")
-        # Get the core subject (first 6-8 words)
-        image_hook = " ".join(clean_title.split()[:8])
+        print(f"🧠 Generating content-aware prompt for: {title[:50]}...")
         
-        # New "Content-First" Viral Prompt Strategy
-        # We want the image to actually depict the TOPIC, but with a viral/dramatic style.
-        # Format: [Subject Action/Scene] + [Viral Visual Style] + [Atmosphere]
-        
-        viral_style = (
-            "Visual Style: Professional AI & Tech news graphic. High-tech, authoritative, and data-centric. "
-            "Aesthetic: Clean, modern, editorial quality. Use high-resolution imagery of hardware, "
-            "clean EV designs, or professional portraits. "
-            "Lighting: Cinematic, high contrast. "
-            "Avoid generic tropes."
-        )
-        
-        # Construct the scene description based on the hook
-        scene_description = (
-            f"A realistic and professional image depicting '{image_hook}'. "
-            f"Make the subject matter the central focus. "
-            f"If technology: show real hardware, servers, or clean data visualizations. "
-            f"If business: show professional environments, modern offices, or sharp graphs. "
-            f"Key elements: Real-world tech impact, serious and authoritative tone. "
-        )
+        try:
+            import google.generativeai as genai
+            from .settings import GOOGLE_API_KEY
+            
+            genai.configure(api_key=GOOGLE_API_KEY)
+            model = genai.GenerativeModel('gemini-flash-latest')
+            
+            # Brand Style Guide (Strict)
+            style_guide = (
+                "VISUAL STYLE: Professional AI & Tech news graphic. High-tech, authoritative, and data-centric. "
+                "Aesthetic: Clean, modern, editorial quality. Cinematic lighting, high contrast. "
+                "NO cartoons, NO anime, NO illustrations. MUST look like a photo or high-end 3D render."
+            )
+            
+            user_prompt = f"""
+            Role: Expert AI Art Director for a Tech News publication.
+            
+            Task: Write a text-to-image prompt for Google Vertex AI Imagen 3.0 based on this article.
+            
+            Article Title: {title}
+            Article Summary: {summary}
+            
+            Guidelines:
+            1. Analyze the summary to find a SPECIFIC visual metaphor or scene (e.g., if about "robot hands", show a robot hand; if about "stock market crash", show a digital board crashing; if about "CEOs", show a silhouette in a boardroom).
+            2. DO NOT use generic "AI nodes" or "glowing brains" unless the article is specifically about that.
+            3. DESCRIBE the scene in detail: lighting, camera angle, subject, background.
+            4. INCORPORATE the mandatory visual style: {style_guide}
+            
+            Output:
+            Return ONLY the prompt text. No "Here is the prompt:" prefix.
+            """
+            
+            response = model.generate_content(user_prompt)
+            generated_prompt = response.text.strip()
+            
+            # Safety cleanup
+            generated_prompt = generated_prompt.replace("\n", " ")
+            
+            print(f"   ✨ LLM Prompt: {generated_prompt[:100]}...")
+            return generated_prompt
+            
+        except Exception as e:
+            print(f"⚠️ LLM Prompt Generation failed: {e}. Falling back to template.")
+            # Fallback to old template logic
+            clean_title = title.replace(":", "").replace("-", "")
+            image_hook = " ".join(clean_title.split()[:8])
+            return f"A realistic and professional image depicting '{image_hook}'. {style_guide}"
 
-        selected_prompt = f"{scene_description} {viral_style}"
-        
-        # Add Negative Prompt constraints (what to avoid)
-        negative_constraints = (
-            " --negative_prompt: robotic hands, glowing brains, generic AI nodes, bluish holograms, "
-            "cartoon, anime, low quality, blurry, distorted faces, bad anatomy, "
-            "illustration, painting, drawing, text, watermark"
-        )
-        
-        return selected_prompt + negative_constraints
+    def create_viral_prompt(self, title):
+        """Legacy wrapper for backward compatibility."""
+        return self.create_content_aware_prompt(title)
     
     
     def cleanup_old_images(self, days_old=7):
