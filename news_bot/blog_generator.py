@@ -57,6 +57,7 @@ class BlogGenerator:
                 similarity = SequenceMatcher(None, candidate_clean, existing_title).ratio()
                 
                 if similarity > threshold:
+                    print(f"DEBUG: matched '{candidate_clean}' with '{existing_title}' in {post} (Score: {similarity})")
                     return True, post
             except Exception as e:
                 print(f"Error reading {post}: {e}")

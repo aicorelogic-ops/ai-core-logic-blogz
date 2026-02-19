@@ -263,6 +263,15 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         else:
             print("❌ Facebook posting failed")
 
+        print("\n" + "="*60)
+        print("🛡️ SAFE POSTING VERIFICATION REQUIRED")
+        from .settings import FB_PAGE_ID
+        print("To comply with 'facebook-posting-safety.md', you MUST now:")
+        print(f"1. VISUALLY VERIFY the post on the Page Feed: https://www.facebook.com/{FB_PAGE_ID}")
+        print("2. Ensure it appears on the MAIN 'Home' tab, not just 'Photos'.")
+        print("3. Take a screenshot of the feed as the Completion Artifact.")
+        print("="*60 + "\n")
+
 
 def main():
     """CLI entry point."""

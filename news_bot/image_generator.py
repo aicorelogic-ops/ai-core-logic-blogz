@@ -182,14 +182,17 @@ class ImageGenerator:
             except:
                 tag_font = font
             
-            # Tag background
+            # Tag background (AI.CORELOGIC UPDATE)
             tag_bg_y1 = current_y - int(tag_font_size * 2.0)
             tag_bg_y2 = current_y - int(tag_font_size * 0.5)
+            # Brand Rule: Use #ai.corelogic brand yellow (or standard bright yellow)
+            brand_yellow = "#FFD700" 
             draw.rectangle(
                 [margin_x, tag_bg_y1, margin_x + int(width*0.35), tag_bg_y2],
-                fill="#FF0050"
+                fill=brand_yellow
             )
-            draw.text((margin_x + 5, tag_bg_y1 + int(tag_font_size*0.2)), tag_text, font=tag_font, fill="white")
+            # Text on yellow background needs to be black for contrast
+            draw.text((margin_x + 5, tag_bg_y1 + int(tag_font_size*0.2)), tag_text, font=tag_font, fill="black")
 
             # Draw Title Lines
             for line in lines:
@@ -199,6 +202,30 @@ class ImageGenerator:
                 draw.text((margin_x, current_y), line, font=font, fill="white")
                 current_y += line_height
             
+            # 5. Watermark (Top Right)
+            # Brand Rule: Place a small, clean "ai.corelogic" text or logo in the top right corner
+            watermark_text = "ai.corelogic"
+            watermark_font_size = int(height * 0.04)
+            try:
+                watermark_font = ImageFont.truetype("arialbd.ttf", watermark_font_size)
+            except:
+                watermark_font = font
+            
+            # Calculate size to position correctly
+            try:
+                bbox = draw.textbbox((0, 0), watermark_text, font=watermark_font)
+                wm_width = bbox[2] - bbox[0]
+            except AttributeError:
+                wm_width = draw.textlength(watermark_text, font=watermark_font)
+            
+            wm_x = width - wm_width - int(width * 0.05)
+            wm_y = int(height * 0.05)
+            
+            # Watermark Shadow
+            draw.text((wm_x + 2, wm_y + 2), watermark_text, font=watermark_font, fill=(0,0,0,128))
+            # Watermark Text (White for visibility on most backgrounds)
+            draw.text((wm_x, wm_y), watermark_text, font=watermark_font, fill="white")
+
             # Composite
             out = Image.alpha_composite(img, overlay)
             out = out.convert("RGB")
@@ -413,29 +440,29 @@ class ImageGenerator:
         # Format: [Subject Action/Scene] + [Viral Visual Style] + [Atmosphere]
         
         viral_style = (
-            "Visual Style: Hyper-realistic 8k resolution, cinematic lighting, high contrast, "
-            "dramatic shadows, depth of field, detailed texture. "
-            "Aesthetic: 'Breaking News' intensity, urgency, modern, slightly gritty but professional."
+            "Visual Style: Professional AI & Tech news graphic. High-tech, authoritative, and data-centric. "
+            "Aesthetic: Clean, modern, editorial quality. Use high-resolution imagery of hardware, "
+            "clean EV designs, or professional portraits. "
+            "Lighting: Cinematic, high contrast. "
+            "Avoid generic tropes."
         )
         
         # Construct the scene description based on the hook
         scene_description = (
-            f"A dramatic, high-stakes scene depicting '{image_hook}'. "
+            f"A realistic and professional image depicting '{image_hook}'. "
             f"Make the subject matter the central focus. "
-            f"If technology: show glowing servers, data streams, or futuristic interfaces. "
-            f"If business/finance: show intense boardroom discussions, stock crashes, or piles of money. "
-            f"If policy/law: show gavels, documents, or government buildings with storm clouds. "
-            f"Key elements: A sense of motion, impact, or consequence. "
-            f"The image should tell a story about '{image_hook}' without using text."
+            f"If technology: show real hardware, servers, or clean data visualizations. "
+            f"If business: show professional environments, modern offices, or sharp graphs. "
+            f"Key elements: Real-world tech impact, serious and authoritative tone. "
         )
 
         selected_prompt = f"{scene_description} {viral_style}"
         
         # Add Negative Prompt constraints (what to avoid)
         negative_constraints = (
-            " --negative_prompt: blurry, low quality, cartoon, anime, effortless, "
-            "boring, plain white background, distorted faces, bad anatomy, "
-            "watermark, text, signature, ugly, deformed"
+            " --negative_prompt: robotic hands, glowing brains, generic AI nodes, bluish holograms, "
+            "cartoon, anime, low quality, blurry, distorted faces, bad anatomy, "
+            "illustration, painting, drawing, text, watermark"
         )
         
         return selected_prompt + negative_constraints
