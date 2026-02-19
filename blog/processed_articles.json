@@ -24,5 +24,26 @@
     "blog_path": "blog/posts/2026-02-19-rapidata-emerges-to-shorten-ai-model-development-c.html",
     "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-19-rapidata-emerges-to-shorten-ai-model-development-c.html",
     "processed_date": "2026-02-19T12:58:30.360180"
+  },
+  "https://www.theverge.com/ai-artificial-intelligence/881574/cline-openclaw-prompt-injection-hack": {
+    "title": "The AI security nightmare is here and it looks suspiciously like lobster",
+    "blog_path": "blog/posts/2026-02-19-the-ai-security-nightmare-is-here-and-it-looks-sus.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-19-the-ai-security-nightmare-is-here-and-it-looks-sus.html",
+    "processed_date": "2026-02-19T13:00:35.111356"
+  },
+  "https://venturebeat.com/infrastructure/when-accurate-ai-is-still-dangerously-incomplete": {
+    "title": "When accurate AI is still dangerously incomplete",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-19T13:08:44.387811"
+  },
+  "https://www.artificialintelligence-news.com/news/insurance-giant-aig-deploys-agentic-ai-with-orchestration-layer/": {
+    "title": "Insurance giant AIG deploys agentic AI with orchestration layer",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-19T13:08:44.437341"
+  },
+  "https://www.artificialintelligence-news.com/news/ssc-blue-prism-on-the-journey-from-rpa-to-agentic-automation/": {
+    "title": "SS&C Blue Prism: On the journey from RPA to agentic automation",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-02-19T13:08:44.491248"
   }
 }
