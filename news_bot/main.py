@@ -119,7 +119,8 @@ Return ONLY a number 0-100. No explanation."""
                 article['title'], 
                 content_package['blog_html'], 
                 article['link'],
-                image_url=None, # FORCE GENERATION: Ignore RSS image to ensure content-aware AI image
+                # image_url=article.get('image_url'),
+                image_url=None, # FORCE GENERATION: User selected "Always Generate AI Images"
                 # image_url=article.get('image_url'),
                 tldr_summary=content_package.get('tldr_summary'),
                 editorial_prospect=content_package.get('editorial_prospect'),
