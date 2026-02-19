@@ -460,35 +460,33 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
             
-            # NEW "Brand Integration" Style Guide (Strict)
+            # NEW "Clean & Professional" Style Guide
             style_guide = (
-                "VISUAL STYLE: Professional editorial business photography. High-end, clean, and modern. "
-                "COMPOSITION RULES: "
-                "1. Subject: The image MUST feature a clear, close-up human face. If a specific person is mentioned (e.g. Mark Zuckerberg), generate a highly accurate, photorealistic portrait. If not, feature a relatable professional. "
-                "2. Brand Integration: The image MUST prominently display the authentic, recognizable LOGO and business name of the target company. Integrate it organically (e.g., on a glass wall, monitor, or lapel pin). "
-                "3. Negative Space: Leave at least 50% of the canvas as 'active whitespace' (clean, empty, or blurred background) to isolate the logo and subject. "
-                "4. Color Palette: The lighting and background must heavily feature the BRAND COLOR to signal identity. "
-                "TECHNICAL AESTHETIC: Cinematic lighting, high contrast, sharp focus on the subject. NO cartoons, NO anime. MUST look like a premium, award-winning business magazine cover."
+                "VISUAL STYLE: Professional editorial photography. Authentic, modern, and understated. "
+                "NO surrealism, NO cartoon illustrations, NO chaotic collages, and NO hyper-futuristic glowing elements. "
+                "It must look like a high-quality, non-stocky photo from a premium lifestyle or business magazine."
             )
             
             user_prompt = f"""
             Role: Expert AI Art Director for a Tech News publication.
             
-            Task: Analyze the article and write a text-to-image prompt for Google Vertex AI Imagen 3.0.
+            Task: Analyze the blog post text and identify the core subject matter and the overall tone. Use those details to fill in the variables below, then generate a featured image for the blog post.
             
             Article Title: {title}
             Article Summary: {summary}
             
-            Instructions:
-            1. Identify the Main Identifying Entity (Person or Company).
-            2. CRITICAL: DO NOT hallucinate or insert public figures (like Mark Zuckerberg, Elon Musk, Sam Altman) unless they are explicitly the MAIN SUBJECT of the article.
-            3. If no specific person is mentioned, use a generic, diverse professional model or a conceptual representation of the technology.
-            4. Identify the Brand Color associated with the entity (e.g. Chrome=Yellow/Green/Red/Blue, Facebook=Blue).
-            5. Identify the Dominant Emotion (Awe, Urgency, Frustration, Focus).
-            6. Fill in the variables in the template below.
+            DYNAMIC VARIABLES:
+            • [Core Subject]: [Identify the single most tangible, relatable object, setting, or person discussed in the text. CRITICAL: DO NOT hallucinate specific public figures (like Mark Zuckerberg) unless they are the MAIN focus.]
+            • [Color Palette]: [Select a professional color psychology match: e.g., Blue for trust/business, Green for health/nature, White/Light Gray for purity/minimalism, or muted Earth Tones for durability/reliability]
+            
+            COMPOSITION RULES:
+            1. Subject Focus: Feature a clean, clear depiction of the [Core Subject]. If the topic relates to people, include a clear human face (or multiple faces), as human faces naturally draw the viewer's eye.
+            2. Active Whitespace: The image must embrace empty space. Leave at least 40% of the canvas as clean, blurred, or solid-color negative space. Do not fill every corner of the image. This prevents visual clutter and creates a feeling of elegance and high quality.
+            3. Color & Lighting: Use the [Color Palette] as the dominant tone. Ensure the lighting is natural, soft, and realistic.
+            4. Simplicity: The design must be simple and easily understandable in a single glance. Eliminate any meaningless frills or background elements that do not directly reinforce the blog's message.
             
             Template:
-            "[Target Entity - Person: Insert Name ONLY if in article, otherwise describe a generic professional or the technology itself]. The subject's expression clearly conveys [Insert Emotion]. The image prominently features the [Insert Company/Product Name] logo integrated into the scene. The lighting and background are dominated by [Insert Brand Color] tones. {style_guide}"
+            "A high-quality editorial photograph featuring [Core Subject]. The dominant color palette is [Color Palette]. The lighting is natural and soft. The composition uses active whitespace to create an elegant, uncluttered look. {style_guide}"
             
             Output:
             Return ONLY the final prompt text.
