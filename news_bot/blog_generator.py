@@ -64,7 +64,7 @@ class BlogGenerator:
                 
         return False, None
 
-    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None, date_str=None, force_new=False):
+    def create_post(self, title, content, link, image_url=None, tldr_summary=None, editorial_prospect=None, date_str=None, force_new=False, summary=""):
         """
         Generates a static HTML page for the blog post.
         AUTO-PREVENTS DUPLICATES unless force_new=True.
@@ -90,7 +90,8 @@ class BlogGenerator:
                 img_gen = ImageGenerator()
                 
                 # Create viral prompt using the same framework
-                viral_prompt = img_gen.create_viral_prompt(title)
+                # UPDATED: Use content-aware prompt with summary if available
+                viral_prompt = img_gen.create_content_aware_prompt(title, summary=summary)
                 
                 # Generate image (will try Pollinations, then fall back to PIL)
                 local_image_path = img_gen.generate_viral_image(viral_prompt)
