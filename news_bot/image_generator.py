@@ -65,8 +65,13 @@ class ImageGenerator:
             return self._generate_with_pollinations(prompt, output_filename)
         except Exception as e:
             print(f"❌ Pollinations AI failed: {e}")
-            print(f"⚠️ No fallback - returning None (post will be skipped)")
-            return None
+            
+            # Final Fallback: PIL Text Image
+            try:
+                return self._generate_with_pil(prompt, output_filename)
+            except Exception as e_pil:
+                print(f"❌ PIL Fallback failed: {e_pil}")
+                return None
     
     
     def _generate_with_vertex(self, prompt, output_filename=None, title=None):
@@ -92,21 +97,31 @@ class ImageGenerator:
                 raise Exception(f"Service account key not found: {key_path}")
         
         # Initialize Vertex AI
-        vertexai.init(project=VERTEX_PROJECT_ID, location=VERTEX_LOCATION)
+        # TRY DIFFERENT REGION: us-east4 (often has better availability for Imagen)
+        vertexai.init(project=VERTEX_PROJECT_ID, location="us-east4")
         
-        # Load the model - imagen-3.0-generate-001 is the working model
-        model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
-        print(f"   ✅ Model loaded")
-        
-        # Generate image
-        print(f"   Generating image...")
-        response = model.generate_images(
-            prompt=prompt,
-            number_of_images=1,
-            aspect_ratio="1:1",  # Changed to square for better social feed/overlay
-            safety_filter_level="block_some",
-            person_generation="allow_adult"
-        )
+        # Try Imagen 3.0 first
+        try:
+            print(f"   Trying Imagen 3.0...")
+            model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
+            response = model.generate_images(
+                prompt=prompt,
+                number_of_images=1,
+                aspect_ratio="1:1",
+                safety_filter_level="block_some",
+                person_generation="allow_adult"
+            )
+        except Exception as e:
+            print(f"   ⚠️ Imagen 3.0 failed: {e}")
+            print(f"   🔄 Falling back to Imagen 2 (imagegeneration@006)...")
+            model = ImageGenerationModel.from_pretrained("imagegeneration@006")
+            response = model.generate_images(
+                prompt=prompt,
+                number_of_images=1,
+                aspect_ratio="1:1",
+                safety_filter_level="block_some",
+                person_generation="allow_adult"
+            )
         
         if not response.images:
             raise Exception("No images in response")
