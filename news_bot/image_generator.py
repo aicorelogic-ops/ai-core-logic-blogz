@@ -477,16 +477,18 @@ class ImageGenerator:
             
             DYNAMIC VARIABLES:
             • [Core Subject]: [Identify the single most tangible, relatable object, setting, or person discussed in the text. CRITICAL: DO NOT hallucinate specific public figures (like Mark Zuckerberg) unless they are the MAIN focus.]
+            • [Key Visual Details]: [Identify specific visual elements mentioned in the text to include, such as the Company Logo (MUST be integrated naturally/organically), specific devices, or specific people (e.g. CEOs) ONLY if they are the main topic.]
             • [Color Palette]: [Select a professional color psychology match: e.g., Blue for trust/business, Green for health/nature, White/Light Gray for purity/minimalism, or muted Earth Tones for durability/reliability]
             
             COMPOSITION RULES:
             1. Subject Focus: Feature a clean, clear depiction of the [Core Subject]. If the topic relates to people, include a clear human face (or multiple faces), as human faces naturally draw the viewer's eye.
             2. Active Whitespace: The image must embrace empty space. Leave at least 40% of the canvas as clean, blurred, or solid-color negative space. Do not fill every corner of the image. This prevents visual clutter and creates a feeling of elegance and high quality.
-            3. Color & Lighting: Use the [Color Palette] as the dominant tone. Ensure the lighting is natural, soft, and realistic.
-            4. Simplicity: The design must be simple and easily understandable in a single glance. Eliminate any meaningless frills or background elements that do not directly reinforce the blog's message.
+            3. Visual Integration: Incorporate [Key Visual Details] subtly. Logos should appear on devices, walls, or lapel pins, not floating in mid-air.
+            4. Color & Lighting: Use the [Color Palette] as the dominant tone. Ensure the lighting is natural, soft, and realistic.
+            5. Simplicity: The design must be simple and easily understandable in a single glance. Eliminate any meaningless frills or background elements that do not directly reinforce the blog's message.
             
             Template:
-            "A high-quality editorial photograph featuring [Core Subject]. The dominant color palette is [Color Palette]. The lighting is natural and soft. The composition uses active whitespace to create an elegant, uncluttered look. {style_guide}"
+            "A high-quality editorial photograph featuring [Core Subject]. The composition incorporates [Key Visual Details] naturally into the scene. The dominant color palette is [Color Palette]. The lighting is natural and soft. The composition uses active whitespace to create an elegant, uncluttered look. {style_guide}"
             
             Output:
             Return ONLY the final prompt text.
