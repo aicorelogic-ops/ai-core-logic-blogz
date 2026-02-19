@@ -17,6 +17,9 @@ class ImageGenerator:
         self.output_dir = Path(__file__).parent.parent / 'temp_images'
         self.output_dir.mkdir(exist_ok=True)
         
+        # Logging setup
+        self.log_file = Path(__file__).parent.parent / 'image_gen_errors.log'
+
         # Check for OpenAI API key (optional)
         from .settings import OPENAI_API_KEY
         self.openai_key = OPENAI_API_KEY if OPENAI_API_KEY else None
@@ -49,6 +52,8 @@ class ImageGenerator:
             try:
                 return self._generate_with_vertex(prompt, output_filename, title=title)
             except Exception as e:
+                with open(self.log_file, "a") as f:
+                    f.write(f"[{datetime.now()}] Vertex AI Failed: {str(e)}\n")
                 print(f"❌ Vertex AI Imagen failed: {e}")
                 print(f"🔄 Trying next provider...")
         
@@ -68,7 +73,9 @@ class ImageGenerator:
             
             # Final Fallback: PIL Text Image
             try:
-                return self._generate_with_pil(prompt, output_filename)
+                # Use title if available for better looking fallback
+                text_to_use = title if title else prompt
+                return self._generate_with_pil(text_to_use, output_filename, is_title=bool(title))
             except Exception as e_pil:
                 print(f"❌ PIL Fallback failed: {e_pil}")
                 return None
@@ -97,8 +104,8 @@ class ImageGenerator:
                 raise Exception(f"Service account key not found: {key_path}")
         
         # Initialize Vertex AI
-        # TRY DIFFERENT REGION: us-east4 (often has better availability for Imagen)
-        vertexai.init(project=VERTEX_PROJECT_ID, location="us-east4")
+        # Region configured in settings.py (switched to us-east4)
+        vertexai.init(project=VERTEX_PROJECT_ID, location=VERTEX_LOCATION)
         
         # Try Imagen 3.0 first
         try:
@@ -366,7 +373,7 @@ class ImageGenerator:
         return str(filepath)
     
     
-    def _generate_with_pil(self, prompt, output_filename=None):
+    def _generate_with_pil(self, text, output_filename=None, is_title=False):
         """Generate text-based image using PIL (always works, free)."""
         print(f"🎨 Generating with PIL (text graphic)...")
         
@@ -388,11 +395,15 @@ class ImageGenerator:
             except IOError:
                 font = ImageFont.load_default()
                 
-            # Prepare text (extract main subject from prompt)
-            text_content = prompt.replace("Editorial news graphic about ", "")
-            text_content = text_content.split(",")[0]
-            if len(text_content) > 50:
-                text_content = text_content[:50] + "..."
+            # Prepare text 
+            if is_title:
+                text_content = text
+            else:
+                # Legacy: extract main subject from prompt
+                text_content = text.replace("Editorial news graphic about ", "")
+                text_content = text_content.split(",")[0]
+                if len(text_content) > 50:
+                    text_content = text_content[:50] + "..."
                 
             # Wrap text
             lines = textwrap.wrap(text_content, width=25)

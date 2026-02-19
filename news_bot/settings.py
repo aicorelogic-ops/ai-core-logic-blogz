@@ -17,7 +17,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # Optional: for premium image gene
 
 # Vertex AI Config (for Imagen) - DEPRECATED, models unavailable
 VERTEX_PROJECT_ID = os.getenv("VERTEX_PROJECT_ID")  # e.g., "my-project-123456"
-VERTEX_LOCATION = os.getenv("VERTEX_LOCATION", "us-central1")  # Default region
+VERTEX_LOCATION = os.getenv("VERTEX_LOCATION", "us-east4")  # Changed to us-east4 for better availability
 VERTEX_KEY_PATH = os.getenv("VERTEX_KEY_PATH")  # Optional: path to service account JSON
 
 # News Sources (RSS)
