@@ -182,14 +182,29 @@ Output ONLY the Facebook post text. Do NOT include the URL.
             # Fallback post
             return f"🚀 New Analysis: {blog['title']}\n\n#AICoreLogic\n\nRead more: {blog['url']}"
     
+    def verify_live_url(self, url, retries=30):
+        """Checks if the URL returns 200 OK. Retries a few times."""
+        for i in range(retries):
+            try:
+                r = requests.head(url, timeout=5)
+                if r.status_code == 200:
+                    print(f"   ✅ URL is Live (HTTP 200)")
+                    return True
+                else:
+                    print(f"   ⚠️ Url check {i+1}/{retries}: Status {r.status_code}")
+            except Exception as e:
+                print(f"   ⚠️ Url check {i+1}/{retries} failed: {e}")
+            time.sleep(2)
+        return False
+
     def run(self):
         """Main execution flow."""
         print("🔍 Scanning blog posts...")
         all_blogs = self.scanner.get_all_blogs()
         print(f"   Found {len(all_blogs)} total blog posts")
         
-        # User Constraint: Only look at the 4 newest posts
-        recent_blogs = all_blogs[:4]
+        # User Constraint: Only look at the 20 newest posts to handle high volume days
+        recent_blogs = all_blogs[:20]
         print(f"   Refining scope to top {len(recent_blogs)} newest posts")
         
         unpublished = self.tracker.get_unpublished_blogs(recent_blogs)
@@ -211,26 +226,11 @@ Output ONLY the Facebook post text. Do NOT include the URL.
              print(f"   Action: Run `python news_bot/publish_git.py` (or similar) to deploy first.")
              return
 
-    def verify_live_url(self, url, retries=3):
-        """Checks if the URL returns 200 OK. Retries a few times."""
-        for i in range(retries):
-            try:
-                r = requests.head(url, timeout=5)
-                if r.status_code == 200:
-                    print(f"   ✅ URL is Live (HTTP 200)")
-                    return True
-                else:
-                    print(f"   ⚠️ Url check {i+1}/{retries}: Status {r.status_code}")
-            except Exception as e:
-                print(f"   ⚠️ Url check {i+1}/{retries} failed: {e}")
-            time.sleep(2)
-        return False
-        
         # Generate Facebook post content
-        print("\n✍️ Generating Facebook post...")
+        print("\n[Generate] Generating Facebook post...", flush=True)
         fb_post = self.generate_facebook_post(blog)
         print(f"   Preview: {fb_post[:100]}...")
-        
+
         # Facebook Strategy: "Status Update with Photo attachment"
         # User requested: "Not a picture post, but a text post with a picture attached"
         # Logic: 
@@ -239,9 +239,8 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         # 3. Post link in comments
         
         # Generate viral image with Vertex AI
-        print("\n🎨 Generating image with Vertex AI Imagen...")
+        print("\n[Image] Generating image with Vertex AI Imagen...", flush=True)
         from .image_generator import ImageGenerator
-        img_gen = ImageGenerator()
         img_gen = ImageGenerator()
         # Use new content-aware prompt generation
         viral_prompt = img_gen.create_content_aware_prompt(blog['title'], summary=blog['summary'])
@@ -254,7 +253,7 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         print(f"✅ Image generated: {local_image_path}")
         
         # Post to Facebook
-        print("\n📤 Posting Photo to Facebook Timeline...")
+        print("\n[Post] Posting Photo to Facebook Timeline...", flush=True)
         from .publisher import FacebookPublisher
         publisher = FacebookPublisher()
         
@@ -277,9 +276,9 @@ Output ONLY the Facebook post text. Do NOT include the URL.
             if comment_id:
                 print(f"✅ Link posted in comments! ID: {comment_id}")
             else:
-                print(f"⚠️ Failed to post link comment. You may need to add it manually.")
+                print(f"[Warn] Failed to post link comment. You may need to add it manually.")
         else:
-            print("❌ Facebook posting failed")
+            print("[Error] Facebook posting failed")
 
         print("\n" + "="*60)
         print("🛡️ SAFE POSTING VERIFICATION REQUIRED")

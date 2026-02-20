@@ -26,6 +26,19 @@ python -m news_bot.facebook_blog_poster
     *   **Style**: Dense, urgent, cable news alert style.
 6.  **Publish**: Uploads the photo to the Facebook feed and automatically adds the blog link as the first comment.
 
+## 🛡️ Reliability Protocol (Web-First)
+
+The process is designed to be **fail-proof** with the following mechanisms:
+
+1.  **Selection Logic (Newest Unpublished)**: Scans the **Top 20** newest blog posts (sorted by date) and automatically selects the **single most recent one** that has NOT yet been posted to Facebook. It ignores older or already-published articles.
+2.  **Live URL Verification (Ghost Post Prevention)**:
+    *   **Strict Check**: The script pings the public GitHub Pages URL.
+    *   **Retry Logic**: Waits up to **60 seconds** (30 retries) for the deployment to propagate.
+    *   **Abort Criteria**: If the URL returns `404` after retries, the process **stops** to prevent broken links.
+3.  **Graphic Standards**:
+    *   **"High-Impact" Template**: Enforces a massive 2-line headline with **mandatory yellow highlighting** and a strict 50% dark gradient.
+    *   **Brand Safety**: The "AI CORE LOGIC" logo is always placed in a semi-transparent banner for readability.
+
 ## 🛡️ Posting Policy
 
 *   **Verification**: ⚠️ **SKIPPED**. For this specific skill, manual or browser-based verification of the feed is NOT required. The API confirmation (Post ID) is considered sufficient.
