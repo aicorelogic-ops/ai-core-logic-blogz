@@ -127,9 +127,9 @@ header {
 
     /* Order matters! Shorthand first, then specifics */
     background: linear-gradient(135deg, #1e293b, #0f172a);
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center center;
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
