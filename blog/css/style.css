@@ -78,7 +78,7 @@ header {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -121,8 +121,8 @@ header {
     /* Standard 16:9 ratio for better image fit */
     height: auto;
     aspect-ratio: 16 / 9;
-    border-radius: 16px;
-    margin-bottom: 1.5rem;
+    border-radius: 0;
+    margin-bottom: 0;
     position: relative;
 
     /* Order matters! Shorthand first, then specifics */
@@ -498,7 +498,7 @@ main#news-feed {
 }
 
 .card-content {
-    padding: 0 0.5rem;
+    padding: 1.5rem;
 }
 
 .card-meta {
