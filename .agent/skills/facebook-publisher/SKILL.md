@@ -20,9 +20,9 @@ python -m news_bot.facebook_blog_poster
 1.  **Scanner**: Scans `blog/posts/` for the most recent HTML files.
 2.  **Filter**: Checks `news_bot/posted_to_facebook.json` to ensure the post hasn't been shared yet.
 3.  **Viral Copy**: Uses Gemini to write a high-arousal social post (Hook + Scannable Bullets + Link-in-Comments CTA).
-4.  **"Infotainment" Graphic**: Generates a high-end news graphic using the **3-Layer Composition** rule (Background + Inset + Text Overlay).
-    *   **Prompt Logic**: Gemini analyzes the article to extract the *exact* background scene, key person for the inset, and headline.
-    *   **Style**: Journalistic, authoritative, and anti-cartoon.
+4.  **"Infotainment" Graphic**: Generates a **"Breaking News" Graphic** using the **Split Composition** (Top Photo / Bottom Dark Block).
+    *   **Prompt Logic**: Enforces a top-heavy photo, a bottom dark text container, tighter inset anchoring, and a massive **Text Stack** (Headline + Subheader with Yellow Highlight Bar).
+    *   **Style**: Dense, urgent, cable news alert style.
 5.  **Publish**: Uploads the photo to the Facebook feed and automatically adds the blog link as the first comment.
 
 ## 🛡️ Posting Policy

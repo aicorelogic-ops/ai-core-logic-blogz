@@ -461,36 +461,61 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
             
-            # NEW "Infotainment News Graphic" Style Guide
-            # 3-Layer Composition: Background + Inset + Overlay
+            # NEW "Breaking News Master Prompt" Style Guide
+            # Composition: Split (Photo Top/Dark Block Bottom) + Tighter Insets + Text Stack
             
             user_prompt = f"""
             Role: Expert AI Art Director for a Viral Tech News Page (Facebook).
             
-            Task: Create a prompt for a "Infotainment News Graphic" about the following article.
+            Task: Create a prompt for a "Breaking News Graphic" (Split Composition) about the following article.
             
             Article Title: {title}
             Article Summary: {summary}
             
-            VISUAL FORMULA (The "Distinguished Idea"):
-            1. The Contextual Base: A professional, high-resolution photo setting the scene.
-            2. The Social Proof Inset: A circular 'picture-in-picture' element (close-up of person/document).
-            3. The Information Overlay: High-contrast text at the bottom.
+            VISUAL FORMULA (The "Distinguished Idea" - Urgent & Professional):
+            1. The Split Composition (Crucial):
+               - Top 60% of Frame: A high-resolution, professional photo of [MAIN BACKGROUND SCENE].
+               - Bottom 40% of Frame: A solid, dark, heavy contrast block (black or very dark blue) serving as the dedicated text container. Clean transition.
             
-            DYNAMIC VARIABLES:
-            • [MAIN BACKGROUND SCENE]: [Identify the best high-res background scene (e.g. showroom, stage, office). Must be photographic and realistic.]
-            • [KEY PERSON/DETAIL]: [Identify the best subject for the circular inset (Specific Person like Elon Musk if mentioned, or a specific document/screen). If no specific person, use a representative professional.]
-            • [INSERT SHORT HEADLINE]: [Write a punchy 3-5 word headline in ALL CAPS.]
-            • [INSERT WORDS TO HIGHLIGHT]: [Pick the 1-2 most important "power words" from the headline to highlight in yellow.]
+            2. The Insets (Tighter Anchoring):
+               - Top Right: Clean circular inset with [PRIMARY VISUAL EVIDENCE]. Anchor bottom edge near the top of the dark text block.
+               - Top Left: Distinct circular inset with [SECONDARY VISUAL EVIDENCE]. Anchor symmetrically.
+            
+            3. The Branding:
+               - Place the 'AI CORE LOGIC' black and white banner at the Top Center, between the two insets.
+            
+            4. The Typography Stack (The 'Breaking News' Look):
+               - Inside the bottom dark block, create a massive, multi-line text stack using an ultra-bold, compressed sans-serif font.
+               - Line 1 (Main Header): Giant, white text: '[INSERT 3-4 WORD MAIN HEADLINE]'.
+               - Line 2 (Sub-Header & Highlight): Below it, a slightly smaller but dominant line. MUST use a thick bright yellow (#FFFF00) highlight bar behind the key phrase. The text is: '[INSERT REST OF HEADLINE WITH YELLOW BAR]'.
+            
+            DYNAMIC VARIABLES (Extract from text):
+            • [MAIN BACKGROUND SCENE]: [Identify the best high-res background photo.]
+            • [PRIMARY VISUAL EVIDENCE]: [The 'Who': Close-up of Key Person/CEO or Hero Object.]
+            • [SECONDARY VISUAL EVIDENCE]: [The 'Proof': Document, Chart, or Contrasting Object.]
+            • [INSERT 3-4 WORD MAIN HEADLINE]: [The first part of the headline. Massive impact.]
+            • [INSERT REST OF HEADLINE WITH YELLOW BAR]: [The second part of the headline, containing the key phrase to highlight with a yellow bar.]
             
             Output Template:
-            "Create a news-style Facebook graphic for a post about {title}. 
-            1. Composition: A professional, high-resolution photo of [MAIN BACKGROUND SCENE] as the base. 
-            2. Inset Element: Include a clean, circular 'picture-in-picture' inset in the RIGHT middle area featuring a close-up portrait of [KEY PERSON/DETAIL]. 
-            3. Text Overlay: At the bottom third, add a bold, white sans-serif headline that says: '[INSERT SHORT HEADLINE]'. 
-            4. Text Highlights: Change the color of the words '[INSERT WORDS TO HIGHLIGHT]' to bright yellow (#FFFF00). 
-            5. Branding: Place a small, professional 'ai.corelogic' logo in the top right corner. 
-            6. Aesthetic: The style must be journalistic and authoritative. Avoid 3D renders or 'cartoon' AI styles. It should look like a screenshot from a high-end news broadcast or digital media outlet."
+            "Create a powerful, 'breaking news' style Facebook graphic for a post about {title}.
+            
+            1. The Split Composition (Crucial):
+            Top 60% of Frame: A high-resolution, professional photo of [MAIN BACKGROUND SCENE].
+            Bottom 40% of Frame: A solid, dark, heavy contrast block (e.g., black or very dark blue) that serves as the dedicated text container. The transition between the photo and this block should be clean.
+            
+            2. The Insets (Tighter Anchoring):
+            Top Right: A clean circular inset with a portrait of [PRIMARY VISUAL EVIDENCE]. Anchor it so its bottom edge is near the top of the dark text block.
+            Top Left: A distinct circular inset with [SECONDARY VISUAL EVIDENCE]. Anchor it symmetrically with the first inset.
+            
+            3. The Branding:
+            Place the 'AI CORE LOGIC' black and white banner at the Top Center, between the two insets.
+            
+            4. The Typography Stack (The 'Breaking News' Look):
+            Inside the bottom dark block, create a massive, multi-line text stack using an ultra-bold, compressed sans-serif font.
+            Line 1 (Main Header): Giant, white text: '[INSERT 3-4 WORD MAIN HEADLINE]'.
+            Line 2 (Sub-Header & Highlight): Below it, a slightly smaller but still dominant line of text. You MUST use a thick bright yellow (#FFFF00) highlight bar behind the key phrase. The text is: '[INSERT REST OF HEADLINE WITH YELLOW BAR]'.
+            
+            Aesthetic Rule: The image must feel dense, urgent, and professional, like a cable news alert. The text stack must be the dominant visual element of the entire composition."
             
             Output:
             Return ONLY the final prompt text with the variables filled in.
