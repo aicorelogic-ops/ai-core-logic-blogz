@@ -19,11 +19,12 @@ python -m news_bot.facebook_blog_poster
 
 1.  **Scanner**: Scans `blog/posts/` for the most recent HTML files.
 2.  **Filter**: Checks `news_bot/posted_to_facebook.json` to ensure the post hasn't been shared yet.
-3.  **Viral Copy**: Uses Gemini to write a high-arousal social post (Hook + Scannable Bullets + Link-in-Comments CTA).
-4.  **"Infotainment" Graphic**: Generates a **"Breaking News" Graphic** using the **Split Composition** (Top Photo / Bottom Dark Block).
+3.  **Live Verification (Web First)**: Pings the blog post's public URL. If it returns `404 Not Found`, the process **aborts**. The post must be live on GitHub Pages before Facebook generation begins.
+4.  **Viral Copy**: Uses Gemini to write a high-arousal social post (Hook + Scannable Bullets + Link-in-Comments CTA).
+5.  **"Infotainment" Graphic**: Generates a **"Breaking News" Graphic** using the **Split Composition** (Top Photo / Bottom Dark Block).
     *   **Prompt Logic**: Enforces a top-heavy photo, a bottom dark text container, tighter inset anchoring, and a massive **Text Stack** (Headline + Subheader with Yellow Highlight Bar).
     *   **Style**: Dense, urgent, cable news alert style.
-5.  **Publish**: Uploads the photo to the Facebook feed and automatically adds the blog link as the first comment.
+6.  **Publish**: Uploads the photo to the Facebook feed and automatically adds the blog link as the first comment.
 
 ## 🛡️ Posting Policy
 

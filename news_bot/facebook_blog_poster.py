@@ -13,7 +13,10 @@ import json
 from datetime import datetime
 from pathlib import Path
 import re
+import re
 from bs4 import BeautifulSoup
+import requests
+import time
 
 
 class BlogScanner:
@@ -200,6 +203,28 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         print(f"\n📝 Selected: {blog['title']}")
         print(f"   Date: {blog['date']}")
         print(f"   URL: {blog['url']}")
+
+        # NEW: Verify URL is actually live before posting (Ghost Post Prevention)
+        print("   Verifying if blog post is live on the internet...")
+        if not self.verify_live_url(blog['url']):
+             print(f"❌ SKIPPING: URL returned 404. The blog post hasn't deployed to GitHub Pages yet.")
+             print(f"   Action: Run `python news_bot/publish_git.py` (or similar) to deploy first.")
+             return
+
+    def verify_live_url(self, url, retries=3):
+        """Checks if the URL returns 200 OK. Retries a few times."""
+        for i in range(retries):
+            try:
+                r = requests.head(url, timeout=5)
+                if r.status_code == 200:
+                    print(f"   ✅ URL is Live (HTTP 200)")
+                    return True
+                else:
+                    print(f"   ⚠️ Url check {i+1}/{retries}: Status {r.status_code}")
+            except Exception as e:
+                print(f"   ⚠️ Url check {i+1}/{retries} failed: {e}")
+            time.sleep(2)
+        return False
         
         # Generate Facebook post content
         print("\n✍️ Generating Facebook post...")
