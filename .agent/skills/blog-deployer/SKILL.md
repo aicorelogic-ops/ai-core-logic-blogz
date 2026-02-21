@@ -17,11 +17,12 @@ python .agent/skills/blog-deployer/scripts/deploy.py
 
 ## Workflow
 
-1.  The script navigates to the blog directory.
-2.  It stages all changes (`git add .`).
-3.  It commits changes with a timestamped message (or user-provided message).
-4.  It pushes the commit to `origin main`.
-5.  It verifies the push command exit code.
+1.  **Cache Busting**: Scans all `.html` files in the blog directory and increments the `style.css?v=X` version number. This ensures users see design changes immediately.
+2.  **Git Operations**:
+    *   Stages all changes (`git add .`).
+    *   Commits with a timestamped message.
+    *   Pushes to `origin main`.
+3.  **Verification**: Checks exit codes to ensure successful push.
 
 ## Requirements
 

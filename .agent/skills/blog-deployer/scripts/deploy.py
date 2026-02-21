@@ -37,6 +37,49 @@ def main():
         print(f"❌ Error: Blog directory not found: {BLOG_DIR}")
         sys.exit(1)
 
+    # 0. Auto-Bump CSS Version (Cache Busting)
+    print("\n🔄 Checking CSS version in HTML files...")
+    import re
+    
+    html_files_count = 0
+    updated_files_count = 0
+    
+    # Regex to find style.css?v=NUMBER
+    css_version_pattern = re.compile(r'(href=["\']css/style\.css\?v=)(\d+)(["\'])')
+
+    for root, dirs, files in os.walk(BLOG_DIR):
+        for file in files:
+            if file.endswith(".html"):
+                html_files_count += 1
+                filepath = os.path.join(root, file)
+                
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # Search for current version
+                    match = css_version_pattern.search(content)
+                    if match:
+                        current_ver = int(match.group(2))
+                        new_ver = current_ver + 1
+                        
+                        # Replace with new version
+                        new_content = css_version_pattern.sub(f'\g<1>{new_ver}\g<3>', content)
+                        
+                        if content != new_content:
+                            with open(filepath, 'w', encoding='utf-8') as f:
+                                f.write(new_content)
+                            print(f"   ✨ Bumped CSS version to v{new_ver} in {file}")
+                            updated_files_count += 1
+                except Exception as e:
+                    print(f"   ⚠️ Warning: Could not process {file}: {e}")
+
+    if updated_files_count > 0:
+        print(f"   ✅ Updated {updated_files_count} HTML files (Cache Busting Applied).")
+    else:
+        print(f"   ℹ️ No HTML files needed CSS version update (or pattern not found).")
+
+
     # 1. Check Status
     print("\n📊 Checking Git Status...")
     run_command("git status")
