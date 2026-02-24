@@ -536,6 +536,72 @@ class ImageGenerator:
             style_guide = "VISUAL STYLE: Broadcast News Graphic. Split screen or Picture-in-Picture. High Contrast."
             return f"A news graphic about '{title}' with a circular inset of a relevant person and a bold headline at the bottom. {style_guide}"
 
+    def create_facebook_image_prompt(self, title, summary=""):
+        """
+        Uses Gemini to generate a highly specific, realistic photo prompt for Facebook posts.
+        Ensures a human element, environmental context, clean big-text data overlays, corner branding,
+        rounded pictures/marks, and readable text at the bottom.
+        """
+        print(f"🧠 Generating Facebook image prompt for: {title[:50]}...")
+        
+        try:
+            import google.generativeai as genai
+            from .settings import GOOGLE_API_KEY
+            
+            genai.configure(api_key=GOOGLE_API_KEY)
+            model = genai.GenerativeModel('gemini-flash-latest')
+            
+            user_prompt = f"""
+            Role: Expert AI Art Director for a Corporate Facebook Page.
+            
+            Task: Create an image generation prompt for a photorealistic Facebook post graphic about the following article.
+            
+            Article Title: {title}
+            Article Summary: {summary}
+            
+            VISUAL FORMULA (The "Distinguished Idea" - Realistic & Professional):
+            1. Theme & Setting:
+               - Identify the central theme (e.g., Efficiency, Cost Savings, Speed, Security, AI Growth).
+               - Environment: A setting that matches the theme (e.g., a data center, modern office, boardroom).
+               - Style: A REALISTIC, professional photograph. Corporate, bright lighting. Explicitly FORBID sci-fi, glowing brains, floating circuit boards, or abstract art styles.
+            
+            2. The Human Element:
+               - Include a professional person (analyst, engineer, executive) interacting with technology relevant to the theme.
+            
+            3. The Data Overlay (The Hook):
+               - Extract the main "hook" from the text (e.g., "60% COST CUT", "3X FASTER").
+               - Design a clean, professional infographic overlay integrated into the shot. It must use large numbers, bold text, visual cues like arrows, and rounded marks.
+               - Ensure rounded picture insets or rounded infographic elements are used for a modern friendly feel.
+            
+            4. Text & Branding Layout:
+               - Text Layout: The text/data overlay must be positioned at the BOTTOM of the picture. Provide a dark/semi-transparent background block at the bottom so the text is clearly visible and readable against the photo.
+               - Branding: Add the 'AI Core Logic' logo to a CORNER of the image so it is clearly visible as branding (do NOT put the company name on objects inside the picture itself).
+            
+            DYNAMIC VARIABLES (Extract from text):
+            • [ENVIRONMENT]: [The realistic setting matching the theme.]
+            • [HUMAN ACTION]: [Description of the professional person interacting with technology.]
+            • [THE HOOK TEXT]: [The extracted 1-4 word big impact text, e.g., "3X SPEEDUP"].
+            
+            Output Template:
+            "A realistic, high-resolution professional photograph set in [ENVIRONMENT], featuring [HUMAN ACTION]. The lighting is bright and corporate. NO sci-fi elements or abstract art. At the bottom of the image, there is a clean, readable text layout on a semi-transparent dark background, displaying a large infographic data overlay saying '[THE HOOK TEXT]' in bold text with visual cues like arrows and rounded design marks. In one of the top corners, the 'AI Core Logic' logo is clearly visible as a watermark. The overall composition makes the text highly readable while retaining photorealism in the background."
+            
+            Output:
+            Return ONLY the final prompt text with the variables filled in.
+            """
+            
+            response = model.generate_content(user_prompt)
+            generated_prompt = response.text.strip()
+            
+            # Safety cleanup
+            generated_prompt = generated_prompt.replace("\n", " ")
+            
+            print(f"   ✨ Facebook LLM Prompt: {generated_prompt[:100]}...")
+            return generated_prompt
+            
+        except Exception as e:
+            print(f"⚠️ LLM Prompt Generation failed for FB: {e}. Falling back.")
+            return f"A extremely realistic photograph of a professional in an office. At the bottom, a dark overlay with large bold text about '{title}'. AI Core Logic logo in the corner. No sci-fi, no abstract."
+
     def create_viral_prompt(self, title):
         """Legacy wrapper for backward compatibility."""
         return self.create_content_aware_prompt(title)

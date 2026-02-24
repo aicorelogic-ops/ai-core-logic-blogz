@@ -242,8 +242,8 @@ Output ONLY the Facebook post text. Do NOT include the URL.
         print("\n[Image] Generating image with Vertex AI Imagen...", flush=True)
         from .image_generator import ImageGenerator
         img_gen = ImageGenerator()
-        # Use new content-aware prompt generation
-        viral_prompt = img_gen.create_content_aware_prompt(blog['title'], summary=blog['summary'])
+        # Use new facebook specific content-aware prompt generation
+        viral_prompt = img_gen.create_facebook_image_prompt(blog['title'], summary=blog['summary'])
         local_image_path = img_gen.generate_image(viral_prompt, title=blog['title'])
         
         if not local_image_path:

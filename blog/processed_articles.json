@@ -109,5 +109,11 @@
     "blog_path": "blog/posts/2026-02-24-anthropic-s-claude-code-security-is-available-now-.html",
     "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-24-anthropic-s-claude-code-security-is-available-now-.html",
     "processed_date": "2026-02-24T07:22:12.025786"
+  },
+  "https://venturebeat.com/orchestration/researchers-baked-3x-inference-speedups-directly-into-llm-weights-without": {
+    "title": "Researchers baked 3x inference speedups directly into LLM weights — without speculative decoding",
+    "blog_path": "blog/posts/2026-02-24-researchers-baked-3x-inference-speedups-directly-i.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-02-24-researchers-baked-3x-inference-speedups-directly-i.html",
+    "processed_date": "2026-02-24T13:38:26.695248"
   }
 }
