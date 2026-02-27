@@ -107,9 +107,9 @@ class ImageGenerator:
         # Region configured in settings.py (switched to us-east4)
         vertexai.init(project=VERTEX_PROJECT_ID, location=VERTEX_LOCATION)
         
-        # Try Imagen 3.0 first
+        # Try Imagen 3.0
         try:
-            print(f"   Trying Imagen 3.0...")
+            print(f"   Using Imagen 3.0 (imagen-3.0-generate-001)...")
             model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
             response = model.generate_images(
                 prompt=prompt,
@@ -119,16 +119,8 @@ class ImageGenerator:
                 person_generation="allow_adult"
             )
         except Exception as e:
-            print(f"   ⚠️ Imagen 3.0 failed: {e}")
-            print(f"   🔄 Falling back to Imagen 2 (imagegeneration@006)...")
-            model = ImageGenerationModel.from_pretrained("imagegeneration@006")
-            response = model.generate_images(
-                prompt=prompt,
-                number_of_images=1,
-                aspect_ratio="1:1",
-                safety_filter_level="block_some",
-                person_generation="allow_adult"
-            )
+            print(f"   ❌ Imagen 3.0 failed: {e}")
+            raise e
         
         if not response.images:
             raise Exception("No images in response")

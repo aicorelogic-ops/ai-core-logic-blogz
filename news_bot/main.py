@@ -34,7 +34,7 @@ def run_bot():
             from .settings import GOOGLE_API_KEY
             
             genai.configure(api_key=GOOGLE_API_KEY)
-            model = genai.GenerativeModel('gemini-flash-latest')
+            model = genai.GenerativeModel('gemini-1.5-flash')
             
             prompt = f"""Score this article for VIRAL POTENTIAL in the logistics/business automation niche (0-100).
 
