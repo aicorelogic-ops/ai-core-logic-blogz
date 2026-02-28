@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe coding with overeager AI: Lessons learned from treating Google AI Studio like a teammate | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('../assets/vibe-coding-with-overeager-ai--lessons-learned-fro.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Vibe coding with overeager AI: Lessons learned from treating Google AI Studio like a teammate</h1>
+        <div class="meta-info">
+            <span>2026-02-28</span>
+            <span>•</span>
+            <span>3 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>Stop treating AI as a senior developer and start managing it like a volatile, overeager junior intern.</li><li style='margin-bottom: 0.75rem;'>Enforce strict architectural constraints and JSON schemas to prevent AI from destroying your production-grade system reliability.</li><li style='margin-bottom: 0.75rem;'>Pivot AI from code generation to high-level consulting using expert frameworks to unlock its true strategic value.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <h2>90% of "Vibe Coders" are building digital ticking time bombs.</h2>
+
+<p>Most developers think AI is a magic wand that turns "vibes" into gold. They treat Google AI Studio like a senior partner, sit back, and wait for the millions to roll in. But the reality is a brutal wake-up call that most companies won’t survive.</p>
+
+<p>I’m about to reveal how we built a production-grade MarTech application without writing a single line of code. We used Google’s Gemini 3.0 Pro to handle the heavy lifting while we sat in the director's chair. This isn't a theory; it’s a battle-tested blueprint for the future of software development.</p>
+
+<p>If you want to move 10x faster without your codebase collapsing into a pile of spaghetti, you need to listen up. The era of the "prompt engineer" is dead—the era of the AI Architect has arrived.</p>
+
+<h2>STOP TREATING AI LIKE A SENIOR PARTNER</h2>
+
+<p>Your AI assistant isn’t a senior engineer. It’s an overeager, caffeinated junior developer who just read every textbook ever written but has zero common sense.</p>
+
+<ul>
+    <li><b>The Apology Loop:</b> It will break your code, apologize profusely, and then break it again in the exact same way.</li>
+    <li><b>The Drift:</b> It will forget your instructions mid-sentence and start hallucinating "improvements" you never asked for.</li>
+    <li><b>The Regression Nightmare:</b> Every new feature it adds will secretly murder three existing features.</li>
+</ul>
+
+<p>If you trust the "vibe," you are dead in the water. You must enforce architectural discipline that would make a drill sergeant blush.</p>
+
+<h3>THE "GUILTY UNTIL PROVEN INNOCENT" PROTOCOL</h3>
+
+<p>We forced the AI to operate within a cage. It couldn't perform math, it couldn't hold state, and it couldn't touch data without explicit validation. Every single interaction was governed by strict JSON schemas.</p>
+
+<p>We treated the AI’s output as "probabilistic noise" that had to be filtered through "deterministic logic." This is the only way to build a system that actually works when real customers show up.</p>
+
+<h2>UNLOCK THE HIDDEN CONSULTING SUPERPOWER</h2>
+
+<p>The real shocker? The AI is a mediocre coder but a world-class consultant. When we told it to act like a Nielsen Norman Group UX expert, the results were terrifyingly good.</p>
+
+<p>It started citing heuristics and Gestalt principles that human designers often miss. We built an "AI Advisory Board" featuring the digital ghosts of Martin Fowler and McKinsey consultants to audit our every move.</p>
+
+<p>Stop asking it to "write code." Start asking it to "audit the architecture" and watch your quality skyrocket.</p>
+
+<h3>DEFENSIVE PAIR PROGRAMMING IS THE ONLY WAY FORWARD</h3>
+
+<p>Vibe coding isn’t about effortless nirvana; it’s about high-stakes management. You are no longer a coder—you are a Governor of Complexity.</p>
+
+<p>You must implement branch discipline and manual inspection for every single file the AI touches. It’s messy, it’s frustrating, and it’s the only way to win in this new landscape.</p>
+
+<p>Is your current AI strategy building a scalable asset or a fragile liability that will crumble at the first sign of traffic? The "vibe" is great for a jam session, but production systems require discipline.</p>
+
+<p>Contact AI Core Logic for a strategy audit to see if your architecture can survive the AI era.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"Let's be real: "Vibe coding" is a recipe for disaster if you don't have the technical backbone to enforce architectural constraints. The bottom line is that AI is a force multiplier for discipline, but it’s a death sentence for the disorganized. You don't need better prompts; you need a digital constitution that keeps your AI on a short, unbreakable leash."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        
