@@ -547,21 +547,6 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
 
-            import random
-            
-            # Python-driven randomization to forcefully override Gemini's latent biases
-            style_seeds = [
-                "Extreme Macro Photography (focus on tiny details, textures, glass, metal, shallow depth of field)",
-                "Cinematic Metaphor (think Christopher Nolan movie frames, dramatic lighting, suspenseful corporate settings, empty spaces)",
-                "High-End Architectural (focus on stark corporate building geometry, glass facades, brutalist concrete, vast scale)",
-                "Industrial / Logistics (focus on moving parts, shipping, manufacturing, raw materials, heavy industry in action)",
-                "Abstract Organic Tech (visualizing data as fluid dynamics, nature/tech hybrids, bioluminescent concepts, but grounded in reality)",
-                "The Human Toll (focus purely on exhausted, celebrating, or focused human faces in extreme close-up, highly editorial)",
-                "Retro-Future Corporate (analog tech aesthetics mixed with modern settings, 1980s boardroom vibes, warm tungsten lighting)",
-                "Aerial / Drone Perspective (looking straight down on organized chaos, geometric patterns of business operations)"
-            ]
-            forced_style = random.choice(style_seeds)
-
             user_prompt = f"""
             Role: Expert Editorial Art Director for a premium tech news publication.
 
@@ -572,22 +557,27 @@ class ImageGenerator:
             Article Title: {title}
             Article Summary: {summary}
 
-            CRITICAL DIVERSITY INSTRUCTION:
-            The AI image generators are stuck in a rut generating "server rooms" and "glowing tech hallways" for every tech article. 
-            YOU ARE STRICTLY FORBIDDEN from generating prompts that include:
-            - Server rooms, server racks, or data centers.
-            - Glowing infinite hallways.
-            - Generic "businessmen looking at glowing blue screens".
+            CRITICAL INSTRUCTION FOR VISUAL DIVERSITY:
+            Do NOT just generate a generic image of the broad topic. If the article is about "data centers," do NOT generate a wide shot of a server room. 
+            
+            Instead, you must extract ONE highly specific, unique detail, object, or metaphor from the article's context to act as the focal point. 
+            For example, if the article is about infrastructure:
+            - Focus on a single tangled fiber-optic cable.
+            - Focus on a massive industrial cooling fan.
+            - Focus on a biometric security scanner at a door.
+            - Focus on the texture of a microchip.
+            
+            By focusing on a VERY SPECIFIC element from the text, every image will look completely different, even if we publish 5 articles about the same general topic.
 
-            Instead, you MUST strictly adhere to this randomly assigned visual aesthetic:
-            >>> FORCED AESTHETIC STYLE: {forced_style} <<<
+            Step 1: Identify 3 distinct physical objects, specific scenes, or concrete metaphors mentioned or implied in the text.
+            Step 2: Pick the ONE most visually striking and narrow detail to be your subject.
+            Step 3: Write the image prompt focusing entirely on that specific subject.
 
-            Translate the core concept and emotion of the article (e.g., speed, danger, growth, obsolescence) into a physical, real-world scene that perfectly matches that FORCED AESTHETIC STYLE.
-
-            STYLE RULES (Apply to ALL approaches):
+            STYLE RULES:
             - Photorealistic editorial news photography. High-end camera look.
-            - Cinematic, distinctive lighting.
-            - FORBID: sci-fi elements, glowing brains, holograms, literal glowing 1s and 0s, text, logos.
+            - Dramatic, distinctive lighting.
+            - Radically vary your camera angles (try extreme macro, low angles, tight crops).
+            - FORBID: sci-fi elements, glowing brains, holograms, literal glowing 1s and 0s, text, logos, or generic server racks/hallways.
             - COMPOSITION: The lower third of the image MUST be naturally dark or out-of-focus to allow for headline text overlay.
 
             Output:
