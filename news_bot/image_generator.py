@@ -625,16 +625,12 @@ class ImageGenerator:
             draw = ImageDraw.Draw(overlay)
 
             # ── 1. Dark gradient in the lower third ──────────────────────────────
-            gradient_start_y = int(height * 0.62)
+            gradient_start_y = int(height * 0.60)
             for y in range(gradient_start_y, height):
                 alpha = int((y - gradient_start_y) / (height - gradient_start_y) * 230)
                 draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
 
-            # ── 2. Font setup ─────────────────────────────────────────────────────
-            headline_size = int(height * 0.068)
-            tag_size      = int(height * 0.032)
-            wm_size       = int(height * 0.038)
-
+            # ── 2. Font helpers ───────────────────────────────────────────────────
             def _load_font(size, bold=False):
                 for name in (["arialbd.ttf", "Arial Bold.ttf"] if bold else ["arial.ttf", "Arial.ttf"]):
                     try:
@@ -643,28 +639,44 @@ class ImageGenerator:
                         pass
                 return ImageFont.load_default()
 
-            h_font  = _load_font(headline_size, bold=True)
-            tag_font = _load_font(tag_size, bold=True)
-            wm_font  = _load_font(wm_size, bold=False)
+            def _text_width(txt, font):
+                """Measure text width safely across Pillow versions."""
+                try:
+                    bbox = draw.textbbox((0, 0), txt, font=font)
+                    return bbox[2] - bbox[0]
+                except AttributeError:
+                    return int(draw.textlength(txt, font=font))
 
-            # ── 3. Headline text (wrapped, white, bottom-left) ────────────────────
+            # ── 3. Auto-scaling headline to fit image width ───────────────────────
             margin_x      = int(width * 0.05)
             margin_bottom = int(height * 0.06)
-            chars_per_line = 28
-            lines = textwrap.wrap(title.upper(), width=chars_per_line)[:3]  # max 3 lines
+            max_text_width = width - (2 * margin_x)  # usable width inside margins
 
-            line_h = int(headline_size * 1.25)
+            # Start with a generous font and shrink until all lines fit
+            headline_size = int(height * 0.068)
+            min_font_size = int(height * 0.035)
+
+            while headline_size >= min_font_size:
+                h_font = _load_font(headline_size, bold=True)
+                # Dynamically calculate chars_per_line based on current font size
+                avg_char_w = _text_width("M", h_font)  # widest common char
+                chars_per_line = max(15, int(max_text_width / avg_char_w))
+                lines = textwrap.wrap(title.upper(), width=chars_per_line)[:3]
+
+                # Check if every line fits
+                all_fit = all(_text_width(line, h_font) <= max_text_width for line in lines)
+                if all_fit:
+                    break
+                headline_size -= 2  # shrink by 2px and retry
+
+            line_h  = int(headline_size * 1.30)
             total_h = len(lines) * line_h
             current_y = height - margin_bottom - total_h
 
-            # Yellow accent bar behind the FIRST line (the key hook)
+            # ── 4. Yellow accent bar behind the FIRST line (the key hook) ─────────
             brand_yellow = (255, 215, 0, 230)  # gold-yellow
             if lines:
-                try:
-                    bbox = draw.textbbox((0, 0), lines[0], font=h_font)
-                    line_w = bbox[2] - bbox[0]
-                except AttributeError:
-                    line_w = int(draw.textlength(lines[0], font=h_font))
+                line_w = _text_width(lines[0], h_font)
                 pad = 8
                 draw.rectangle(
                     [margin_x - pad, current_y - pad,
@@ -672,41 +684,16 @@ class ImageGenerator:
                     fill=brand_yellow
                 )
 
+            # ── 5. Draw headline lines ────────────────────────────────────────────
             for i, line in enumerate(lines):
-                text_color = "black" if i == 0 else "white"   # black on yellow accent, white on dark
-                # Shadow for non-accented lines
+                text_color = "black" if i == 0 else "white"
+                # Drop shadow for non-accented lines (readability on dark gradient)
                 if i > 0:
                     draw.text((margin_x + 2, current_y + 2), line, font=h_font, fill=(0, 0, 0, 180))
                 draw.text((margin_x, current_y), line, font=h_font, fill=text_color)
                 current_y += line_h
 
-            # ── 4. Tag label ("AI.CORELOGIC UPDATE") above the headline ──────────
-            tag_text = "AI.CORELOGIC UPDATE"
-            tag_y = height - margin_bottom - total_h - int(tag_size * 2.2)
-            tag_bg_pad = 6
-            try:
-                tbbox = draw.textbbox((0, 0), tag_text, font=tag_font)
-                tag_w = tbbox[2] - tbbox[0]
-            except AttributeError:
-                tag_w = int(draw.textlength(tag_text, font=tag_font))
-            draw.rectangle(
-                [margin_x - tag_bg_pad, tag_y - tag_bg_pad,
-                 margin_x + tag_w + tag_bg_pad, tag_y + tag_size + tag_bg_pad],
-                fill=(255, 215, 0, 255)
-            )
-            draw.text((margin_x, tag_y), tag_text, font=tag_font, fill="black")
-
-            # ── 5. Watermark top-right ────────────────────────────────────────────
-            wm_text = tagline.lower()
-            try:
-                wbbox = draw.textbbox((0, 0), wm_text, font=wm_font)
-                wm_w = wbbox[2] - wbbox[0]
-            except AttributeError:
-                wm_w = int(draw.textlength(wm_text, font=wm_font))
-            wm_x = width - wm_w - int(width * 0.04)
-            wm_y = int(height * 0.04)
-            draw.text((wm_x + 2, wm_y + 2), wm_text, font=wm_font, fill=(0, 0, 0, 140))
-            draw.text((wm_x, wm_y), wm_text, font=wm_font, fill=(255, 255, 255, 230))
+            # (No branding — client preference: keep images clean, no company name)
 
             # ── 6. Composite & save ───────────────────────────────────────────────
             out = Image.alpha_composite(img, overlay).convert("RGB")
