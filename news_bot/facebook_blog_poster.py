@@ -251,6 +251,11 @@ Output ONLY the Facebook post text. Do NOT include the URL.
             return
         
         print(f"✅ Image generated: {local_image_path}")
+
+        # Step 2: Stamp crisp headline + branding with PIL (two-step approach).
+        # AI image models garble text — PIL renders pixel-perfect typography.
+        print("[Overlay] Applying programmatic text overlay...", flush=True)
+        img_gen.add_facebook_overlay(local_image_path, blog['title'])
         
         # Post to Facebook
         print("\n[Post] Posting Photo to Facebook Timeline...", flush=True)

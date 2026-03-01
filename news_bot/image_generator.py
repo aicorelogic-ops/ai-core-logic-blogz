@@ -530,69 +530,193 @@ class ImageGenerator:
 
     def create_facebook_image_prompt(self, title, summary=""):
         """
-        Uses Gemini to generate a highly specific, realistic photo prompt for Facebook posts.
-        Ensures a human element, environmental context, clean big-text data overlays, corner branding,
-        rounded pictures/marks, and readable text at the bottom.
+        Uses Gemini to generate an editorial-style BASE IMAGE prompt for Facebook posts.
+
+        KEY DESIGN DECISION (Two-Step Approach):
+        Step 1 (This function): AI generates a CLEAN background photo with NO text in it.
+                                It leaves negative space in the lower third for overlays.
+        Step 2 (add_facebook_overlay): PIL stamps the headline and branding programmatically
+                                       with crisp, perfectly-rendered fonts — no garbled AI text.
         """
         print(f"🧠 Generating Facebook image prompt for: {title[:50]}...")
-        
+
         try:
             import google.generativeai as genai
             from .settings import GOOGLE_API_KEY
-            
+
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
-            
+
             user_prompt = f"""
-            Role: Expert AI Art Director for a Corporate Facebook Page.
-            
-            Task: Create an image generation prompt for a photorealistic Facebook post graphic about the following article.
-            
+            Role: Expert Editorial Art Director for a premium B2B tech publication.
+
+            Task: Write an image generation prompt for a photorealistic BACKGROUND image based on the following article.
+            IMPORTANT: The image must contain NO text, logos, or infographic overlays whatsoever.
+            Those will be added programmatically afterwards. Focus 100% on the visual composition.
+
             Article Title: {title}
             Article Summary: {summary}
-            
-            VISUAL FORMULA (The "Distinguished Idea" - Realistic & Professional):
-            1. Theme & Setting:
-               - Identify the central theme (e.g., Efficiency, Cost Savings, Speed, Security, AI Growth).
-               - Environment: A setting that matches the theme (e.g., a data center, modern office, boardroom).
-               - Style: A REALISTIC, professional photograph. Corporate, bright lighting. Explicitly FORBID sci-fi, glowing brains, floating circuit boards, or abstract art styles.
-            
-            2. The Human Element:
-               - Include a professional person (analyst, engineer, executive) interacting with technology relevant to the theme.
-            
-            3. The Data Overlay (The Hook):
-               - Extract the main "hook" from the text (e.g., "60% COST CUT", "3X FASTER").
-               - Design a clean, professional infographic overlay integrated into the shot. It must use large numbers, bold text, visual cues like arrows, and rounded marks.
-               - Ensure rounded picture insets or rounded infographic elements are used for a modern friendly feel.
-            
-            4. Text & Branding Layout:
-               - Text Layout: The text/data overlay must be positioned at the BOTTOM of the picture. Provide a dark/semi-transparent background block at the bottom so the text is clearly visible and readable against the photo.
-               - Branding: Add the 'AI Core Logic' logo to a CORNER of the image so it is clearly visible as branding (do NOT put the company name on objects inside the picture itself).
-            
-            DYNAMIC VARIABLES (Extract from text):
-            • [ENVIRONMENT]: [The realistic setting matching the theme.]
-            • [HUMAN ACTION]: [Description of the professional person interacting with technology.]
-            • [THE HOOK TEXT]: [The extracted 1-4 word big impact text, e.g., "3X SPEEDUP"].
-            
+
+            INSTRUCTIONS FOR THE VISUAL FORMULA:
+            1. The Core Metaphor: Analyze the summary. What is the business problem being solved?
+               (e.g., organizing chaos, speeding up processes, saving money).
+               Translate this into a REALISTIC, grounded corporate scene.
+            2. High-End Realism: Style must be "editorial news photography."
+               Shallow depth of field, natural or bright corporate lighting.
+               Explicitly FORBID: sci-fi elements, glowing blue brains, holograms, abstract art, any text, any logos.
+            3. Contextual Details: Include 1-2 hyper-specific props related to the content.
+               (e.g., if the post is about logistics, feature a blurred shipping manifest on a tablet.
+               If about finance, feature a printed spreadsheet.)
+            4. The Human Element: Include a professional (business owner, analyst, manager)
+               engaged in a realistic action relevant to the article.
+            5. Composition for Text Overlay: The lower third of the image MUST be
+               a naturally dark, out-of-focus area (e.g., a dark desk surface, deep shadow,
+               blurred dark background) so a headline can be overlaid on it later.
+               Explicitly state this in the prompt.
+
             Output Template:
-            "A realistic, high-resolution professional photograph set in [ENVIRONMENT], featuring [HUMAN ACTION]. The lighting is bright and corporate. NO sci-fi elements or abstract art. At the bottom of the image, there is a clean, readable text layout on a semi-transparent dark background, displaying a large infographic data overlay saying '[THE HOOK TEXT]' in bold text with visual cues like arrows and rounded design marks. In one of the top corners, the 'AI Core Logic' logo is clearly visible as a watermark. The overall composition makes the text highly readable while retaining photorealism in the background."
-            
+            "A photorealistic editorial news photograph of [HUMAN ACTION] in a [ENVIRONMENT].
+            On the desk/table, there is a [SPECIFIC PROP RELATED TO SUMMARY].
+            The lighting is natural and corporate, shot with a shallow depth of field.
+            Strictly no sci-fi elements, no glowing screens, no text, no logos.
+            The composition utilizes the rule of thirds, with the lower third of the image
+            being naturally dark and out-of-focus to allow for text overlays."
+
             Output:
-            Return ONLY the final prompt text with the variables filled in.
+            Return ONLY the final filled-in prompt text. Do not include introductory text.
             """
-            
+
             response = model.generate_content(user_prompt)
             generated_prompt = response.text.strip()
-            
-            # Safety cleanup
+
+            # Safety cleanup — keep it single-line for image APIs
             generated_prompt = generated_prompt.replace("\n", " ")
-            
+
             print(f"   ✨ Facebook LLM Prompt: {generated_prompt[:100]}...")
             return generated_prompt
-            
+
         except Exception as e:
             print(f"⚠️ LLM Prompt Generation failed for FB: {e}. Falling back.")
-            return f"A extremely realistic photograph of a professional in an office. At the bottom, a dark overlay with large bold text about '{title}'. AI Core Logic logo in the corner. No sci-fi, no abstract."
+            return (
+                f"A photorealistic editorial photograph of a business analyst reviewing data "
+                f"in a modern office. Shallow depth of field, corporate lighting. "
+                f"No text, no logos, no sci-fi. Lower third is naturally dark and out-of-focus."
+            )
+
+    def add_facebook_overlay(self, image_path, title, tagline="AI Core Logic"):
+        """
+        Step 2 of the two-step approach: stamps a crisp, professional text overlay
+        onto the pre-generated base image using PIL.
+
+        - Bottom dark gradient band: contains the headline in bold white text.
+        - Top-right corner: clean 'ai.corelogic' watermark text.
+        - Yellow accent bar behind the most important keyword in the headline.
+
+        Why PIL instead of asking the AI to render text:
+            AI image models garble long strings. PIL renders pixel-perfect typography every time.
+        """
+        try:
+            from PIL import Image, ImageDraw, ImageFont
+            import textwrap
+
+            img = Image.open(image_path).convert("RGBA")
+            width, height = img.size
+            overlay = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            draw = ImageDraw.Draw(overlay)
+
+            # ── 1. Dark gradient in the lower third ──────────────────────────────
+            gradient_start_y = int(height * 0.62)
+            for y in range(gradient_start_y, height):
+                alpha = int((y - gradient_start_y) / (height - gradient_start_y) * 230)
+                draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+
+            # ── 2. Font setup ─────────────────────────────────────────────────────
+            headline_size = int(height * 0.068)
+            tag_size      = int(height * 0.032)
+            wm_size       = int(height * 0.038)
+
+            def _load_font(size, bold=False):
+                for name in (["arialbd.ttf", "Arial Bold.ttf"] if bold else ["arial.ttf", "Arial.ttf"]):
+                    try:
+                        return ImageFont.truetype(name, size)
+                    except IOError:
+                        pass
+                return ImageFont.load_default()
+
+            h_font  = _load_font(headline_size, bold=True)
+            tag_font = _load_font(tag_size, bold=True)
+            wm_font  = _load_font(wm_size, bold=False)
+
+            # ── 3. Headline text (wrapped, white, bottom-left) ────────────────────
+            margin_x      = int(width * 0.05)
+            margin_bottom = int(height * 0.06)
+            chars_per_line = 28
+            lines = textwrap.wrap(title.upper(), width=chars_per_line)[:3]  # max 3 lines
+
+            line_h = int(headline_size * 1.25)
+            total_h = len(lines) * line_h
+            current_y = height - margin_bottom - total_h
+
+            # Yellow accent bar behind the FIRST line (the key hook)
+            brand_yellow = (255, 215, 0, 230)  # gold-yellow
+            if lines:
+                try:
+                    bbox = draw.textbbox((0, 0), lines[0], font=h_font)
+                    line_w = bbox[2] - bbox[0]
+                except AttributeError:
+                    line_w = int(draw.textlength(lines[0], font=h_font))
+                pad = 8
+                draw.rectangle(
+                    [margin_x - pad, current_y - pad,
+                     margin_x + line_w + pad, current_y + headline_size + pad],
+                    fill=brand_yellow
+                )
+
+            for i, line in enumerate(lines):
+                text_color = "black" if i == 0 else "white"   # black on yellow accent, white on dark
+                # Shadow for non-accented lines
+                if i > 0:
+                    draw.text((margin_x + 2, current_y + 2), line, font=h_font, fill=(0, 0, 0, 180))
+                draw.text((margin_x, current_y), line, font=h_font, fill=text_color)
+                current_y += line_h
+
+            # ── 4. Tag label ("AI.CORELOGIC UPDATE") above the headline ──────────
+            tag_text = "AI.CORELOGIC UPDATE"
+            tag_y = height - margin_bottom - total_h - int(tag_size * 2.2)
+            tag_bg_pad = 6
+            try:
+                tbbox = draw.textbbox((0, 0), tag_text, font=tag_font)
+                tag_w = tbbox[2] - tbbox[0]
+            except AttributeError:
+                tag_w = int(draw.textlength(tag_text, font=tag_font))
+            draw.rectangle(
+                [margin_x - tag_bg_pad, tag_y - tag_bg_pad,
+                 margin_x + tag_w + tag_bg_pad, tag_y + tag_size + tag_bg_pad],
+                fill=(255, 215, 0, 255)
+            )
+            draw.text((margin_x, tag_y), tag_text, font=tag_font, fill="black")
+
+            # ── 5. Watermark top-right ────────────────────────────────────────────
+            wm_text = tagline.lower()
+            try:
+                wbbox = draw.textbbox((0, 0), wm_text, font=wm_font)
+                wm_w = wbbox[2] - wbbox[0]
+            except AttributeError:
+                wm_w = int(draw.textlength(wm_text, font=wm_font))
+            wm_x = width - wm_w - int(width * 0.04)
+            wm_y = int(height * 0.04)
+            draw.text((wm_x + 2, wm_y + 2), wm_text, font=wm_font, fill=(0, 0, 0, 140))
+            draw.text((wm_x, wm_y), wm_text, font=wm_font, fill=(255, 255, 255, 230))
+
+            # ── 6. Composite & save ───────────────────────────────────────────────
+            out = Image.alpha_composite(img, overlay).convert("RGB")
+            out.save(image_path, quality=95)
+            print(f"   ✅ Facebook overlay applied to {image_path}")
+
+        except ImportError:
+            print("❌ PIL not available — skipping Facebook overlay.")
+        except Exception as e:
+            print(f"❌ Facebook overlay failed: {e}")
 
     def create_viral_prompt(self, title):
         """Legacy wrapper for backward compatibility."""

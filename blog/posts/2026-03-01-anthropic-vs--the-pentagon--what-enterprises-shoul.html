@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthropic vs. The Pentagon: what enterprises should do | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('../assets/anthropic-vs--the-pentagon--what-enterprises-shoul.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Anthropic vs. The Pentagon: what enterprises should do</h1>
+        <div class="meta-info">
+            <span>2026-03-01</span>
+            <span>•</span>
+            <span>3 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>The Pentagon blacklisted Anthropic as a national security risk for refusing to build autonomous killer robots.</li><li style='margin-bottom: 0.75rem;'>Enterprises must build model-agnostic systems to survive sudden government bans on specific AI providers.</li><li style='margin-bottom: 0.75rem;'>Diversify your AI supply chain now using open-source models to prevent total business operations blackout.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <b>Your entire AI strategy could be illegal by Monday morning.</b>
+
+<p>The U.S. government just dropped a nuclear bomb on the AI industry, and if you aren’t prepared, your business is collateral damage. This isn't a "glitch" or a "policy update." This is a total blacklisting of the world’s most sophisticated AI lab, and it’s sending shockwaves through the C-suites of every Fortune 500 company.</p>
+
+<p>I’ve spent years dissecting the intersection of technology and scale, and I’m telling you right now: the rules of the game just changed forever. Read this carefully, or prepare to watch your "automated" workflows go dark while your competitors thrive.</p>
+
+<h2><b>The $200 Million Execution: Anthropic vs. The Pentagon</b></h2>
+
+<p>On Friday, February 27, 2026, President Trump and the White House issued a direct order: <b>Cease all use of Anthropic technology immediately.</b></p>
+
+<p>The Department of War, led by Pete Hegseth, officially designated Anthropic—the maker of the legendary Claude models—as a "Supply-Chain Risk to National Security." This is the same "blackball" list used to crush Huawei and Kaspersky. </p>
+
+<ul>
+<li><b>The Deadline:</b> All federal agencies have 180 days to scrub Claude from their systems.</li>
+<li><b>The Cause:</b> Anthropic CEO Dario Amodei refused to allow his AI to be used for mass surveillance of Americans and fully autonomous killer robots.</li>
+<li><b>The Fallout:</b> A $200 million military contract is dead, and every government contractor must stop using Anthropic effective immediately.</li>
+</ul>
+
+<h2><b>Your "Bulletproof" Tech Stack is Brittle and Dangerous</b></h2>
+
+<p>Anthropic is currently a $380 billion giant. Their Claude Code service is printing $2.5 billion in revenue. Companies like Salesforce and Spotify are seeing massive gains from these models. </p>
+
+<p>But the Pentagon just proved that <b>it doesn't matter how good the tech is.</b> If the government decides your provider is "unpatriotic," your API keys become worthless overnight. </p>
+
+<h3><b>The Trap of the "Single Provider"</b></h3>
+<p>Most enterprises are "hard-coding" their entire future into one model’s API. You are building your house on a foundation of shifting sand. If you can’t switch from Claude to GPT-4o or Gemini in 24 hours, you don't have a business—you have a ticking time bomb.</p>
+
+<h3><b>Predators in the Water</b></h3>
+<p>While Anthropic fights for its life in court, OpenAI and xAI are already circling the carcass. Sam Altman just signed a massive Pentagon deal, and Elon Musk’s Grok is moving into classified systems. The market is fragmenting, and the "Terms of Service" wars have only just begun.</p>
+
+<h2><b>How to Survive the AI "Supply Chain" Bloodbath</b></h2>
+
+<p>You don't need to delete Claude today, but you do need to stop being a hostage. The "Anthropic Ban" is a wake-up call for every technical decision-maker on the planet. </p>
+
+<p>You must move to a "Warm Standby" architecture. This means using orchestration layers and standardized prompting so you can "hot swap" models the moment a political or legal firestorm hits. </p>
+
+<ul>
+<li><b>Diversify Your Supply:</b> Don't ignore open-source models like Meta’s Llama or IBM’s Granite.</li>
+<li><b>In-House Hosting:</b> Running models locally or in a private cloud is the only way to insulate yourself from federal blacklists.</li>
+<li><b>Model Agnosticism:</b> If your agents can’t run on a different brain by tomorrow morning, your supply chain is broken.</li>
+</ul>
+
+<p>The era of "set it and forget it" AI is over. We are now in an age of strategic redundancy where model interoperability is the only thing standing between you and a total blackout. </p>
+
+<p>Are you going to wait for a social media post to shut down your operations, or are you going to build a system that is impossible to kill?</p>
+
+<p>Contact AI Core Logic for a strategy audit to ensure your AI stack is resilient and redundant. Follow for more updates as this situation develops.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"The bottom line is that the AI era just collided with cold, hard geopolitics and defense procurement. This isn't about ethics; it's a brutal warning that any SaaS provider can be turned into a security risk overnight. If your business is hard-coded to a single API, you aren’t a leader—you’re a hostage to the next executive order."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        
