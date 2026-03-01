@@ -557,37 +557,32 @@ class ImageGenerator:
             Article Title: {title}
             Article Summary: {summary}
 
-            CRITICAL RULES FOR VISUAL DIVERSITY:
-            You MUST vary the composition every time. Do NOT default to "a person in an office."
-            Pick the BEST visual approach based on the article's actual subject:
+            CRITICAL RULES FOR VISUAL DIVERSITY & AVOIDING REPETITION:
+            Even if multiple articles are about the exact same topic (e.g., "infrastructure" or "AI models"), you MUST invent a totally unique scene every time. NEVER generate the exact same visual twice.
 
-            A) PRODUCT / TECHNOLOGY SHOT — If the article is about a specific product, chip, device, robot, or tool:
-               → Dramatic close-up of the object itself. Moody lighting, dark background, editorial product photography.
-               Example: A macro shot of a GPU on a reflective surface with dramatic side-lighting.
+            Step 1: Pick the visual approach below.
+            Step 2: Invent a NOVEL subject and a UNIQUE camera angle. Do NOT just copy the examples.
 
-            B) ENVIRONMENT / SCALE SHOT — If the article is about infrastructure, data centers, factories, or large-scale operations:
-               → Wide establishing shot showing the environment's scale. No people needed.
-               Example: A towering row of server racks in a massive data center, blue LED ambient light.
+            A) PRODUCT / TECHNOLOGY — Close-up of hardware. 
+               (Invent new subjects: e.g., a glowing fiber-optic junction, an industrial sensor array, a complex circuit board edge, a robotic joint, an edge-computing gateway). 
 
-            C) HUMAN-IN-CONTEXT — If the article is about a CEO, executive decision, or workforce impact:
-               → Person in a setting that matches the story (NOT always an office with papers).
-               Could be: a factory floor, a conference stage, a lab, a trading floor, standing outdoors at a tech campus.
+            B) ENVIRONMENT / SCALE — Establishing shots of infrastructure. 
+               (Invent new subjects: e.g., massive cooling fans in shadows, an infinite corridor of shipping containers, a pristine semiconductor clean room, glowing subterranean data cables, a high-tech power grid substation).
 
-            D) CONCEPTUAL / METAPHOR — If the article is about an abstract concept (competition, disruption, speed, cost):
-               → A visual metaphor. Example for "disruption": an empty boardroom with a single chair knocked over.
-               Example for "speed": a blurred high-speed train with motion lines. NO sci-fi.
+            C) HUMAN-IN-CONTEXT — Person in a related physical space. 
+               (Invent new settings: e.g., a hard-hat engineer inspecting a solar array, a network technician in a dark operations center, a logistics manager on a high catwalk, a researcher looking through thick glass).
 
-            E) REAL-WORLD IMPACT — If the article is about users, consumers, or society:
-               → Everyday scene showing the technology in real life (a person using a phone on a city street,
-               a delivery drone in a suburban neighborhood, a student with a laptop in a library).
+            D) CONCEPTUAL METAPHOR — Visual representation of an abstract business idea. 
+               (Invent new metaphors: e.g., a shattered hourglass for "saving time", a perfectly aligned row of steel gears for "efficiency", a single illuminated path in a dark maze for "strategy").
 
-            STYLE RULES (Apply to ALL approaches):
-            - Photorealistic editorial news photography. High-end camera look.
-            - Cinematic lighting (can be moody, dramatic, warm, or cool — match the article tone).
-            - Shallow depth of field where appropriate.
+            E) REAL-WORLD IMPACT — Technology deployed in the physical world.
+               (Invent new scenes: e.g., a smart-camera mounting on a city streetlight, a drone scanning agricultural fields at dawn, automated cranes moving shipping containers).
+
+            FORCED RANDOMIZATION (Apply to ALL approaches):
+            - Radically vary the CAMERA ANGLE: Use extreme macro, bird's-eye view, ultra-wide angle, or low-angle looking up.
+            - Radically vary the LIGHTING: Use warm morning sun, harsh cinematic spotlight, moody neon corporate blues, or sterile white lab lighting.
             - FORBID: sci-fi elements, glowing brains, holograms, abstract digital art, any text, any logos.
-            - COMPOSITION: The lower third of the image MUST be naturally dark or out-of-focus
-              to allow for headline text overlay later.
+            - COMPOSITION: The lower third of the image MUST be naturally dark or out-of-focus to allow for headline text overlay.
 
             Output:
             Return ONLY the final image prompt. No introductory text, no explanation.
