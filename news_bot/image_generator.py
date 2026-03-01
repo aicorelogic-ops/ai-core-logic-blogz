@@ -114,7 +114,7 @@ class ImageGenerator:
             response = model.generate_images(
                 prompt=prompt,
                 number_of_images=1,
-                aspect_ratio="1:1",
+                aspect_ratio="16:9",
                 safety_filter_level="block_some",
                 person_generation="allow_adult"
             )
