@@ -157,5 +157,11 @@
     "blog_path": "blog/posts/2026-03-01-google-s-opal-just-quietly-showed-enterprise-teams.html",
     "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-03-01-google-s-opal-just-quietly-showed-enterprise-teams.html",
     "processed_date": "2026-03-01T09:44:36.742941"
+  },
+  "https://venturebeat.com/orchestration/openais-big-investment-from-aws-comes-with-something-else-new-stateful": {
+    "title": "OpenAI's big investment from Amazon comes with something else: new 'stateful' architecture for enterprise agents",
+    "blog_path": "blog/posts/2026-03-01-openai-s-big-investment-from-amazon-comes-with-som.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-03-01-openai-s-big-investment-from-amazon-comes-with-som.html",
+    "processed_date": "2026-03-01T09:58:33.044858"
   }
 }

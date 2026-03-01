@@ -132,55 +132,91 @@ class FacebookBlogPoster:
         # Return the newest unpublished blog
         return unpublished_blogs[0]
     
+    def _extract_blog_text(self, blog):
+        """Extract clean text content from the blog HTML file (up to ~2000 chars).
+
+        Why read the full content instead of just the 200-char summary:
+        Gemini needs enough material to identify real business insights,
+        actionable takeaways, and specific numbers/stats to quote.
+        """
+        try:
+            with open(blog['filepath'], 'r', encoding='utf-8') as f:
+                html = f.read()
+            soup = BeautifulSoup(html, 'html.parser')
+
+            # Get all paragraph text from the article body
+            article_body = soup.find('div', class_='article-body')
+            if article_body:
+                paragraphs = [p.get_text().strip() for p in article_body.find_all('p')]
+                full_text = "\n".join(paragraphs)
+            else:
+                # Fallback: grab all paragraph text
+                full_text = "\n".join(p.get_text().strip() for p in soup.find_all('p'))
+
+            # Cap at ~2000 chars to stay within prompt budget
+            return full_text[:2000] if full_text else blog.get('summary', '')
+        except Exception as e:
+            print(f"   [Warn] Could not read full blog content: {e}")
+            return blog.get('summary', '')
+
     def generate_facebook_post(self, blog):
-        """Generate Facebook post content from blog data."""
-        # Use Gemini to create engaging Facebook post
+        """
+        Generate a B2B-focused Facebook post using Gemini.
+
+        Strategy shift: Instead of 'viral emotion' clickbait, we now position
+        ai.corelogic as a consultancy that translates AI news into business value.
+        Hook → Value Translation → Bullet Points → CTA.
+        """
         import google.generativeai as genai
         from .settings import GOOGLE_API_KEY
-        
+
         genai.configure(api_key=GOOGLE_API_KEY)
         model = genai.GenerativeModel('gemini-flash-latest')
-        
+
+        # Read the full blog content for richer material
+        blog_content = self._extract_blog_text(blog)
+
         prompt = f"""
-**Role:** You are a Viral Content Strategist and Behavioral Psychologist.
+Role: Expert B2B Social Media Copywriter for 'ai.corelogic', an agency dedicated to helping businesses seamlessly incorporate AI to drastically improve efficiency, streamline workflows, and drive better results.
 
-**Objective:** Write a high-engagement Facebook post about this blog article:
-Title: {blog['title']}
-Summary: {blog['summary']}
-URL: {blog['url']}
+Task: Write a highly engaging Facebook text post based on the following blog article. Do NOT just summarize it — sell the value of the information to a business owner.
 
-**Constraints & Guidelines:**
+Article Title: {blog['title']}
+Article Content: {blog_content}
 
-1.  **Emotional Arousal:** The tone must evoke a High-Arousal emotion. Choose one of the following: **Awe** (shock/wonder), **Amusement** (humor), **Anger** (righteous indignation), or **Anxiety** (warning/urgency). Do NOT write a "sad" or "relaxing" post.
+FOLLOW THIS EXACT STRUCTURE:
 
-2.  **The Hook (Front-Loading):**
-    *   **Emoji First:** Start the post with a SINGLE, high-impact emoji that matches the emotion. Do NOT use the same emoji every time. Vary it based on context (e.g., 🚨, 🤯, 📉, ⚠️, 🚀, 💡, 🛑).
-    *   **No Brackets:** Do NOT use text tags like [ALERT] or [UPDATE].
-    *   **Inverted Pyramid:** The text immediately following the emoji must contain the most shocking or valuable information in the first 5 words.
+1. **The Hook** (1-2 sentences): Start with a scroll-stopping question or bold statement. Target a common business pain point (wasted time, high overhead, manual bottlenecks) that the article addresses. Do NOT start with a bracket tag like [ALERT]. You may start with a single relevant emoji.
 
-3.  **Layout & Scannability (F-Pattern):**
-    *   **No Walls of Text:** Paragraphs must be 1-2 sentences maximum.
-    *   **Active Whitespace:** Leave double spacing between thoughts to create a "luxurious" and readable feel.
-    *   **Lists:** Use a bulleted list (using emojis like 👉 or ✅ as bullets) for the core value points. This caters to "layer-cake" scanning behavior.
+2. **The Value Translation** (2-3 sentences): Explain in plain, accessible English how the AI concept discussed in the article solves that problem. Strip away heavy technical jargon; focus on the business outcome (ROI, speed, accuracy).
 
-4.  **The Ending (TAC Formula):**
-    *   **Transition:** Use a short sentence signaling the wrap-up (e.g., "Here is the bottom line.").
-    *   **Ask:** Ask a specific, closed-ended question to drive comments (e.g., "Do you prefer A or B?" rather than "Thoughts?").
-    *   **Call to Action:** End with exactly: "Link in comments 👇" (Do NOT include the actual URL in the text).
+3. **Key Takeaways** (Bullet Points): Provide 2-3 quick bullet points extracting the most actionable insights from the post. Use simple emojis as bullets (e.g., ✅, 🚀, or ⚙️).
 
-5.  **Hashtags:** Use 3-5 keywords relevant to the niche for categorization, placed at the very bottom so they do not clutter the visual hierarchy.
+4. **Call to Action** (CTA): End by directing the reader to click the link in the comments to read the full guide, or to message us to see how this AI workflow can be implemented in their company. Use exactly: "Full breakdown in the comments 👇"
 
-**Output Format:**
-Output ONLY the Facebook post text. Do NOT include the URL.
+5. **Formatting Rules**:
+   - Use generous double line breaks between each section so it reads well on mobile.
+   - Keep paragraphs to 1-2 sentences maximum.
+   - NO walls of text.
+
+6. **Hashtags**: Include 3-4 highly relevant hashtags at the very bottom, separated from the CTA by a line break.
+
+Output ONLY the Facebook post text. Do NOT include the blog URL in the post body.
 """
-        
+
         try:
             response = model.generate_content(prompt)
-            return response.text.strip() + "\n\n#AICoreLogic"
+            return response.text.strip()
         except Exception as e:
-            print(f"⚠️ AI generation failed: {e}")
-            # Fallback post
-            return f"🚀 New Analysis: {blog['title']}\n\n#AICoreLogic\n\nRead more: {blog['url']}"
+            print(f"   [Warn] AI text generation failed: {e}")
+            # Fallback: clean, professional, still on-brand
+            return (
+                f"New on the blog: {blog['title']}\n\n"
+                f"Read our latest breakdown on how AI can streamline "
+                f"your business workflows.\n\n"
+                f"Full breakdown in the comments 👇\n\n"
+                f"#AICoreLogic #AI #BusinessEfficiency"
+            )
     
     def verify_live_url(self, url, retries=30):
         """Checks if the URL returns 200 OK. Retries a few times."""
