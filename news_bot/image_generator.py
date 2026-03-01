@@ -548,42 +548,49 @@ class ImageGenerator:
             model = genai.GenerativeModel('gemini-flash-latest')
 
             user_prompt = f"""
-            Role: Expert Editorial Art Director for a premium B2B tech publication.
+            Role: Expert Editorial Art Director for a premium tech news publication.
 
             Task: Write an image generation prompt for a photorealistic BACKGROUND image based on the following article.
-            IMPORTANT: The image must contain NO text, logos, or infographic overlays whatsoever.
-            Those will be added programmatically afterwards. Focus 100% on the visual composition.
+            IMPORTANT: The image must contain NO text, logos, or infographic overlays.
+            Those will be added programmatically. Focus 100% on the visual composition.
 
             Article Title: {title}
             Article Summary: {summary}
 
-            INSTRUCTIONS FOR THE VISUAL FORMULA:
-            1. The Core Metaphor: Analyze the summary. What is the business problem being solved?
-               (e.g., organizing chaos, speeding up processes, saving money).
-               Translate this into a REALISTIC, grounded corporate scene.
-            2. High-End Realism: Style must be "editorial news photography."
-               Shallow depth of field, natural or bright corporate lighting.
-               Explicitly FORBID: sci-fi elements, glowing blue brains, holograms, abstract art, any text, any logos.
-            3. Contextual Details: Include 1-2 hyper-specific props related to the content.
-               (e.g., if the post is about logistics, feature a blurred shipping manifest on a tablet.
-               If about finance, feature a printed spreadsheet.)
-            4. The Human Element: Include a professional (business owner, analyst, manager)
-               engaged in a realistic action relevant to the article.
-            5. Composition for Text Overlay: The lower third of the image MUST be
-               a naturally dark, out-of-focus area (e.g., a dark desk surface, deep shadow,
-               blurred dark background) so a headline can be overlaid on it later.
-               Explicitly state this in the prompt.
+            CRITICAL RULES FOR VISUAL DIVERSITY:
+            You MUST vary the composition every time. Do NOT default to "a person in an office."
+            Pick the BEST visual approach based on the article's actual subject:
 
-            Output Template:
-            "A photorealistic editorial news photograph of [HUMAN ACTION] in a [ENVIRONMENT].
-            On the desk/table, there is a [SPECIFIC PROP RELATED TO SUMMARY].
-            The lighting is natural and corporate, shot with a shallow depth of field.
-            Strictly no sci-fi elements, no glowing screens, no text, no logos.
-            The composition utilizes the rule of thirds, with the lower third of the image
-            being naturally dark and out-of-focus to allow for text overlays."
+            A) PRODUCT / TECHNOLOGY SHOT — If the article is about a specific product, chip, device, robot, or tool:
+               → Dramatic close-up of the object itself. Moody lighting, dark background, editorial product photography.
+               Example: A macro shot of a GPU on a reflective surface with dramatic side-lighting.
+
+            B) ENVIRONMENT / SCALE SHOT — If the article is about infrastructure, data centers, factories, or large-scale operations:
+               → Wide establishing shot showing the environment's scale. No people needed.
+               Example: A towering row of server racks in a massive data center, blue LED ambient light.
+
+            C) HUMAN-IN-CONTEXT — If the article is about a CEO, executive decision, or workforce impact:
+               → Person in a setting that matches the story (NOT always an office with papers).
+               Could be: a factory floor, a conference stage, a lab, a trading floor, standing outdoors at a tech campus.
+
+            D) CONCEPTUAL / METAPHOR — If the article is about an abstract concept (competition, disruption, speed, cost):
+               → A visual metaphor. Example for "disruption": an empty boardroom with a single chair knocked over.
+               Example for "speed": a blurred high-speed train with motion lines. NO sci-fi.
+
+            E) REAL-WORLD IMPACT — If the article is about users, consumers, or society:
+               → Everyday scene showing the technology in real life (a person using a phone on a city street,
+               a delivery drone in a suburban neighborhood, a student with a laptop in a library).
+
+            STYLE RULES (Apply to ALL approaches):
+            - Photorealistic editorial news photography. High-end camera look.
+            - Cinematic lighting (can be moody, dramatic, warm, or cool — match the article tone).
+            - Shallow depth of field where appropriate.
+            - FORBID: sci-fi elements, glowing brains, holograms, abstract digital art, any text, any logos.
+            - COMPOSITION: The lower third of the image MUST be naturally dark or out-of-focus
+              to allow for headline text overlay later.
 
             Output:
-            Return ONLY the final filled-in prompt text. Do not include introductory text.
+            Return ONLY the final image prompt. No introductory text, no explanation.
             """
 
             response = model.generate_content(user_prompt)
