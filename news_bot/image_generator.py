@@ -547,6 +547,21 @@ class ImageGenerator:
             genai.configure(api_key=GOOGLE_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
 
+            import random
+            
+            # Python-driven randomization to forcefully override Gemini's latent biases
+            style_seeds = [
+                "Extreme Macro Photography (focus on tiny details, textures, glass, metal, shallow depth of field)",
+                "Cinematic Metaphor (think Christopher Nolan movie frames, dramatic lighting, suspenseful corporate settings, empty spaces)",
+                "High-End Architectural (focus on stark corporate building geometry, glass facades, brutalist concrete, vast scale)",
+                "Industrial / Logistics (focus on moving parts, shipping, manufacturing, raw materials, heavy industry in action)",
+                "Abstract Organic Tech (visualizing data as fluid dynamics, nature/tech hybrids, bioluminescent concepts, but grounded in reality)",
+                "The Human Toll (focus purely on exhausted, celebrating, or focused human faces in extreme close-up, highly editorial)",
+                "Retro-Future Corporate (analog tech aesthetics mixed with modern settings, 1980s boardroom vibes, warm tungsten lighting)",
+                "Aerial / Drone Perspective (looking straight down on organized chaos, geometric patterns of business operations)"
+            ]
+            forced_style = random.choice(style_seeds)
+
             user_prompt = f"""
             Role: Expert Editorial Art Director for a premium tech news publication.
 
@@ -557,31 +572,22 @@ class ImageGenerator:
             Article Title: {title}
             Article Summary: {summary}
 
-            CRITICAL RULES FOR VISUAL DIVERSITY & AVOIDING REPETITION:
-            Even if multiple articles are about the exact same topic (e.g., "infrastructure" or "AI models"), you MUST invent a totally unique scene every time. NEVER generate the exact same visual twice.
+            CRITICAL DIVERSITY INSTRUCTION:
+            The AI image generators are stuck in a rut generating "server rooms" and "glowing tech hallways" for every tech article. 
+            YOU ARE STRICTLY FORBIDDEN from generating prompts that include:
+            - Server rooms, server racks, or data centers.
+            - Glowing infinite hallways.
+            - Generic "businessmen looking at glowing blue screens".
 
-            Step 1: Pick the visual approach below.
-            Step 2: Invent a NOVEL subject and a UNIQUE camera angle. Do NOT just copy the examples.
+            Instead, you MUST strictly adhere to this randomly assigned visual aesthetic:
+            >>> FORCED AESTHETIC STYLE: {forced_style} <<<
 
-            A) PRODUCT / TECHNOLOGY — Close-up of hardware. 
-               (Invent new subjects: e.g., a glowing fiber-optic junction, an industrial sensor array, a complex circuit board edge, a robotic joint, an edge-computing gateway). 
+            Translate the core concept and emotion of the article (e.g., speed, danger, growth, obsolescence) into a physical, real-world scene that perfectly matches that FORCED AESTHETIC STYLE.
 
-            B) ENVIRONMENT / SCALE — Establishing shots of infrastructure. 
-               (Invent new subjects: e.g., massive cooling fans in shadows, an infinite corridor of shipping containers, a pristine semiconductor clean room, glowing subterranean data cables, a high-tech power grid substation).
-
-            C) HUMAN-IN-CONTEXT — Person in a related physical space. 
-               (Invent new settings: e.g., a hard-hat engineer inspecting a solar array, a network technician in a dark operations center, a logistics manager on a high catwalk, a researcher looking through thick glass).
-
-            D) CONCEPTUAL METAPHOR — Visual representation of an abstract business idea. 
-               (Invent new metaphors: e.g., a shattered hourglass for "saving time", a perfectly aligned row of steel gears for "efficiency", a single illuminated path in a dark maze for "strategy").
-
-            E) REAL-WORLD IMPACT — Technology deployed in the physical world.
-               (Invent new scenes: e.g., a smart-camera mounting on a city streetlight, a drone scanning agricultural fields at dawn, automated cranes moving shipping containers).
-
-            FORCED RANDOMIZATION (Apply to ALL approaches):
-            - Radically vary the CAMERA ANGLE: Use extreme macro, bird's-eye view, ultra-wide angle, or low-angle looking up.
-            - Radically vary the LIGHTING: Use warm morning sun, harsh cinematic spotlight, moody neon corporate blues, or sterile white lab lighting.
-            - FORBID: sci-fi elements, glowing brains, holograms, abstract digital art, any text, any logos.
+            STYLE RULES (Apply to ALL approaches):
+            - Photorealistic editorial news photography. High-end camera look.
+            - Cinematic, distinctive lighting.
+            - FORBID: sci-fi elements, glowing brains, holograms, literal glowing 1s and 0s, text, logos.
             - COMPOSITION: The lower third of the image MUST be naturally dark or out-of-focus to allow for headline text overlay.
 
             Output:
