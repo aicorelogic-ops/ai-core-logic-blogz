@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An AI startup founder says he's planning a 'March for Billionaires' in protest of California's wealth tax |
+        AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('../assets/photo_2026-02-06_16-51-45.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5, 5, 7, 0.7) 50%, rgba(5, 5, 7, 0.3) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+
+        .quick-summary strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+
+        .article-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transform 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="../index.html" class="logo">
+            <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+            <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+        </a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+        </div>
+    </nav>
+
+    <header class="article-hero">
+        <div class="hero-content">
+            <span class="category-pill">AI Market Analysis</span>
+            <h1>An AI startup founder says he's planning a 'March for Billionaires' in protest of California's wealth
+                tax</h1>
+            <div class="meta-info">
+                <span>2026-02-10</span>
+                <span>•</span>
+                <span>3 min read</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="article-container">
+        <!-- Quick Summary Section -->
+        <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <p>Key insights and actionable takeaways from this analysis to help you stay ahead in the AI landscape.</p>
+    </div>
+
+        <!-- Main Content -->
+        <div class="article-body">
+            <div style="font-family: Arial, sans-serif;">
+
+                <h2>Wealth Tax Warpath: An AI Founder's Political Calculus and the Business Implications</h2>
+                <p>The convergence of technology leadership, personal finance, and political activism has never been
+                    more pronounced. A recent announcement by an AI startup founder planning a highly publicized protest
+                    against California’s wealth tax provides a critical case study for how executive political
+                    positioning impacts the broader tech ecosystem.</p>
+
+                <h3>What is it?</h3>
+                <p>The "March for Billionaires" is a planned, high-profile protest event organized by a prominent AI
+                    startup founder. Its target is the proposed California wealth tax legislation, which aims to tax the
+                    global net worth of high-earning state residents, regardless of where those assets are held.</p>
+                <p>Key characteristics of the event and its context:</p>
+                <ul>
+                    <li><strong>Political Theater:</strong> The march utilizes a provocative and potentially satirical
+                        name to draw maximum media attention to the tax issue.</li>
+                    <li><strong>Targeted Policy:</strong> The California wealth tax often includes low entry thresholds,
+                        capturing many successful founders and highly compensated executives, not just established
+                        billionaires.</li>
+                    <li><strong>Source of Conflict:</strong> It represents a direct confrontation between the state’s
+                        desire to fund public services via progressive taxation and the founders’ arguments that such
+                        taxes stifle innovation and encourage capital flight.</li>
+                </ul>
+
+                <h3>Why it matters for Business/Logistics</h3>
+                <p>For an AI company, financial stability and access to talent are paramount. A wealth tax, or the
+                    political fight against it, creates immediate and long-term logistical friction, especially in the
+                    capital-intensive AI sector:</p>
+                <p><strong>1. Executive Talent Acquisition and Retention:</strong></p>
+                <ul>
+                    <li>High-value executives and engineers often factor in tax implications when deciding where to live
+                        and work. Tax policies perceived as punitive can severely handicap California-based AI firms
+                        competing for global talent.</li>
+                    <li>The controversy adds a new layer of complexity to compensation packages, potentially requiring
+                        higher base salaries or more creative equity structures to offset perceived tax risks.</li>
+                </ul>
+                <p><strong>2. Capital Liquidity and Investment:</strong></p>
+                <ul>
+                    <li>Wealth taxes, if implemented, directly impact the liquid capital available to founders—capital
+                        often recycled into new ventures, angel investing, or bridging early-stage funding gaps for
+                        their own companies.</li>
+                    <li>Political instability surrounding tax policy adds a risk premium to VC valuations. Venture
+                        capital funds may become warier of funding companies whose founders or primary operations are
+                        based in high-tax jurisdictions perceived as hostile to wealth generation.</li>
+                </ul>
+                <p><strong>3. Corporate Relocation Pressure:</strong></p>
+                <p>The protest itself serves as an advertisement for corporate exodus. The march signals to policymakers
+                    that founders are politically mobilized and serious about relocating headquarters and key personnel
+                    to states like Texas, Florida, or jurisdictions outside the U.S. that offer more favorable tax
+                    environments.</p>
+
+                <h3>Our Take/Prediction</h3>
+                <p>While the "March for Billionaires" may elicit public backlash for appearing tone-deaf to broader
+                    economic inequality issues, its primary function is not persuasion but leverage. We predict this
+                    event will successfully force the wealth tax debate out of backroom lobbying and onto the front
+                    pages, raising the political cost for legislators supporting the measure.</p>
+                <p><strong>Prediction:</strong> This is a bellwether moment signaling the permanent politicization of
+                    the tech elite. AI Core Logic advises startups to develop clear, proactive strategies regarding
+                    state-level tax policy risks, including formal relocation contingency plans. The financial and
+                    reputational stability of a modern AI firm now depends heavily on navigating these public policy
+                    battles, regardless of whether the founder agrees with the protestor’s methods.</p>
+
+            </div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+
+
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."</p>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        </div>
+
+        <a href="../index.html" class="back-btn">← Back to News Feed</a>
+    </main>
+    <script>
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        };
+    </script>
+
+    <footer>
+        <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+    </footer>
+</body>
+
+</html>

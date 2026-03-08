@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Automating a 50-Person Dispatch Team | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('https://image.pollinations.ai/prompt/Professional%20news%20network%20graphic%20in%20the%20style%20of%20ABC%20News%20or%20Bloomberg%20television%3A%0A%0APHOTO%20BACKGROUND%3A%20A%20high-tech%20logistics%20control%20room%20with%20glowing%20digital%20maps%20and%20data%20dashboards%20visible%20on%20large%20wall-mounted%20screens%2C%20symbolizing%20efficiency%20and%20scale.%2C%20photojournalism%20quality%2C%20warm%20lighting%2C%20uplifting%20composition%2C%20aspirational%0A%0ATEXT%20OVERLAY%20ELEMENTS%3A%0A-%20Large%20bold%20white%20sans-serif%20headline%20at%20BOTTOM%20with%20dark%20gradient%20backdrop%3A%20%22Case%20Study%3A%20Automating%20a%2050-Person%20Dispatch%20Team%22%0A-%20Small%20category%20badge%20in%20TOP-LEFT%20corner%3A%20%22TECH%20UPDATE%22%20in%20tech%20blue%20color%0A-%20Subtle%20dark%20gradient%20overlay%20%2850%25%20opacity%29%20across%20bottom%20third%20for%20text%20readability%0A-%20Clean%20professional%20typography%20similar%20to%20ABC%20News%20or%20Variety%20magazine%20graphics%0A%0ASTYLE%20SPECIFICATIONS%3A%0A-%20High-quality%20photojournalistic%20image%2C%20not%20amateur%20or%20casual%0A-%20Corporate%20news%20network%20aesthetic%0A-%20Text%20must%20be%20clearly%20readable%20and%20prominent%0A-%20inspiring%20visual%20mood%0A-%20Composition%20suitable%20for%20social%20media%20thumbnail%0A-%20No%20watermarks%20or%20logos%20except%20subtle%20%22NEWS%22%20badge%0A%0ATECHNICAL%3A%201200x630%20aspect%20ratio%2C%20optimized%20for%20Facebook%20feed?width=1200&height=630&nologo=true&model=flux') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Case Study: Automating a 50-Person Dispatch Team</h1>
+        <div class="meta-info">
+            <span>2026-02-12</span>
+            <span>•</span>
+            <span>3 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        Key insights and actionable takeaways to stay ahead in the AI landscape.
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        
+<h1>We Automated a 50-Person Dispatch Team. Here's the Exact Blueprint.</h1>
+
+<p><b>4,000 emails a day. 50 people drowning. One solution.</b></p>
+
+<h3>Are Your Dispatchers Buried in Admin Hell?</h3>
+
+<p>Let's be honest. Your dispatch team is the lifeblood of your operation. But what happens when that lifeblood gets clogged? When your dispatchers are spending more time shuffling emails than actually, you know, dispatching?</p>
+
+<p>They're buried in admin hell. We've seen it a thousand times.</p>
+
+<h3>The Slow, Painful Death of Manual Dispatch</h3>
+
+<p>Think about it. Every single day, your team is:</p>
+
+<ul>
+  <li><b>Reading emails...slowly.</b> Humans are just slower than machines. Fact.</li>
+  <li><b>Making mistakes.</b> Typos, wrong addresses, missed deadlines. Errors cost money.</li>
+  <li><b>Burning out.</b> Overwhelmed. Stressed. Turnover skyrockets.</li>
+  <li><b>Getting woken up at 3 AM.</b> Because emergencies don't clock out.</li>
+</ul>
+
+<p>That's just scratching the surface. The REAL cost is missed opportunities. Deals lost because your team couldn't react fast enough. Profit bleeding out every single day.</p>
+
+<h3>The Bottleneck: Real-World Nightmare Scenarios</h3>
+
+<p>Let's get specific. This isn't hypothetical. We're talking about YOUR business.</p>
+
+<p><b>Scenario #1:</b> A critical piece of equipment breaks down. The email request gets lost in the inbox jungle. Hours wasted. Production grinds to a halt. Customers are furious. You're losing money by the minute.</p>
+
+<p><b>Scenario #2:</b> A VIP client demands immediate attention. Your dispatcher is swamped. The request gets delayed. The client feels ignored. They take their business elsewhere. Poof. Gone.</p>
+
+<p><b>Scenario #3:</b> Compliance deadlines are looming. Your team is scrambling to gather paperwork. Errors abound. Fines pile up. Your reputation takes a hit.</p>
+
+<p>Sound familiar? You're not alone. But there's a better way. A way to stop the bleeding.</p>
+
+<h3>The Fix: Inbox Agent (Focus on Results, Not Tech Specs)</h3>
+
+<p>We created Inbox Agent. Think of it as your secret weapon. Not some fancy software with a million useless features. But a simple, powerful system that automates the grunt work, so your dispatchers can focus on what matters: getting the job done.</p>
+
+<p>It's about <b>results</b>, pure and simple. Not about complex algorithms or confusing interfaces.</p>
+
+<p>Inbox Agent automatically:</p>
+
+<ul>
+  <li><b>Sorts and prioritizes emails instantly.</b> No more lost requests.</li>
+  <li><b>Extracts key information automatically.</b> No more manual data entry.</li>
+  <li><b>Triggers automated workflows.</b> Get things moving without human intervention.</li>
+  <li><b>Alerts the right people, at the right time.</b> No more missed deadlines.</li>
+</ul>
+
+<p>It's like giving your dispatch team a super-powered assistant. One that never sleeps, never makes mistakes, and never complains.</p>
+
+<h3>The Result: 20 Hours Saved Per Dispatcher, Per Week</h3>
+
+<p>That's not a typo. We're talking about real, tangible results.</p>
+
+<p>Our clients are seeing an average of <b>20 hours saved per dispatcher, per week.</b> That's an entire half-week of productivity unlocked. What could *your* team accomplish with an extra 20 hours every week?</p>
+
+<p>Imagine:</p>
+
+<ul>
+  <li><b>Increased efficiency.</b> More jobs completed. More revenue generated.</li>
+  <li><b>Reduced errors.</b> Fewer costly mistakes. Higher customer satisfaction.</li>
+  <li><b>Happier employees.</b> Less stress. Less burnout. Lower turnover.</li>
+  <li><b>A competitive edge.</b> The ability to react faster, smarter, and more effectively than your competition.</li>
+</ul>
+
+<p>Want to learn how we can automate *your* dispatch team and unlock those same results? </p>
+
+<p><b>Click here to see the blueprint.</b></p>
+
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        

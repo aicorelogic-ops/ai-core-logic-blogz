@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jack Dorsey's Block cuts 40% of staff, 4,000+ people — and yes, it's because of AI efficiencies | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('../assets/jack-dorsey-s-block-cuts-40--of-staff--4-000--peop.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Jack Dorsey's Block cuts 40% of staff, 4,000+ people — and yes, it's because of AI efficiencies</h1>
+        <div class="meta-info">
+            <span>2026-02-27</span>
+            <span>•</span>
+            <span>2 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>Jack Dorsey fired 4,000 employees while growing profit 24 percent to pivot Block toward agentic AI efficiencies.</li><li style='margin-bottom: 0.75rem;'>Wall Street rewarded the massive headcount reduction with a 24 percent stock surge and record-breaking efficiency benchmarks.</li><li style='margin-bottom: 0.75rem;'>Boards will soon fire any leader who refuses to replace human bloat with autonomous AI orchestration tools.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <h1>4,000 People Just Lost Their Jobs While Profits Scuryrocketed 24%.</h1>
+
+<p>Jack Dorsey just sent a shockwave through the business world by nuking 40% of his workforce at Block.</p>
+
+<p>This isn't a "rescue mission" for a failing company.</p>
+
+<p>This is a cold-blooded execution of the old way of doing business to make room for the AI Era.</p>
+
+<p>Block just proved that you can fire 4,000 people, grow profits by double digits, and watch your stock price surge 24% in a single day.</p>
+
+<p>If you think your industry is safe from this "agentic" shift, you are a sitting duck.</p>
+
+<h2>The Day the Human Cubicle Died</h2>
+
+<p>Block—the giant behind Square and Cash App—just slashed its headcount from 10,000 to 6,000.</p>
+
+<p>They did this while reporting a staggering $2.87 billion in gross profit.</p>
+
+<p>Dorsey is replacing human-intensive management hierarchies with what he calls "agentic AI infrastructure."</p>
+
+<p>The message to Wall Street was clear: Humans are a liability; AI is an asset.</p>
+
+<h2>4,000 Heads on a Platter for Wall Street</h2>
+
+<p>The market didn't mourn the 4,000 families affected.</p>
+
+<p>The market cheered.</p>
+
+<p>Block’s stock price rocketed because they hit the "Rule of 40"—the holy grail of tech efficiency.</p>
+
+<ul>
+    <li><b>Cash App Profit:</b> Up 33% to $1.83 billion.</li>
+    <li><b>Efficiency Goal:</b> Targeting $2 million in gross profit per employee.</li>
+    <li><b>Operational Shift:</b> AI now manages internal decision-making and risk assessment.</li>
+</ul>
+
+<h3>The New Benchmark: $2 Million Per Person</h3>
+
+<p>Dorsey is no longer interested in how many people he employs.</p>
+
+<p>He is interested in "intelligence-native" models that move at extreme speed.</p>
+
+<p>He is moving from reactive dashboards to "Moneybots" that anticipate customer needs before they even arise.</p>
+
+<h2>Your Board is Coming for Your Headcount</h2>
+
+<p>By the end of this year, every Board of Directors will ask their CEO one question.</p>
+
+<p>"Why are we paying humans to do what Jack Dorsey is doing with a script?"</p>
+
+<p>The "COVID overhiring binge" is over.</p>
+
+<p>The age of the lean, AI-orchestrated machine is here.</p>
+
+<p>You can either be the one who implements the AI, or the one replaced by it.</p>
+
+<p>The era of "bloated middle management" and "growth at all costs" has been buried in a shallow grave.</p>
+
+<p>Are you building a business that scales with expensive human souls, or one that scales with infinite digital intelligence?</p>
+
+<p>Contact AI Core Logic for a strategy audit today.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"The bottom line is that the "growth at all costs" era of hiring is dead and buried. Jack Dorsey just gave every Board of Directors a license to kill human bloat in favor of AI-driven margins. If your business isn't targeting two million dollars in profit per employee, you aren't competing—you’re just waiting for the liquidation sale."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        

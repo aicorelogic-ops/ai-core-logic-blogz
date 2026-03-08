@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial: Build Your Own 'Email Sorter' Bot | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('https://image.pollinations.ai/prompt/Professional%20news%20network%20graphic%20in%20the%20style%20of%20ABC%20News%20or%20Bloomberg%20television%3A%0A%0APHOTO%20BACKGROUND%3A%20A%20clean%2C%20modern%20workspace%20with%20a%20high-end%20laptop%20screen%20displaying%20a%20glowing%20digital%20interface%20of%20emails%20being%20automatically%20organized%20into%20color-coded%20folders%20by%20a%20subtle%20AI%20mesh%20overlay.%2C%20photojournalism%20quality%2C%20warm%20lighting%2C%20uplifting%20composition%2C%20aspirational%0A%0ATEXT%20OVERLAY%20ELEMENTS%3A%0A-%20Large%20bold%20white%20sans-serif%20headline%20at%20BOTTOM%20with%20dark%20gradient%20backdrop%3A%20%22Tutorial%3A%20Build%20Your%20Own%20%27Email%20Sorter%27%20Bot%22%0A-%20Small%20category%20badge%20in%20TOP-LEFT%20corner%3A%20%22AI%20NEWS%22%20in%20electric%20blue%20color%0A-%20Subtle%20dark%20gradient%20overlay%20%2850%25%20opacity%29%20across%20bottom%20third%20for%20text%20readability%0A-%20Clean%20professional%20typography%20similar%20to%20ABC%20News%20or%20Variety%20magazine%20graphics%0A%0ASTYLE%20SPECIFICATIONS%3A%0A-%20High-quality%20photojournalistic%20image%2C%20not%20amateur%20or%20casual%0A-%20Corporate%20news%20network%20aesthetic%0A-%20Text%20must%20be%20clearly%20readable%20and%20prominent%0A-%20inspiring%20visual%20mood%0A-%20Composition%20suitable%20for%20social%20media%20thumbnail%0A-%20No%20watermarks%20or%20logos%20except%20subtle%20%22NEWS%22%20badge%0A%0ATECHNICAL%3A%201200x630%20aspect%20ratio%2C%20optimized%20for%20Facebook%20feed?width=1200&height=630&nologo=true&model=flux') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>Tutorial: Build Your Own 'Email Sorter' Bot</h1>
+        <div class="meta-info">
+            <span>2026-02-12</span>
+            <span>•</span>
+            <span>2 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        Key insights and actionable takeaways to stay ahead in the AI landscape.
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        
+<b>You don't need a $50k dev team. Here's proof.</b>
+
+<p>Seriously. Stop believing the lie that automating your business needs a Silicon Valley genius and a pile of venture capital. That's BS.</p>
+
+<h3>Your Inbox Is a Graveyard</h3>
+
+<p>Admit it. You're drowning in emails.</p>
+
+<ul>
+<li><b>800+ unread messages.</b> And growing.</li>
+<li>You're <b>missing critical deals.</b> Opportunities lost.</li>
+<li>Every morning feels like <b>walking into a digital minefield.</b></li>
+<li>The <b>anxiety</b> is REAL. The overwhelm is crushing.</li>
+</ul>
+
+<p>You spend hours each week just *trying* to get your inbox under control. Hours that could be spent closing deals, growing your business, or, you know, actually enjoying life.</p>
+
+<p>You've probably tried everything:</p>
+
+<ul>
+<li>Endless folders.</li>
+<li>Complex filters that somehow never work.</li>
+<li>Unsubscribing from everything (and still getting spammed).</li>
+</ul>
+
+<p>It's exhausting. And it's costing you money. Big money.</p>
+
+<h3>No-Code Logic: Anyone Can Do This</h3>
+
+<p>What if I told you that you could build a simple "Email Sorter" bot in just 10 minutes? And without writing a single line of complex code?</p>
+
+<p>Sounds impossible, right? It's not.</p>
+
+<p>We're going to use a simple, powerful combination of tools that makes automation accessible to anyone, even if you're allergic to code.</p>
+
+<h3>The Stack (Simplified)</h3>
+
+<p>Here's what you'll need (don't worry, it's easier than it sounds):</p>
+
+<ul>
+<li><b>Python:</b> Think of this as the engine. It's the backbone of our bot, but we'll keep it super simple.</li>
+<li><b>Gemini (or your preferred AI model):</b> This is the brain. It analyzes the email content and decides where it goes.</li>
+<li><b>A Gmail account:</b> Where your emails live.</li>
+</ul>
+
+<p>We're not going to get bogged down in technical jargon. I'll walk you through each step, holding your hand. Seriously. It's easier than setting up your Facebook profile.</p>
+
+<h3>Auto-Sorting Magic</h3>
+
+<p>Here's the concept:</p>
+
+<ol>
+<li>Our Python "engine" connects to your Gmail.</li>
+<li>It pulls in new emails.</li>
+<li>It sends the email content to Gemini (the AI brain).</li>
+<li>Gemini analyzes the email and tells us what it's about (e.g., "Sales Lead," "Customer Support," "Spam").</li>
+<li>Our Python engine then automatically moves the email to the correct folder.</li>
+</ol>
+
+<p>Boom. Sorted. Automatically.</p>
+
+<p>Imagine never having to manually sort another email again. Imagine the peace of mind. Imagine the time you'll save.</p>
+
+<h3>The Benefit: Inbox Peace (Emotional Outcome)</h3>
+
+<p>This isn't just about automating your inbox. It's about reclaiming your sanity.</p>
+
+<p>It's about:</p>
+
+<ul>
+<li><b>Eliminating the overwhelm.</b></li>
+<li><b>Focusing on what matters.</b></li>
+<li><b>Closing more deals.</b></li>
+<li><b>Actually enjoying your business (and your life).</b></li>
+</ul>
+
+<p>Ready to build your own Email Sorter bot in 10 minutes? Click here to get the step-by-step guide and code template. No opt-in required. Just pure, actionable value. Let's get this done.</p>
+
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"We analyze the intersection of logistics, automation, and AI to deliver actionable insights for modern businesses. No hype, just practical strategy."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        

@@ -1,0 +1,10 @@
+requests
+beautifulsoup4
+feedparser
+python-dotenv
+google-generativeai
+fastapi
+uvicorn
+pydantic
+Pillow
+google-cloud-aiplatform

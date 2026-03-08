@@ -1,0 +1,36 @@
+{
+  "https://techcrunch.com/2026/03/01/investors-spill-what-they-arent-looking-for-anymore-in-ai-saas-companies/": {
+    "title": "Investors spill what they aren’t looking for anymore in AI SaaS companies",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-03-01T11:33:13.673395"
+  },
+  "https://venturebeat.com/orchestration/vibe-coding-with-overeager-ai-lessons-learned-from-treating-google-ai-studio": {
+    "title": "Vibe coding with overeager AI: Lessons learned from treating Google AI Studio like a teammate",
+    "status": "duplicate_skipped",
+    "processed_date": "2026-03-01T11:33:13.713097"
+  },
+  "https://venturebeat.com/technology/anthropic-vs-the-pentagon-what-enterprises-should-do": {
+    "title": "Anthropic vs. The Pentagon: what enterprises should do",
+    "blog_path": "blog/posts/2026-03-01-anthropic-vs--the-pentagon--what-enterprises-shoul.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-03-01-anthropic-vs--the-pentagon--what-enterprises-shoul.html",
+    "processed_date": "2026-03-01T11:33:49.544834"
+  },
+  "https://www.theverge.com/tech/885228/lenovo-ai-workmate-companion-work-concept-robot-arm-desktop-clock-hub": {
+    "title": "A robot arm with puppy dog eyes is just one of Lenovo&#8217;s new desktop AI concepts",
+    "blog_path": "blog/posts/2026-03-02-a-robot-arm-with-puppy-dog-eyes-is-just-one-of-len.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-03-02-a-robot-arm-with-puppy-dog-eyes-is-just-one-of-len.html",
+    "processed_date": "2026-03-02T06:38:41.231291"
+  },
+  "https://techcrunch.com/2026/03/06/robinhoods-startup-fund-stumbles-in-nyse-debut/": {
+    "title": "Robinhood’s startup fund stumbles in NYSE debut",
+    "blog_path": "blog/posts/2026-03-08-robinhood-s-startup-fund-stumbles-in-nyse-debut.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-03-08-robinhood-s-startup-fund-stumbles-in-nyse-debut.html",
+    "processed_date": "2026-03-08T16:51:04.557563"
+  },
+  "https://venturebeat.com/orchestration/langchains-ceo-argues-that-better-models-alone-wont-get-your-ai-agent-to": {
+    "title": "LangChain's CEO argues that better models alone won't get your AI agent to production",
+    "blog_path": "blog/posts/2026-03-08-langchain-s-ceo-argues-that-better-models-alone-wo.html",
+    "blog_url": "https://aicorelogic-ops.github.io/ai-core-logic-blogz/blog/posts/2026-03-08-langchain-s-ceo-argues-that-better-models-alone-wo.html",
+    "processed_date": "2026-03-08T16:52:46.685289"
+  }
+}

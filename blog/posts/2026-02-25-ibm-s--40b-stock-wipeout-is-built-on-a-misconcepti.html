@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM's $40B stock wipeout is built on a misconception: Translating COBOL isn't the same as modernizing it | AI Core Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F0FF;
+            --secondary: #7000FF;
+            --bg: #050507;
+            --surface: #0F1419;
+            --text: #E2E8F0;
+            --text-dim: #94A3B8;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span { color: var(--primary); }
+        
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--primary); }
+        
+        /* Hero Section */
+        .article-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 400px;
+            background: url('../assets/ibm-s--40b-stock-wipeout-is-built-on-a-misconcepti.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .article-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 0%, rgba(5,5,7,0.7) 50%, rgba(5,5,7,0.3) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .category-pill {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Key Takeaways Box (NEW) */
+        .quick-summary {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+        }
+        .quick-summary strong { color: var(--primary); display: block; margin-bottom: 0.5rem; }
+        
+        /* Article Body */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        
+        .article-body {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .article-body h2 {
+            color: #fff;
+            margin: 3rem 0 1.5rem 0;
+            font-size: 1.75rem;
+        }
+        
+        .article-body p { margin-bottom: 1.5rem; }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 3rem;
+            background: var(--primary);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="logo">
+        <img src="../assets/brand-logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">AI.CORE <span>LOGIC</span></div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+    </div>
+</nav>
+
+<header class="article-hero">
+    <div class="hero-content">
+        <span class="category-pill">AI Market Analysis</span>
+        <h1>IBM's $40B stock wipeout is built on a misconception: Translating COBOL isn't the same as modernizing it</h1>
+        <div class="meta-info">
+            <span>2026-02-25</span>
+            <span>•</span>
+            <span>2 min read</span>
+        </div>
+    </div>
+</header>
+
+<main class="article-container">
+    <!-- Quick Summary Section -->
+    <div class="quick-summary">
+        <strong>💡 Key TakeAways:</strong> 
+        <ul style='margin: 0; padding-left: 1.5rem; line-height: 1.8;'><li style='margin-bottom: 0.75rem;'>IBM lost 40 billion dollars because investors wrongly assumed that AI code translation equals total system modernization.</li><li style='margin-bottom: 0.75rem;'>Simple translation fails to address complex data architectures and the high-performance reliability that keeps legacy mainframes running.</li><li style='margin-bottom: 0.75rem;'>Enterprises should run small pilots to test AI output quality rather than attempting massive vendor replacements overnight.</li></ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="article-body">
+        <h1>$40,000,000,000. Gone. In 24 Hours.</h1>
+
+<p>That is the staggering amount of market cap wiped off IBM because of a single announcement from Anthropic.</p>
+
+<p>Investors are panicking because they think the "COBOL problem" was just solved with a magic button. They are dead wrong.</p>
+
+<p>At AI Core Logic, we have watched enterprises burn millions on "quick fixes" for decades. We know exactly where the bodies are buried in legacy code.</p>
+
+<p>Read this now, before you make a $40 billion mistake with your own infrastructure.</p>
+
+<h2>The Day the Mainframe "Died" (According to Wall Street)</h2>
+
+<p>On Tuesday, Anthropic revealed that Claude can now read, analyze, and translate 66-year-old COBOL into modern Java and Python. By the closing bell, IBM suffered its biggest single-day stock crash in 25 years.</p>
+
+<p>The market is pricing this as an existential threat to the IBM mainframe. They see 250 billion lines of active COBOL and think AI is the wrecking ball that finally knocks it down.</p>
+
+<p>But translating code is not the same as modernizing a business. This knee-jerk reaction proves that most people don't understand how the world's biggest banks actually function.</p>
+
+<h2>The Fatal "Magic Button" Delusion</h2>
+
+<p>Everyone wants to believe AI is a magic wand. They think you can just "Ctrl+C" legacy COBOL and "Ctrl+V" a modern enterprise.</p>
+
+<p>It is a total lie.</p>
+
+<p><b>Translating COBOL is the easy part.</b> Amazon and Google have offered migration tools for years, yet the mainframes are still screaming.</p>
+
+<h3>Your Problem Isn't the Language, It's the Logic</h3>
+<ul>
+    <li><b>Non-Deterministic Chaos:</b> AI tools are inconsistent; they might implement the same operation three different ways in one codebase.</li>
+    <li><b>Hidden Dependencies:</b> COBOL isn't just code; it's a 60-year web of data architecture and hardware coupling.</li>
+    <li><b>The ROI Trap:</b> Moving code to the cloud often costs more in compute than it saves in developer hours.</li>
+</ul>
+
+<h2>Why Your "Modern" Code Will Still Break</h2>
+
+<p>IBM mainframes don't run the world because of COBOL. They run the world because of <b>determinism and reliability</b> that general-purpose servers cannot touch.</p>
+
+<p>When a bank processes a million transactions, they need "transaction processing integrity," not a "good enough" translation from a chatbot. If your data architecture is a mess, Java won't save you.</p>
+
+<p>If you just port your old mess into a new language, you haven't solved the problem. You've just made your technical debt more expensive to host.</p>
+
+<h2>The Only Way to Survive the Hype</h2>
+
+<p>Do not react emotionally to the headlines. Do not rip and replace your entire tech stack because of a blog post from Silicon Valley.</p>
+
+<p>The winners will use AI as a high-speed accelerator, not a driverless car. You need a disciplined program with measurable checkpoints and brutal risk guardrails.</p>
+
+<p>Are you chasing a "magic button," or are you building a system that actually works in the real world?</p>
+
+<p>Now is the time to audit your modernization strategy before the hype burns your budget to the ground.</p>
+
+<p>Contact AI Core Logic for a strategy audit.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0;">
+        
+        
+        <!-- Editorial Attribution (Brand Logo + Dynamic Prospect) -->
+        <div class="author-bio" style="background: #0F1419; padding: 2rem; border-radius: 8px; border-left: 4px solid #00F0FF;">
+             <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                <img src="../assets/brand-logo.png" alt="AI Core Logic" style="width: 60px; height: 60px; object-fit: contain;">
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-family: 'Outfit', sans-serif; color: #00F0FF; font-size: 1.1rem;">AI Core Logic Editorial</h4>
+                    <p style="margin: 0; font-size: 0.95rem; color: #94A3B8; line-height: 1.6; font-style: italic;">"The bottom line is that the market reacted to a technical fantasy, not a business reality. Translating code is the easy part, but rewriting the foundational logic and hardware coupling of a 66-year-old system is where most projects actually die. If you treat AI as a "magic conversion button" without a disciplined governance framework, you’re just porting your technical debt into a more expensive environment."</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <a href="../index.html" class="back-btn">← Back to News Feed</a>
+</main>
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("scroll-progress").style.width = scrolled + "%";
+    };
+</script>
+
+<footer>
+    <p>&copy; 2026 AI Core Logic. Scanned for excellence.</p>
+</footer>
+</body>
+</html>
+        
