@@ -45,4 +45,5 @@ vertex-ai-key.json
 *-service-account.json
 
 # Tool Data (including headless browser caches)
-skills/*/data/browser_state/
+skills/*/data/browser_state/data/
+data/
